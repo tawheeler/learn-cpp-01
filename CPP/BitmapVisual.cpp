@@ -3,11 +3,15 @@
 
 	A visual which always shows a static bitmap image
 
+    Author: Tim Wheeler
+    Contact: timwheeleronline@gmail.com
+
 ========================================================================
 */
 
 #include "BitmapVisual.h"
 
+using namespace MysticDave;
 
 BitmapVisual::BitmapVisual( Vec2i * pos, ALLEGRO_BITMAP * bitmap ) {
 	BitmapVisual::pos = pos;

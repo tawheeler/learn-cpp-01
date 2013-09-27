@@ -6,6 +6,9 @@
 	rendered. Screens are arranged on a stack, and may block those
 	below them from being updated and/or rendered
 
+    Author: Tim Wheeler
+    Contact: timwheeleronline@gmail.com
+
 ========================================================================
 */
 
@@ -13,29 +16,31 @@
 
 #include <allegro5/allegro5.h>
 
-class BaseScreen {
+namespace MysticDave {
+    class BaseScreen {
 
-public:
-	virtual void		Init() = 0;
-	virtual void		Cleanup() = 0;
-	void				SetBlockUpdate( bool val );
-	void				SetBlockRender( bool val );
-	bool				BlocksUpdate() const;
-	bool				BlocksRender() const;
-	virtual void		HandleEvent( ALLEGRO_EVENT event ) = 0;
-	virtual void		Update() = 0;
-	virtual void		Render() const = 0;
+    public:
+	    virtual void		Init() = 0;
+	    virtual void		Cleanup() = 0;
+	    void				SetBlockUpdate( bool val );
+	    void				SetBlockRender( bool val );
+	    bool				BlocksUpdate() const;
+	    bool				BlocksRender() const;
+	    virtual void		HandleEvent( ALLEGRO_EVENT event ) = 0;
+	    virtual void		Update() = 0;
+	    virtual void		Render() const = 0;
 
-	bool				IsDead();
-	void				SetDead();
+	    bool				IsDead();
+	    void				SetDead();
 
-protected:
-						BaseScreen();
+    protected:
+						    BaseScreen();
 
-private:
-	bool				blocksRender; //whether it blocks screens below it from rendering
-	bool				blocksUpdate; //whether it blocks screens below it from updating
+    private:
+	    bool				blocksRender; //whether it blocks screens below it from rendering
+	    bool				blocksUpdate; //whether it blocks screens below it from updating
 	
-	bool				isDead;       //whether to destroy or not
+	    bool				isDead;       //whether to destroy or not
 
-};
+    };
+}

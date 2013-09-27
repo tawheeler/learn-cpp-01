@@ -5,11 +5,16 @@
 	Holds a stack of BaseScreen objects and controls their updating
 	and rendering
 
+    Author: Tim Wheeler
+    Contact: timwheeleronline@gmail.com
+
 ========================================================================
 */
 
 #include "ScreenManager.h"
 #include <assert.h>
+
+using namespace MysticDave;
 
 ScreenManager::ScreenManager() {
 	// do nothing

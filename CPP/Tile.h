@@ -6,6 +6,9 @@
 	Tied to a static floor image
 	Can contain TileEntities
 
+    Author: Tim Wheeler
+    Contact: timwheeleronline@gmail.com
+
 ========================================================================
 */
 
@@ -13,21 +16,23 @@
 
 #include <deque>
 
-class TileEntity;
+namespace MysticDave {
+    class TileEntity;
 
-class Tile {
+    class Tile {
 
-public:
+    public:
 
-	bool									blocksOccupation;  // whether this tile can contain TileEntities that move around (walls do not, floors do, for instance)
-	char									imageAddr;         // determines which image in the sprite sheet to use								
+	    bool									blocksOccupation;  // whether this tile can contain TileEntities that move around (walls do not, floors do, for instance)
+	    int										imageAddr;         // determines which image in the sprite sheet to use								
 
-											Tile();
-											Tile( char imageAddr );
-											~Tile();
+											    Tile();
+											    Tile( char imageAddr );
+											    ~Tile();
 
-	bool									IsOccupied(); // whether this tile can be moved in to or not
+	    bool									IsOccupied(); // whether this tile can be moved in to or not
 
-	TileEntity *							tileEntity; // the tile within this spot, if there is one
+        std::deque < TileEntity * >             tileEntityList; // the tile within this spot, if there is one
 
-};
+    };
+}

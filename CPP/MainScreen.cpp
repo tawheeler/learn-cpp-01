@@ -15,21 +15,23 @@
 #include "Utils.h"
 #include "TileBitmapVisual.h"
 
+using namespace MysticDave;
+
 void MainScreen::Init() {
 	keys[UP] = keys[DOWN] = keys[LEFT] = keys[RIGHT] = keys[SPACE] = false;
 	curChamber = new Chamber(1);
 
-	int chamberTileInd[] = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2,
-					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
-					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
-					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
-					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
-					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
-					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
-					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
-					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
-					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
-					 40, 41, 41, 41, 41, 41, 41, 41, 41, 41, 41, 42 };
+	int chamberTileInd[] = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2,
+					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
+					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
+					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
+					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
+					 20, 21, 21, 21, 21, 21,  7, 21, 21, 21, 21, 21, 22,
+					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
+					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
+					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
+					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
+					 40, 41, 41, 41, 41, 41, 41, 41, 41, 41, 41, 41, 42 };
 
 	int ind = 0;
 	for ( int y = 0; y < 11; y ++ ) {
@@ -44,7 +46,7 @@ void MainScreen::Init() {
 
 	curChamber->GenerateFloorImage();
 
-	player = new PlayerEntity();
+	/*player = new PlayerEntity();
 	player->tileX = 5;
 	player->tileY = 4;
 	player->SetPixPosToMatchTilePos();
@@ -61,14 +63,14 @@ void MainScreen::Init() {
 	block->tileX = 7;
 	block->tileY = 6;
 	block->SetPixPosToMatchTilePos();
-	curChamber->AddTileEntity( block );
+	curChamber->AddTileEntity( block );*/
 
 }
 
 void MainScreen::Cleanup() {
 	delete curChamber;
-	player->Cleanup();
-	delete player;
+	//player->Cleanup();
+	//delete player;
 }
 
 void MainScreen::HandleEvent( ALLEGRO_EVENT evt ) {
@@ -93,7 +95,7 @@ void MainScreen::HandleEvent( ALLEGRO_EVENT evt ) {
 
 void MainScreen::Update() {
 
-	if ( player != 0 ) {
+	/*if ( player != 0 ) {
 
 		int numDirsPressed = (keys[DOWN] ? 1 : 0) + (keys[UP] ? 1 : 0) + (keys[LEFT] ? 1 : 0) + (keys[RIGHT] ? 1 : 0);
 
@@ -142,7 +144,7 @@ void MainScreen::Update() {
 		}
 
 		player->Update();
-	}
+	}*/
 
 	curChamber->Update();
 
@@ -150,5 +152,5 @@ void MainScreen::Update() {
 
 void MainScreen::Render() const {
 	curChamber->Render();
-	player->visual->Render();
+	//player->visual->Render();
 }

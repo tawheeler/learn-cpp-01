@@ -3,35 +3,40 @@
 
 	A translational action something undertakes
 
+    Author: Tim Wheeler
+    Contact: timwheeleronline@gmail.com
+
 ========================================================================
 */
 #pragma once
 
 #include "Vec2i.h"
 
-class Motion {
-public:
+namespace MysticDave {
+    class Motion {
+    public:
 
-				Motion( Vec2i * vec, int destX, int destY, int totalMotionTime );
-				~Motion();
+				    Motion( Vec2i * vec, int destX, int destY, int totalMotionTime );
+				    ~Motion();
 
-	void		Update();
-	bool		IsDone();
+	    void		Update();
+	    bool		IsDone();
 	
 
-private:
+    private:
 	
-	int			GetPixelX();
-	int			GetPixelY();
+	    int			GetPixelX();
+	    int			GetPixelY();
 
-	int			totalMotionTime;  // number of ticks the overall motion takes
-	int			motionTick;       // the tick the motion is currently in
+	    int			totalMotionTime;  // number of ticks the overall motion takes
+	    int			motionTick;       // the tick the motion is currently in
 	
-	int			startX; // [pix]
-	int			startY; // [pix]
-	int			destX;  // [pix]
-	int			destY;  // [pix]
+	    int			startX; // [pix]
+	    int			startY; // [pix]
+	    int			destX;  // [pix]
+	    int			destY;  // [pix]
 
-	Vec2i *		vec;    // the vector tied to the motion
+	    Vec2i *		vec;    // the vector tied to the motion
 
-};
+    };
+}

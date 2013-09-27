@@ -4,6 +4,9 @@
 	An entity controlled by the player
 	Mystic Dave!
 
+    Author: Tim Wheeler
+    Contact: timwheeleronline@gmail.com
+
 ========================================================================
 */
 
@@ -14,37 +17,40 @@
 #include "Animation.h"
 #include "Motion.h"
 #include "Tile.h"
+#include "jsoncons/json.hpp"
 
-class PlayerEntity : public TileEntity {
+namespace MysticDave {
+    class PlayerEntity : public TileEntity {
 
-public:
+    public:
 
-						PlayerEntity();
-						~PlayerEntity();
+						        PlayerEntity();
+						        ~PlayerEntity();
 
-	int					GetDir();
-	void				SetDir( int dir );
+	    int					    GetDir();
+	    void				    SetDir( int dir );
 
-	void				PlayAnimation( Animation * anim );
-	virtual void		Move( int dir, Tile * curTile ); // sets the player to move one tile in the specified direction
-	void				PushMove( int dir, Tile * curTile );
-	bool				IsPlayingAnimation();
+	    void				    PlayAnimation( Animation * anim );
+	    bool				    IsPlayingAnimation();
 
-private:
+        virtual jsoncons::json  GetJSON();
 
-	AnimationVisual *	animVis;
+    private:
+
+	    AnimationVisual *	    animVis;
 	
-	int					dir;         // the direction faced
-	int *				standingArr; // images for the various directions
+	    int					    dir;         // the direction faced
+	    int *				    standingArr; // images for the various directions
 
-	Animation *			animNorth;
-	Animation *			animEast;
-	Animation *			animSouth;
-	Animation *			animWest;
+	    Animation *			    animNorth;
+	    Animation *			    animEast;
+	    Animation *			    animSouth;
+	    Animation *			    animWest;
 
-	Animation *			animPushNorth;
-	Animation *			animPushEast;
-	Animation *			animPushSouth;
-	Animation *			animPushWest;
+	    Animation *			    animPushNorth;
+	    Animation *			    animPushEast;
+	    Animation *			    animPushSouth;
+	    Animation *			    animPushWest;
 
-};
+    };
+}

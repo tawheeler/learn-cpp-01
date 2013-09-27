@@ -3,6 +3,9 @@
 
 	An entity which has a tile as its location
 
+    Author: Tim Wheeler
+    Contact: timwheeleronline@gmail.com
+
 ========================================================================
 */
 
@@ -14,38 +17,58 @@
 //#include "RuneSpace.h"
 #include "Motion.h"
 #include "Tile.h"
+#include <string>
 
-class TileEntity : public Entity {
-public:
+namespace MysticDave {
+    class TileEntity : public Entity {
+    public:
 
-	bool				blocksOccupation;
+                                    TileEntity( std::string name, long uid );
+						            ~TileEntity();
 
-						TileEntity( int type );
-						TileEntity( int type, int uid );
-						~TileEntity();
+	    bool				        BlocksOccupation();
+        void                        SetBlocksOccupation( bool blocks );
 
-	Vec2i *				pos; // position in pixel space
+        Vec2i *                     GetPos();
 
-	int					tileX;  // position in tile space
-	int					tileY;
+        Visual *                    GetVisual();
+        void                        SetVisual( Visual * visual );
 
-	void				SetTilePosToMatchPixPos(); // matches tile position from pixel position
-	void				SetPixPosToMatchTilePos();
+        int                         GetRenderZ();
+        void                        SetRenderZ( int z );
 
-	Visual*				visual;
-	//RuneSpace*			runeSpace;
+        bool                        IsFlammable();
+        void                        SetFlammable( bool b );
 
-	virtual void		Update();
-	virtual void		Cleanup();
+        bool				        IsInMotion();
+        int                         GetSourceTileLoc();  //the tile it is moving from or is currently in
 
-	void				AddMotion( Motion * motion );
-	virtual void 		Move( int dir, Tile * curTile ); // sets the player to move one tile in the specified direction
+        void				        AddMotion( Motion * motion );
+        void                        HaltAllMotion( Motion * motion ); // halts all motions in the stack
+	    void 		                MoveDir( int dir, int sourceTileLoc ); // have the TE move one tile in the specified direction
+        //void                        MoveTarget( int targetTileLoc, int sourceTileLoc ); // have the TE move to the target tile
 
-	bool				IsInMotion();
+	    virtual void		        Update();
+	    virtual void		        Cleanup();
+        virtual void                Render( int x, int y );
 
-protected:
+        virtual void                OnEntered( TileEntity * actor ) {}
+        virtual void                OnExited( TileEntity * actor ) {}
+
+        virtual jsoncons::json      GetJSON();
+
+    protected:
 	
-	Motion *			motion;
-	Tile *				sourceTile;
+        int                         renderZ;
+        int				            sourceTileLoc;
+
+        bool				        blocksOccupation;
+        bool                        flammable;
+
+        Vec2i *                     pos;  // position in pixel space
+        Visual*				        visual;
+	    std::deque < Motion * >		motionQueue;
+	    
 	
-};
+    };
+}

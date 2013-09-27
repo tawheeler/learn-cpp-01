@@ -3,6 +3,9 @@
 
 	A visual the size of a bitmap, so is rendered in tilespace
 
+    Author: Tim Wheeler
+    Contact: timwheeleronline@gmail.com
+
 ========================================================================
 */
 
@@ -12,13 +15,15 @@
 #include "Vec2i.h"
 #include "TextureSheet.h"
 
-class TileBitmapVisual : public BitmapVisual {
+namespace MysticDave {
+    class TileBitmapVisual : public BitmapVisual {
 
-public:
+    public:
 
-									TileBitmapVisual( Vec2i * pos, ALLEGRO_BITMAP * bitmap );
-									~TileBitmapVisual();
+									    TileBitmapVisual( Vec2i * pos, ALLEGRO_BITMAP * bitmap );
+									    ~TileBitmapVisual();
 
-	void							Render();
+	    void							Render();
 
-};
+    };
+}

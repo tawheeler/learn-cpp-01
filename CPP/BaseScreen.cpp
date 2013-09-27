@@ -6,10 +6,15 @@
 	rendered. Screens are arranged on a stack, and may block those
 	below them from being updated and/or rendered
 
+    Author: Tim Wheeler
+    Contact: timwheeleronline@gmail.com
+
 ========================================================================
 */
 
 #include "BaseScreen.h"
+
+using namespace MysticDave;
 
 BaseScreen::BaseScreen() {
 	blocksRender = true;

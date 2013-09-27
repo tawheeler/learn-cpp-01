@@ -3,6 +3,9 @@
 
 	A visual which always shows a static bitmap image
 
+    Author: Tim Wheeler
+    Contact: timwheeleronline@gmail.com
+
 ========================================================================
 */
 
@@ -12,21 +15,23 @@
 #include "Vec2i.h"
 #include "TextureSheet.h"
 
-class BitmapVisual : public Visual {
+namespace MysticDave {
+    class BitmapVisual : public Visual {
 
-public:
+    public:
 
-									BitmapVisual( Vec2i * pos, ALLEGRO_BITMAP * bitmap );
-									~BitmapVisual();
+									    BitmapVisual( Vec2i * pos, ALLEGRO_BITMAP * bitmap );
+									    ~BitmapVisual();
 
-	void							Cleanup();
-	void							Render();
+	    void							Cleanup();
+	    void							Render();
 
-protected:
+    protected:
 
-	Vec2i *							pos;
-	ALLEGRO_BITMAP *				bitmap;
-	int								halfWidth;  // bitmap width
-	int								halfHeight;  // bitmap height
+	    Vec2i *							pos;
+	    ALLEGRO_BITMAP *				bitmap;
+	    int								halfWidth;  // bitmap width
+	    int								halfHeight;  // bitmap height
 
-};
+    };
+}

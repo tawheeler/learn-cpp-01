@@ -5,23 +5,50 @@
 	Grants fundamental ability to receive messages, update, 
 	posseses a uid, and a type
 
+    Author: Tim Wheeler
+    Contact: timwheeleronline@gmail.com
+
 ========================================================================
 */
 
-class Entity {
-public:
-	enum TYPE{TYPE_MISC, TYPE_SYGALDRY, TYPE_LOGICTIMER, TYPE_BLOCK, TYPE_PLAYER, TYPE_ENEMY, TYPE_DOOR, TYPE_FIREPLACE, TYPE_HAZARD };
+#pragma once
 
-	int					UID;   // unique id
-	int					type;  // type of object
+#include <string>
+#include <map>
+#include <list>
+#include "jsoncons/json.hpp"
+#include "Property.h"
+#include "Input.h"
+#include "OutputStruct.h"
+#include "PropertySet.h"
 
-						Entity( int type );
-						Entity( int type, int uid );
-						~Entity();
+namespace MysticDave {
+    class Entity : public PropertySet {
+    public:
 
-	virtual void		Update();
-	virtual void		Cleanup();
+						                        Entity( std::string name, long uid );
+						                        ~Entity();
+
+	    std::string			                    GetName() { return name; }
+        long                                    GetUID() { return uid; }
+
+	    virtual void		                    Update();
+	    virtual void		                    Cleanup();
+
+        virtual void                            OnInput( Input * I ) {};
+
+        virtual bool                            ShouldBeRemoved() { return false; }
+
+        void                                    AddOutput( OutputStruct os );
+
+        virtual jsoncons::json  				GetJSON();
+
+    protected:
+	    std::string								name;
+        int                                     uid;
+
+	    std::map< std::string, Property >	              properties;
+        std::map< std::string, std::list<OutputStruct> >  outputs;
 	
-	//virtual void		ReceiveMessage( Message * msg ) = 0;
-	
-};
+    };
+}

@@ -5,6 +5,9 @@
 	Holds a stack of BaseScreen objects and controls their updating
 	and rendering
 
+    Author: Tim Wheeler
+    Contact: timwheeleronline@gmail.com
+
 ========================================================================
 */
 
@@ -14,24 +17,27 @@
 #include <deque>
 #include "BaseScreen.h"
 
-class BaseScreen;
+namespace MysticDave {
 
-class ScreenManager {
-public:
-										ScreenManager();
-										~ScreenManager();
-	void								StartUp();
-	void								ShutDown();
-	static ScreenManager&				GetInstance();
+    class BaseScreen;
 
-	void								HandleEvent( ALLEGRO_EVENT evt );
-	void								Update();
-	void								Render();
+    class ScreenManager {
+    public:
+										    ScreenManager();
+										    ~ScreenManager();
+	    void								StartUp();
+	    void								ShutDown();
+	    static ScreenManager&				GetInstance();
 
-	void								PushGameScreen( BaseScreen * gs );
+	    void								HandleEvent( ALLEGRO_EVENT evt );
+	    void								Update();
+	    void								Render();
 
-private:
-	std::deque < BaseScreen * > states;
-	std::deque < BaseScreen * > statesToAdd;
-	std::deque < BaseScreen * >::iterator iter;
-};
+	    void								PushGameScreen( BaseScreen * gs );
+
+    private:
+	    std::deque < BaseScreen * > states;
+	    std::deque < BaseScreen * > statesToAdd;
+	    std::deque < BaseScreen * >::iterator iter;
+    };
+}

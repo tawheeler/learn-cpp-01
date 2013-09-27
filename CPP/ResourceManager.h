@@ -3,6 +3,9 @@
 
 	Handles all loaded game resources, including images, sounds etc.
 
+    Author: Tim Wheeler
+    Contact: timwheeleronline@gmail.com
+
 ========================================================================
 */
 
@@ -15,26 +18,28 @@
 #include <deque>
 #include <map>
 
-class ResourceManager {
-public:
+namespace MysticDave {
+    class ResourceManager {
+    public:
 	
-	void												StartUp();
-	void												ShutDown();
-	static ResourceManager&								GetInstance();	
+	    void												StartUp();
+	    void												ShutDown();
+	    static ResourceManager&								GetInstance();	
 
-	ALLEGRO_BITMAP *									GetBitmap( const char * name ); // loads it if it needs to, otherwise returns it
-	TextureSheet *										GetTextureSheet ( const char * name ); // returns it if it has already been loaded
-	TextureSheet *										LoadTextureSheet ( const char * name, int texWidth, int texHeight ); // returns if it has already been loaded, otherwise creates it
+	    ALLEGRO_BITMAP *									GetBitmap( const char * name ); // loads it if it needs to, otherwise returns it
+	    TextureSheet *										GetTextureSheet ( const char * name ); // returns it if it has already been loaded
+	    TextureSheet *										LoadTextureSheet ( const char * name, int texWidth, int texHeight ); // returns if it has already been loaded, otherwise creates it
 
-private:
-														ResourceManager() {};
-														ResourceManager( ResourceManager const& );  //do not implement
-	void operator = ( ResourceManager const& ); // don't implement
+    private:
+														    ResourceManager() {};
+														    ResourceManager( ResourceManager const& );  //do not implement
+	    void operator = ( ResourceManager const& ); // don't implement
 
-	std::deque < ALLEGRO_BITMAP * >						bitmapList;
-	std::deque < TextureSheet * >						texSheetList;
+	    std::deque < ALLEGRO_BITMAP * >						bitmapList;
+	    std::deque < TextureSheet * >						texSheetList;
 
-	std::map < std::string, ALLEGRO_BITMAP * >			bitmapMap;
-	std::map < std::string, TextureSheet * >			texSheetMap;
+	    std::map < std::string, ALLEGRO_BITMAP * >			bitmapMap;
+	    std::map < std::string, TextureSheet * >			texSheetMap;
 	
-};
+    };
+}

@@ -3,15 +3,20 @@
 
 	An object which can be rendered on the screen
 
+    Author: Tim Wheeler
+    Contact: timwheeleronline@gmail.com
+
 ========================================================================
 */
 
 #pragma once
 
-class Visual {
-public:
-						Visual();
-						~Visual();
-	virtual void		Cleanup() = 0;
-	virtual void		Render() = 0;
-};
+namespace MysticDave {
+    class Visual {
+    public:
+						    Visual();
+						    ~Visual();
+	    virtual void		Cleanup() = 0;
+	    virtual void		Render() = 0;
+    };
+}

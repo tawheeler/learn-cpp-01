@@ -3,12 +3,17 @@
 
 	A texture sheet of same-sized textures
 
+    Author: Tim Wheeler
+    Contact: timwheeleronline@gmail.com
+
 ========================================================================
 */
 
 #include "TextureSheet.h"
 #include "ResourceManager.h"
 #include "LogManager.h"
+
+using namespace MysticDave;
 
 TextureSheet::TextureSheet( const char * name, int width, int height ) {
 

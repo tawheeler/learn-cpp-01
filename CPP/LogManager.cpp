@@ -4,6 +4,9 @@
 	Handles error and standard system output 
 	outputs to several different log files
 
+    Author: Tim Wheeler
+    Contact: timwheeleronline@gmail.com
+
 ========================================================================
 */
 
@@ -11,6 +14,8 @@
 #include <assert.h>
 #include <stdio.h>   // for va_list et al
 #include <windows.h> // for OutputDebugString
+
+using namespace MysticDave;
 
 void LogManager::StartUp() {
 	debug = true;

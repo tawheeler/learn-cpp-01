@@ -3,11 +3,16 @@
 
 	Handles all loaded game resources, including images, sounds etc.
 
+    Author: Tim Wheeler
+    Contact: timwheeleronline@gmail.com
+
 ========================================================================
 */
 
 #include "ResourceManager.h"
 #include <assert.h>
+
+using namespace MysticDave;
 
 void ResourceManager::StartUp() {
 	// do nothing

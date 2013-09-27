@@ -3,6 +3,9 @@
 
 	Provided standard utilites
 
+    Author: Tim Wheeler
+    Contact: timwheeleronline@gmail.com
+
 ========================================================================
 */
 #pragma once
@@ -10,6 +13,8 @@
 #include "Globals.h"
 
 namespace UTIL {
+
+    using namespace MysticDave;
 
 	static const int DIR_NORTH = 0;
 	static const int DIR_EAST  = 1;

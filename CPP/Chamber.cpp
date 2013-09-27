@@ -2,7 +2,7 @@
 ========================================================================
 
 	A room in the world
-	Composed of a grid of tiles (12 x 11)
+	Composed of a grid of tiles (13 x 11)
 
 ========================================================================
 */
@@ -12,7 +12,9 @@
 #include "Utils.h"
 #include "TileEntity.h"
 
-int Chamber::CHAMBER_TILE_WIDTH = 12;
+using namespace MysticDave;
+
+int Chamber::CHAMBER_TILE_WIDTH = 13;
 int Chamber::CHAMBER_TILE_HEIGHT = 11;
 
 Chamber::Chamber( int chamberID ) {
@@ -39,6 +41,7 @@ Chamber::~Chamber() {
 	
 	delete texSheet;
 
+    std::deque < TileEntity * >::iterator iter;
 	for ( iter = tileEntityList.begin(); iter != tileEntityList.end(); ) {
 		(*iter)->Cleanup();
 		delete (*iter);
@@ -47,6 +50,7 @@ Chamber::~Chamber() {
 }
 	
 void Chamber::Update() {
+    std::deque < TileEntity * >::iterator iter;
 	for ( iter = tileEntityList.begin(); iter != tileEntityList.end(); ++iter ) {
 		(*iter)->Update();
 	}
@@ -54,19 +58,23 @@ void Chamber::Update() {
 
 void Chamber::Render() {
 	al_draw_bitmap( GetFloorImage(), 0, 0, 0 );
+
+    std::deque < TileEntity * >::iterator iter;
 	for ( iter = tileEntityList.begin(); iter != tileEntityList.end(); ++iter ) {
-		if ( (*iter)->visual != 0 ) {
-			(*iter)->visual->Render();
+		if ( (*iter)->GetVisual() != 0 ) {
+			(*iter)->GetVisual()->Render();
 		}
 	}
 }
 
 void Chamber::AddTileEntity( TileEntity * te ) {
-	int tileX = UTIL::PixToGrid( te->pos->x );
-	int tileY = UTIL::PixToGrid( te->pos->y );
+	/* TODO: this
+    int tileX = UTIL::PixToGrid( te->GetPos()->x );
+	int tileY = UTIL::PixToGrid( te->GetPos()->y );
 	tileArr[tileX + tileY*tileWidth].tileEntity = te;
 	
 	tileEntityList.push_back( te );
+    */
 }
 
 Tile * Chamber::GetTile( int x, int y ) {
@@ -109,6 +117,31 @@ void Chamber::GenerateFloorImage() {
 
 }
 
-bool Chamber::IsInChamber( int x, int y ) {
+bool Chamber::IsInChamber_Tile( int x, int y ) {
 	return ( x >= 0 && x < tileWidth && y >= 0 && y < tileHeight );
+}
+
+bool Chamber::IsInChamber_Pixel( float x, float y ) {
+	return ( x >= 0 && x < tileWidth*TILE_DIM && y >= 0 && y < tileHeight*TILE_DIM );
+}
+
+jsoncons::json Chamber::GetJSON() {
+
+    using jsoncons::json;
+
+    json obj( json::an_object );
+
+    obj["uid"]  = chamberID;
+    obj["tileWidth"] = tileWidth;
+    obj["tileHeight"] = tileHeight;
+
+    json jtileArr( json::an_array );
+    for ( int i = 0; i < numTiles; ++i ) {
+        jtileArr.add( tileArr[i].imageAddr );
+    }
+
+    obj["tileArr"] = jtileArr;
+
+    return obj;
+    
 }

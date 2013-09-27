@@ -6,17 +6,20 @@
 	Tied to a static floor image
 	Can contain TileEntities
 
+    Author: Tim Wheeler
+    Contact: timwheeleronline@gmail.com
+
 ========================================================================
 */
 
 #include "Tile.h"
-
 #include "TileEntity.h"
+
+using namespace MysticDave;
 
 Tile::Tile() {
 	Tile::imageAddr  = 0;
 	blocksOccupation = false;
-	tileEntity = 0;
 }
 
 Tile::Tile( char imageAddr ) {
@@ -31,9 +34,9 @@ Tile::~Tile() {
 bool Tile::IsOccupied() {
 
 
-	bool retval = blocksOccupation || tileEntity != 0;
+	bool retval = blocksOccupation;
 
-	//TODO: make it so that not all tileEntities automatically block occupation
+    // TODO: check list of tile entities
 
 	return retval;
 

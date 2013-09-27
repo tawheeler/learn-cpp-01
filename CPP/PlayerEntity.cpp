@@ -4,6 +4,9 @@
 	An entity controlled by the player
 	Mystic Dave!
 
+    Author: Tim Wheeler
+    Contact: timwheeleronline@gmail.com
+
 ========================================================================
 */
 
@@ -12,13 +15,17 @@
 #include "ResourceManager.h"
 #include "LogManager.h"
 #include "Utils.h"
+#include <string>
+#include <map>
+#include "Property.h"
 
-PlayerEntity::PlayerEntity() : TileEntity( TYPE_PLAYER, 1 ) {
+using namespace MysticDave;
+
+PlayerEntity::PlayerEntity() : TileEntity( "MysticDave", 1 ) {
 	// TODO: fix UID 1 by default
 	animVis = new AnimationVisual( pos, (ResourceManager::GetInstance()).GetBitmap( "./res/Sprites/Dave2/Dave_S_L.png" ) );
 	visual = animVis;
-	motion = 0;
-	sourceTile = 0;
+	sourceTileLoc = -1;
 	dir = UTIL::DIR_SOUTH;
 
 	standingArr = new int[4];
@@ -73,10 +80,10 @@ PlayerEntity::PlayerEntity() : TileEntity( TYPE_PLAYER, 1 ) {
 
 PlayerEntity::~PlayerEntity() {
 	animVis = 0;
-	sourceTile = 0;
-	if ( motion != 0 ) {
-		delete motion;
-	}
+	
+    // delete everything in the motion stack
+
+
 	delete animNorth;
 	delete animWest;
 	delete animSouth;
@@ -89,62 +96,60 @@ int PlayerEntity::GetDir() {
 
 void PlayerEntity::SetDir( int dir ) {
 	PlayerEntity::dir = dir;
-	animVis->SetBitmap( (ResourceManager::GetInstance()).GetTextureSheet("./res/Sprites/DaveSpriteSheet.png")->GetTexture( standingArr[dir] ) );
-	motion = new Motion( pos, pos->x, pos->y, 8 );  // adds a little delay after turning
+	//animVis->SetBitmap( (ResourceManager::GetInstance()).GetTextureSheet("./res/Sprites/DaveSpriteSheet.png")->GetTexture( standingArr[dir] ) );
+	//motion = new Motion( pos, pos->x, pos->y, 8 );  // adds a little delay after turning
 }
 
 void PlayerEntity::PlayAnimation( Animation * anim ) {
 	animVis->PlayAnimation( anim );
 }
 
-void PlayerEntity::Move( int dir, Tile * curTile ) {
-	
-	switch ( dir ) {
-		case UTIL::DIR_NORTH:
-			animVis->PlayAnimation( animNorth );
-			motion = new Motion( pos, pos->x, pos->y - TILE_DIM, animNorth->totalDuration ); 
-			break;
-		case UTIL::DIR_EAST:  
-			animVis->PlayAnimation( animEast );
-			motion = new Motion( pos, pos->x + TILE_DIM, pos->y, animEast->totalDuration ); 
-			break;
-		case UTIL::DIR_SOUTH: 
-			animVis->PlayAnimation( animSouth );
-			motion = new Motion( pos, pos->x, pos->y + TILE_DIM, animSouth->totalDuration ); 
-			break;
-		case UTIL::DIR_WEST:  
-			animVis->PlayAnimation( animWest );
-			motion = new Motion( pos, pos->x - TILE_DIM, pos->y, animWest->totalDuration ); 
-			break;
-	}
-
-	sourceTile = curTile;
-}
-
-void PlayerEntity::PushMove( int dir, Tile * curTile ) {
-	
-	switch ( dir ) {
-		case UTIL::DIR_NORTH:
-			animVis->PlayAnimation( animPushNorth );
-			motion = new Motion( pos, pos->x, pos->y - TILE_DIM, animPushNorth->totalDuration ); 
-			break;
-		case UTIL::DIR_EAST:  
-			animVis->PlayAnimation( animPushEast );
-			motion = new Motion( pos, pos->x + TILE_DIM, pos->y, animPushEast->totalDuration ); 
-			break;
-		case UTIL::DIR_SOUTH: 
-			animVis->PlayAnimation( animPushSouth );
-			motion = new Motion( pos, pos->x, pos->y + TILE_DIM, animPushSouth->totalDuration ); 
-			break;
-		case UTIL::DIR_WEST:  
-			animVis->PlayAnimation( animPushWest );
-			motion = new Motion( pos, pos->x - TILE_DIM, pos->y, animPushWest->totalDuration ); 
-			break;
-	}
-
-	sourceTile = curTile;
-}
 
 bool PlayerEntity::IsPlayingAnimation() {
 	return animVis->IsPlayingAnimation();
+}
+
+jsoncons::json PlayerEntity::GetJSON() {
+    // Obtain a JSON entity for the player entity
+    // This will be a JSON object, with the following values:
+    //
+    // name - string
+    // uid - number
+    // 
+    // properties - json object
+    // outputs    - json object
+    //
+    // <TILE ENTITY:>
+    // blocksOccupation - bool
+    // posX - float
+    // posY - float
+    //
+    // <PlayerEntity>
+    // dir - float
+
+    //using jsoncons::json;
+
+    //TODO: add outputs list
+
+    //// A boolean value
+    //json flag(true);
+
+    //// A numeric value
+    //json number(10.5);
+
+    //// An object value with four members
+    //json obj(json::an_object);
+    //obj["first_name"] = "Jane";
+    //obj["last_name"] = "Roe";
+    //obj["events_attended"] = 10;
+    //obj["accept_waiver_of_liability"] = true;
+
+    //// An array value with four elements
+    //json arr(json::an_array);
+    //arr.add(null_val);
+    //arr.add(flag);
+    //arr.add(number);
+    //arr.add(obj);
+
+    return Entity::GetJSON();
 }

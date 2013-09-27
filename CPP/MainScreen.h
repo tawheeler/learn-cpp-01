@@ -3,6 +3,9 @@
 
 	A BaseScreen which runs the standard game mode
 
+    Author: Tim Wheeler
+    Contact: timwheeleronline@gmail.com
+
 ========================================================================
 */
 
@@ -12,18 +15,23 @@
 #include "BaseScreen.h"
 #include "Chamber.h"
 #include "PlayerEntity.h"
+#include "ForceNet.h"
 
-class MainScreen : public BaseScreen {
-public:
-	bool keys[9];
-	enum KEYS{UP, DOWN, LEFT, RIGHT, SPACE};
+namespace MysticDave {
+    class MainScreen : public BaseScreen {
+    public:
+	    bool keys[9];
+	    enum KEYS{UP, DOWN, LEFT, RIGHT, SPACE};
 
-	void									Init();
-	void									Cleanup();
-	void									HandleEvent( ALLEGRO_EVENT evt );
-	void									Update();
-	void									Render() const;
+	    void									Init();
+	    void									Cleanup();
+	    void									HandleEvent( ALLEGRO_EVENT evt );
+	    void									Update();
+	    void									Render() const;
 
-	Chamber *								curChamber;
-	PlayerEntity *							player;
-};
+	    Chamber *								curChamber;
+	    PlayerEntity *							player;
+
+	    ForceNet *								fnet;
+    };
+}

@@ -3,11 +3,16 @@
 
 	A translational action something undertakes
 
+    Author: Tim Wheeler
+    Contact: timwheeleronline@gmail.com
+
 ========================================================================
 */
 
 #include "Motion.h"
 #include "Utils.h"
+
+using namespace MysticDave;
 
 Motion::Motion( Vec2i * vec, int destX, int destY, int totalMotionTime ) {
 	Motion::vec             = vec;

@@ -2,55 +2,77 @@
 ========================================================================
 
 	A room in the world
-	Composed of a grid of tiles (12 x 11)
+	Composed of a grid of tiles
+
+    Author: Tim Wheeler
+    Contact: timwheeleronline@gmail.com
 
 ========================================================================
 */
 
 #pragma once
 
+#include "Entity.h"
+#include "TileEntity.h"
 #include "Tile.h"
 #include "TextureSheet.h"
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 #include <deque>
+#include <map>
+#include <string>
+#include "jsoncons/json.hpp"
 
-class Chamber {
+namespace MysticDave {
+    class Chamber {
 
-public:
+    public:
 
-	static int								CHAMBER_TILE_WIDTH;  // how many tiles wide the chamber is (12)
-	static int								CHAMBER_TILE_HEIGHT; // how many tiles tall the chamber is (11)
+	    static int								CHAMBER_TILE_WIDTH;  // how many tiles wide the chamber is (13)
+	    static int								CHAMBER_TILE_HEIGHT; // how many tiles tall the chamber is (11)
 
-	int										chamberID; // a unique chamber identifier
+	    int                                     GetUID();
 
-											Chamber( int chamberID );
-											~Chamber();
+											    Chamber( int chamberID );
+											    ~Chamber();
 
-	void									Update();
-	void									Render();
+	    void									Update();
+	    void									Render();
 
-	void									AddTileEntity( TileEntity * te );
+        void									GenerateFloorImage();
+
+        bool									IsInChamber_Tile( int x, int y ); // whether the given tile point is in the chamber
+        bool                                    IsInChamber_Pixel( float x, float y ); // whether the given pixel point is in the chamber
+
+        bool                                    CanTileBeEntered( int x, int y );
+
+	    void									AddTileEntity( TileEntity * te );
+        void                                    AddEntity( Entity * e );
 	
-	Tile *									GetTile( int x, int y );
-	int										GetTileWidth() const;
-	int										GetTileHeight() const;
-	ALLEGRO_BITMAP *						GetFloorImage() const;
+	    Tile *									GetTile( int x, int y );
+	    int										GetTileWidth() const;
+	    int										GetTileHeight() const;
+	    ALLEGRO_BITMAP *						GetFloorImage() const;
 
-	void									GenerateFloorImage();
+        jsoncons::json                          GetJSON();
 
-	bool									IsInChamber( int x, int y ); // whether point (in tilespace) is in chamber
+    private:
 
-private:
+        int	      								chamberID; // a unique chamber identifier
 
-	Tile *									tileArr;     // array of tiles
-	int										numTiles;    // how many tiles we have
-	int										tileWidth;   // how many tiles wide the chamber is
-	int										tileHeight;  // how many tiles high the chamber is
+	    Tile *									tileArr;     // array of tiles
+	    int										numTiles;    // how many tiles we have
+	    int										tileWidth;   // how many tiles wide the chamber is
+	    int										tileHeight;  // how many tiles high the chamber is
 
-	ALLEGRO_BITMAP *						floorImage;  // image created by tile base images
-	TextureSheet *							texSheet;    // texture sheet for the tiles
+	    ALLEGRO_BITMAP *						floorImage;  // image created by tile base images
+	    TextureSheet *							texSheet;    // texture sheet for the tiles
 
-	std::deque < TileEntity * >				tileEntityList;
-	std::deque < TileEntity * >::iterator	iter;
-};
+	    std::deque < TileEntity * >				tileEntityList;
+        
+        std::map< std::string, Entity * >       entityStringMap;
+        std::map< long,        Entity * >       entityUIDMap;
+        std::deque< Entity * >                  entityList;
+
+    };
+}

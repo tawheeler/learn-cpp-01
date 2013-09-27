@@ -3,11 +3,16 @@
 
 	A visual the size of a tile, so is rendered in tilespace
 
+    Author: Tim Wheeler
+    Contact: timwheeleronline@gmail.com
+
 ========================================================================
 */
 
 #include "TileBitmapVisual.h"
 #include "Globals.h"
+
+using namespace MysticDave;
 
 TileBitmapVisual::TileBitmapVisual( Vec2i * pos, ALLEGRO_BITMAP * bitmap ) : BitmapVisual( pos, bitmap ) {
 	// do nothing

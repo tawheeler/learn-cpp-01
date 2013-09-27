@@ -3,11 +3,16 @@
 
 	A visual which shows animations
 
+    Author: Tim Wheeler
+    Contact: timwheeleronline@gmail.com
+
 ========================================================================
 */
 
 #include "AnimationVisual.h"
 #include "Globals.h"
+
+using namespace MysticDave;
 
 AnimationVisual::AnimationVisual( Vec2i * pos, ALLEGRO_BITMAP * bitmap ) {
 	AnimationVisual::pos = pos;

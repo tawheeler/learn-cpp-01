@@ -3,6 +3,9 @@
 
 	The main function, which initializes Allegro and runs the game loop
 
+    Author: Tim Wheeler
+    Contact: timwheeleronline@gmail.com
+
 ========================================================================
 */
 
@@ -22,10 +25,10 @@
 #include "ResourceManager.h"
 //#include "GameObjectManager.h"
 
-
 #include "BaseScreen.h"
 #include "MainScreen.h"
 
+using namespace MysticDave;
 
 LogManager *				myLogManager;
 ScreenManager *				myScreenManager;

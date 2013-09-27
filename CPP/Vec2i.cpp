@@ -3,11 +3,16 @@
 
 	A 2D vector class, integers
 
+    Author: Tim Wheeler
+    Contact: timwheeleronline@gmail.com
+
 ========================================================================
 */
 
 #include "Vec2i.h"
 #include <math.h>
+
+using namespace MysticDave;
 
 Vec2i::Vec2i() {
 	x = y = 0;
