@@ -4,6 +4,9 @@
 #ifndef JSONCONS_JSON_HPP
 #define JSONCONS_JSON_HPP
 
+//#define NOMINMAX  // prevent issues with max() colliding with jsoncons
+#undef max
+
 #include "jsoncons/json1.hpp"
 #include "jsoncons/json2.hpp"
 

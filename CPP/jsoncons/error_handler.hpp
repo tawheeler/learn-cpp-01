@@ -1,7 +1,7 @@
 #ifndef JSONCONS_ERROR_HANDLER_HPP
 #define JSONCONS_ERROR_HANDLER_HPP
 
-#include "jsoncons/json_exception.hpp"
+#include "json_exception.hpp"
 
 // Error codes
 //

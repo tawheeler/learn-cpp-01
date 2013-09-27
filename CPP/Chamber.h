@@ -34,6 +34,7 @@ namespace MysticDave {
 	    int                                     GetUID();
 
 											    Chamber( int chamberID );
+                                                Chamber( jsoncons::json jobj );
 											    ~Chamber();
 
 	    void									Update();

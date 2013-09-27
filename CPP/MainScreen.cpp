@@ -15,18 +15,30 @@
 #include "Utils.h"
 #include "TileBitmapVisual.h"
 
+#include <iostream>
+#include <fstream>
+#include "jsoncons/json.hpp"
+
 using namespace MysticDave;
 
 void MainScreen::Init() {
 	keys[UP] = keys[DOWN] = keys[LEFT] = keys[RIGHT] = keys[SPACE] = false;
-	curChamber = new Chamber(1);
+	
+    using jsoncons::json;
+
+    json jobj = json::parse_file("./saves/chamber.json");
+    curChamber = new Chamber( jobj );
+
+    // add a chamber mananger that can import / export chambers
+
+    /*curChamber = new Chamber(1);
 
 	int chamberTileInd[] = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2,
 					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
 					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
 					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
 					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
-					 20, 21, 21, 21, 21, 21,  7, 21, 21, 21, 21, 21, 22,
+					 20, 21, 21, 21, 21, 21,  6, 21, 21, 21, 21, 21, 22,
 					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
 					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
 					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
@@ -35,16 +47,27 @@ void MainScreen::Init() {
 
 	int ind = 0;
 	for ( int y = 0; y < 11; y ++ ) {
-		for ( int x = 0; x < 12; x ++ ) {
+		for ( int x = 0; x < 13; x ++ ) {
 			curChamber->GetTile( x, y )->imageAddr = chamberTileInd[ind];
 			if ( x == 0 || x == 11 || y == 0 || y == 10 ) {
 				curChamber->GetTile( x, y )->blocksOccupation = true;
 			}
 			ind++;
 		}
-	}
+	}*/
 
 	curChamber->GenerateFloorImage();
+
+    /*using namespace std;
+    using jsoncons::json;
+    using jsoncons::pretty_print;
+
+    jsoncons::json jobj = curChamber->GetJSON();
+
+    ofstream myfile;
+    myfile.open ("./saves/chamber.json");
+    myfile << pretty_print(jobj) << std::endl;
+    myfile.close();*/
 
 	/*player = new PlayerEntity();
 	player->tileX = 5;

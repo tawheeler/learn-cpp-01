@@ -13,6 +13,7 @@
 #include "TileEntity.h"
 
 using namespace MysticDave;
+using jsoncons::json;
 
 int Chamber::CHAMBER_TILE_WIDTH = 13;
 int Chamber::CHAMBER_TILE_HEIGHT = 11;
@@ -29,6 +30,29 @@ Chamber::Chamber( int chamberID ) {
 	floorImage = 0;
 
 	// TODO: make this not-hardcoded
+	texSheet = new TextureSheet( "./res/BackgroundTiles.gif", 64, 64 );
+}
+
+Chamber::Chamber( jsoncons::json jobj ) {
+
+    Chamber::chamberID = jobj["uid"].as_int();
+
+    tileWidth  = Chamber::chamberID = jobj["tileWidth"].as_int();
+	tileHeight = Chamber::chamberID = jobj["tileHeight"].as_int();
+	numTiles   = tileWidth * tileHeight;
+
+    tileArr = new Tile[numTiles];
+    floorImage = 0;
+
+    json jtileArr = jobj["tileArr"];
+    int i = 0;
+    for (auto it = jtileArr.begin_elements(); it != jtileArr.end_elements(); ++it)
+    {
+        tileArr[i] = it->as_int();
+        ++i;
+    }
+
+    // TODO: make this not-hardcoded
 	texSheet = new TextureSheet( "./res/BackgroundTiles.gif", 64, 64 );
 }
 
@@ -126,8 +150,6 @@ bool Chamber::IsInChamber_Pixel( float x, float y ) {
 }
 
 jsoncons::json Chamber::GetJSON() {
-
-    using jsoncons::json;
 
     json obj( json::an_object );
 

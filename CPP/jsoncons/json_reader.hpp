@@ -10,10 +10,10 @@
 #include <istream>
 #include <cstdlib>
 #include <stdexcept>
-#include "jsoncons/jsoncons_config.hpp"
-#include "jsoncons/json_char_traits.hpp"
-#include "jsoncons/json_listener.hpp"
-#include "jsoncons/error_handler.hpp"
+#include "jsoncons_config.hpp"
+#include "json_char_traits.hpp"
+#include "json_listener.hpp"
+#include "error_handler.hpp"
 
 namespace jsoncons {
 
