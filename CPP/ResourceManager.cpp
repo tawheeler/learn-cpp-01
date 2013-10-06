@@ -10,6 +10,7 @@
 */
 
 #include "ResourceManager.h"
+#include "LogManager.h"
 #include <assert.h>
 
 using namespace MysticDave;
@@ -54,9 +55,11 @@ ALLEGRO_BITMAP * ResourceManager::GetBitmap( const char * name ) {
 	   //element found;
 	   retval = mapIter->second;
 	} else { // not found load it
+        LogManager::GetInstance().Write( LogManager::LOG_APP, "Loading Bitmap %s...", name );
 		retval = al_load_bitmap( name );
 		bitmapList.push_back( retval );
 		bitmapMap[ str ] = retval;
+        LogManager::GetInstance().Write( LogManager::LOG_APP, " [DONE]\n" );
 	}
 	return retval;
 }

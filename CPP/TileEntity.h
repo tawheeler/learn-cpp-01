@@ -14,9 +14,8 @@
 #include "Entity.h"
 #include "Vec2i.h"
 #include "Visual.h"
-//#include "RuneSpace.h"
 #include "Motion.h"
-#include "Tile.h"
+#include <deque>
 #include <string>
 
 namespace MysticDave {
@@ -24,7 +23,8 @@ namespace MysticDave {
     public:
 
                                     TileEntity( std::string name, int uid );
-						            ~TileEntity();
+                                    TileEntity( jsoncons::json jobj );
+		                            ~TileEntity();
 
 	    bool				        BlocksOccupation();
         void                        SetBlocksOccupation( bool blocks );
@@ -52,8 +52,8 @@ namespace MysticDave {
 	    virtual void		        Cleanup();
         virtual void                Render( int x, int y );
 
-        virtual void                OnEntered( TileEntity * actor ) {}
-        virtual void                OnExited( TileEntity * actor ) {}
+        virtual void                OnEntered( TileEntity * actor ) {} // called when actor enteres the space this TE is in
+        virtual void                OnExited( TileEntity * actor ) {}  // called when actor leaves the space this TE is in
 
         virtual jsoncons::json      GetJSON();
 

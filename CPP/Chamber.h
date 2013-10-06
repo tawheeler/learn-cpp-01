@@ -14,7 +14,6 @@
 
 #include "Entity.h"
 #include "TileEntity.h"
-#include "Tile.h"
 #include "TextureSheet.h"
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
@@ -49,6 +48,7 @@ namespace MysticDave {
         bool                                    CanTileBeEntered( int x, int y );
 
 	    void									AddTileEntity( TileEntity * te );
+        void									AddTileEntity( TileEntity * te, int tileX, int tileY ); //place it at the given tile loc
         void                                    AddEntity( Entity * e );
 	
 	    int										GetTileWidth() const;

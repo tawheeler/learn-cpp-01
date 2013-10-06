@@ -10,12 +10,12 @@
 #include "ResourceManager.h"
 #include "LogManager.h"
 #include "Globals.h"
-#include "Tile.h"
 #include "Motion.h"
 #include "Utils.h"
 #include "TileBitmapVisual.h"
 #include "Entity.h"
 #include "jsoncons/json.hpp"
+#include "CampFire.h"
 
 using jsoncons::json;
 using namespace MysticDave;
@@ -29,12 +29,14 @@ void MainScreen::Init() {
     //json dude_obj = json::parse_file( "./saves/dude.json" );
     //Entity e = Entity( dude_obj );
 
-    json jobj = json::parse_file("./saves/chamber.json");
-    curChamber = new Chamber( jobj );
-
-    // add a chamber mananger that can import / export chambers
-
-    //curChamber = new Chamber(1);
+    curChamber = new Chamber( json::parse_file("./saves/chamber.json") );
+    
+    /*
+    curChamber->AddTileEntity( new CampFire( "campFire1", 2 ), 2, 2 );
+    curChamber->AddTileEntity( new CampFire( "campFire2", 3 ), 10, 2 );
+    curChamber->AddTileEntity( new CampFire( "campFire3", 4 ), 2, 8 );
+    curChamber->AddTileEntity( new CampFire( "campFire4", 5 ), 10, 8 );
+    */
 
 	/*
     int chamberTileInd[] = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2,
@@ -65,11 +67,11 @@ void MainScreen::Init() {
     using jsoncons::json;
     using jsoncons::pretty_print;
 
-    jsoncons::json jobj = curChamber->GetJSON();
+    jsoncons::json jobj_out = curChamber->GetJSON();
 
     ofstream myfile;
     myfile.open ("./saves/chamber.json");
-    myfile << pretty_print(jobj) << std::endl;
+    myfile << pretty_print(jobj_out) << std::endl;
     myfile.close();*/
 
 	/*player = new PlayerEntity();

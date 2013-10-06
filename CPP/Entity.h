@@ -29,7 +29,7 @@ namespace MysticDave {
 
 						                        Entity( std::string name, int uid );
                                                 Entity( jsoncons::json jobj );
-						                        ~Entity();
+		                                        ~Entity();
 
 	    std::string			                    GetName() { return name; }
         long                                    GetUID() { return uid; }

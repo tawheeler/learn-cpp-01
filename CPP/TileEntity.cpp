@@ -26,8 +26,20 @@ TileEntity::TileEntity( std::string name, int uid ) : Entity( name, uid ) {
 	visual = 0;
 }
 
+TileEntity::TileEntity( jsoncons::json jobj ) : Entity ( jobj ) {
+    renderZ = jobj["renderZ"].as_int();
+    sourceTileLoc = jobj["sourceTileLoc"].as_int();
+    blocksOccupation = jobj["blocksOccupation"].as_bool();
+    flammable = jobj["flammable"].as_bool();
+    int x = jobj["x"].as_int();
+    int y = jobj["y"].as_int();
+
+    pos = new Vec2i( x, y );
+    visual = 0;
+}
+
 TileEntity::~TileEntity() {
-	// do nothing
+    // do nothing
 }
 
 void TileEntity::Cleanup() {
@@ -156,6 +168,7 @@ jsoncons::json TileEntity::GetJSON() {
     jobj["flammable"] = flammable;
     jobj["x"] = pos->x;
     jobj["y"] = pos->y;
+    jobj["type"] = "TileEntitiy";
 
     return jobj;
 }

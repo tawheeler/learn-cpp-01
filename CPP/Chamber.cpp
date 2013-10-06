@@ -11,6 +11,7 @@
 #include "Globals.h"
 #include "Utils.h"
 #include "TileEntity.h"
+#include "CampFire.h"
 
 using jsoncons::json;
 using namespace MysticDave;
@@ -87,6 +88,24 @@ Chamber::Chamber( jsoncons::json jobj ) {
         tilePassableArr[i] = (*it).as_bool();
     }
 
+    // extract plain entities
+    json jEntities = jobj["entities"];
+    for ( auto it = jEntities.begin_elements(); it != jEntities.end_elements(); ++it ) {
+        entityList.push_back( new Entity(*it) );
+    }
+
+    // extract tile entities
+    json jTileEntities = jobj["tileEntities"];
+    for ( auto it = jTileEntities.begin_elements(); it != jTileEntities.end_elements(); ++it ) {
+
+        if ( (*it)["type"].as_string().compare( "TileEntity" ) == 0 ) {
+            AddTileEntity( new TileEntity( *it ) );
+        } else if ( (*it)["type"].as_string().compare( "CampFire" ) == 0 ) {
+            AddTileEntity( new CampFire( *it ) );
+        }
+        
+    }
+
     // TODO: make this not-hardcoded
 	texSheet = new TextureSheet( "./res/BackgroundTiles.gif", 64, 64 );
     GenerateFloorImage();
@@ -134,13 +153,18 @@ void Chamber::Render( int x, int y ) {
 }
 
 void Chamber::AddTileEntity( TileEntity * te ) {
-	/* TODO: this
     int tileX = UTIL::PixToGrid( te->GetPos()->x );
 	int tileY = UTIL::PixToGrid( te->GetPos()->y );
-	tileArr[tileX + tileY*tileWidth].tileEntity = te;
-	
+    tileEntityTileListArr[GetTileNumFromPos(tileX, tileY)].push_back( te );
 	tileEntityList.push_back( te );
-    */
+}
+
+void Chamber::AddTileEntity( TileEntity * te, int tileX, int tileY ) {
+    int pixX = UTIL::GridToPix( tileX );
+	int pixY = UTIL::GridToPix( tileY );
+    te->GetPos()->Set( pixX, pixY );
+    tileEntityTileListArr[GetTileNumFromPos(tileX, tileY)].push_back( te );
+	tileEntityList.push_back( te );
 }
 
 int Chamber::GetTileWidth() const {
@@ -224,7 +248,21 @@ jsoncons::json Chamber::GetJSON() {
     obj["tileImageAddrArr"] = tileImageAddrArrJSON;
     obj["tilePassableArr"] = tilePassableArrJSON;
 
-    // TODO: add array of tile entitiy list, and entity list
+    // Add list of plain entities
+    json entitiesJSON( json::an_array );
+    std::deque < Entity * >::iterator iterA;
+    for ( iterA = entityList.begin(); iterA != entityList.end(); ++iterA ) {
+        entitiesJSON.add( (*iterA)->GetJSON() );
+    }
+    obj["entities"] = entitiesJSON;
+
+    // Add list of tile entities
+    json tileEntitiesJSON( json::an_array );
+    std::deque < TileEntity * >::iterator iterB;
+    for ( iterB = tileEntityList.begin(); iterB != tileEntityList.end(); ++iterB ) {
+        tileEntitiesJSON.add( (*iterB)->GetJSON() );
+    }
+    obj["tileEntities"] = tileEntitiesJSON;
 
     return obj;
     
