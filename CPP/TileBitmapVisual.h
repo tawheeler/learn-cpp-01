@@ -23,7 +23,7 @@ namespace MysticDave {
 									    TileBitmapVisual( Vec2i * pos, ALLEGRO_BITMAP * bitmap );
 									    ~TileBitmapVisual();
 
-	    void							Render();
+	    virtual void					Render( int x, int y );
 
     };
 }

@@ -16,6 +16,7 @@
 #include <string>
 #include <map>
 #include <list>
+#include <set>
 #include "jsoncons/json.hpp"
 #include "Property.h"
 #include "Input.h"
@@ -26,7 +27,8 @@ namespace MysticDave {
     class Entity : public PropertySet {
     public:
 
-						                        Entity( std::string name, long uid );
+						                        Entity( std::string name, int uid );
+                                                Entity( jsoncons::json jobj );
 						                        ~Entity();
 
 	    std::string			                    GetName() { return name; }
@@ -35,20 +37,21 @@ namespace MysticDave {
 	    virtual void		                    Update();
 	    virtual void		                    Cleanup();
 
-        virtual void                            OnInput( Input * I ) {};
-
-        virtual bool                            ShouldBeRemoved() { return false; }
-
+        virtual void                            OnInput( Input * I );
         void                                    AddOutput( OutputStruct os );
 
-        virtual jsoncons::json  				GetJSON();
+        bool                                    ShouldBeRemoved() { return shouldBeRemoved; }
 
+        virtual jsoncons::json  				GetJSON();
+        
     protected:
 	    std::string								name;
         int                                     uid;
 
-	    std::map< std::string, Property >	              properties;
-        std::map< std::string, std::list<OutputStruct> >  outputs;
+        bool                                    shouldBeRemoved;
+
+        std::map< std::string, std::list<OutputStruct> >  outputMap;
+        std::set< std::string >                           inputs;
 	
     };
 }

@@ -42,13 +42,13 @@ bool Motion::IsDone() {
 }
 
 int Motion::GetPixelX() {
-	float u = ((float)totalMotionTime - (float) motionTick) / totalMotionTime;
-    int retval = (int) UTIL::Lerp( u, startX, destX );
+	float u = ((float)(totalMotionTime - motionTick)) / totalMotionTime;
+    int retval = (int) UTIL::Lerp( u, (float)startX, (float)destX );
     return retval;
 }
 
 int Motion::GetPixelY() {
-	float u = ((float)totalMotionTime - (float) motionTick) / totalMotionTime;
-    int retval = (int) UTIL::Lerp( u, startY, destY );
+	float u = ((float)(totalMotionTime - motionTick)) / totalMotionTime;
+    int retval = (int) UTIL::Lerp( u, (float)startY, (float)destY );
     return retval;
 }

@@ -22,8 +22,8 @@ namespace MysticDave {
 						    AnimationVisual( Vec2i * pos, ALLEGRO_BITMAP * bitmap );
 						    ~AnimationVisual();
 
-	    void				Cleanup();
-	    void				Render();
+	    virtual void		Cleanup();
+	    virtual void		Render( int x, int y );
 
 	    void				PlayAnimation( Animation * anim );
 	    void				SetBitmap( ALLEGRO_BITMAP * bitmap );

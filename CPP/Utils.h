@@ -11,6 +11,10 @@
 #pragma once
 
 #include "Globals.h"
+#include <iostream>
+#include <fstream>
+#include "jsoncons/json.hpp"
+#include <string>
 
 namespace UTIL {
 
@@ -99,4 +103,15 @@ namespace UTIL {
 		}
 		return retval;
 	}
+
+    static void WriteJSONToFile( jsoncons::json jobj, std::string file ) {
+        using namespace std;
+        using jsoncons::json;
+        using jsoncons::pretty_print;
+
+        ofstream myfile;
+        myfile.open( file );
+        myfile << pretty_print(jobj) << std::endl;
+        myfile.close();
+    }
 };

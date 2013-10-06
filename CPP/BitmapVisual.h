@@ -23,8 +23,8 @@ namespace MysticDave {
 									    BitmapVisual( Vec2i * pos, ALLEGRO_BITMAP * bitmap );
 									    ~BitmapVisual();
 
-	    void							Cleanup();
-	    void							Render();
+	    virtual void				    Cleanup();
+	    virtual void					Render( int x, int y );
 
     protected:
 

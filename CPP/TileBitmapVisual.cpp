@@ -22,6 +22,6 @@ TileBitmapVisual::~TileBitmapVisual() {
 	BitmapVisual::~BitmapVisual();
 }
 
-void TileBitmapVisual::Render() {
-	al_draw_bitmap( bitmap, pos->x, pos->y, 0 );
+void TileBitmapVisual::Render( int x, int y ) {
+	al_draw_bitmap( bitmap, pos->x - x, pos->y - y, 0 );
 }

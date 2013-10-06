@@ -15,6 +15,7 @@
 #pragma once
 
 #include <deque>
+#include "jsoncons/json.hpp"
 
 namespace MysticDave {
     class TileEntity;
@@ -22,17 +23,24 @@ namespace MysticDave {
     class Tile {
 
     public:
-
-	    bool									blocksOccupation;  // whether this tile can contain TileEntities that move around (walls do not, floors do, for instance)
-	    int										imageAddr;         // determines which image in the sprite sheet to use								
-
 											    Tile();
-											    Tile( char imageAddr );
+											    Tile( int imageAddr );
+                                                Tile( jsoncons::json jobj );
 											    ~Tile();
 
+        bool                                    BlocksOccupation();
+        void                                    SetBlocksOccupation( bool b );
+        int                                     GetImageAddr();
+        void                                    SetImageAddr( int i );
 	    bool									IsOccupied(); // whether this tile can be moved in to or not
 
-        std::deque < TileEntity * >             tileEntityList; // the tile within this spot, if there is one
+        jsoncons::json                          GetJSON();
+
+    private:
+        bool									blocksOccupation;  // whether this tile can contain TileEntities that move around (walls do not, floors do, for instance)
+	    int										imageAddr;         // determines which image in the sprite sheet to use								
+
+        std::deque < TileEntity * >             tileEntityList; // the tile entities within this spot, if there are any
 
     };
 }

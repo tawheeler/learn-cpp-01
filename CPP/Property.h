@@ -14,7 +14,6 @@
 #pragma once
 
 #include <string>
-#include "HashTable.h"
 #include "assert.h"
 
 namespace MysticDave {
@@ -28,6 +27,7 @@ namespace MysticDave {
 		    bool* m_bool;
 	    };
 
+    public:
 	    enum Type {
 		    INT,
 		    FLOAT,
@@ -152,6 +152,10 @@ namespace MysticDave {
 
 	    // generic return...
 	    std::string GetValue();
+
+        bool IsOfType( Type t ) {
+            return m_type == t;
+        }
 
     };
 }

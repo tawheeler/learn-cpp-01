@@ -12,7 +12,7 @@
 */
 
 #include "PropertySet.h"
-#include "HashTable.h"
+#include "assert.h"
 
 using namespace MysticDave;
 
@@ -22,26 +22,28 @@ PropertySet::~PropertySet() {}
 
 void PropertySet::Register(std::string const& name, int* value) {
 	Property* new_property = new Property(name,value);
-	m_properties.Insert(name,new_property);
+	m_properties[name] = new_property;
 }
 
 void PropertySet::Register(std::string const& name, float* value) {
 	Property* new_property = new Property(name,value);
-	m_properties.Insert(name,new_property);
+	m_properties[name] = new_property;
 }
 
 void PropertySet::Register(std::string const& name, std::string* value) {
 	Property* new_property = new Property(name,value);
-	m_properties.Insert(name,new_property);
+	m_properties[name] = new_property;
 }
 
 void PropertySet::Register(std::string const& name, bool* value) {
 	Property* new_property = new Property(name,value);
-	m_properties.Insert(name,new_property);
+    m_properties[name] = new_property;
 }
 
 Property* PropertySet::Lookup(std::string const& name) {
-	return m_properties.Lookup(name);
+    std::map< std::string, Property *>::iterator pos = m_properties.find(name);
+    assert(pos != m_properties.end());
+    return pos->second;
 }
 
 bool PropertySet::SetValue(std::string const& name, std::string const& value) {
@@ -113,7 +115,11 @@ bool PropertySet::Set(std::string const& name, char* value) {
 }
 
 std::list< std::string > PropertySet::GetKeys() {
-    return m_properties.GetKeys();
+    std::list< std::string > retval;
+    for ( std::map< std::string, Property * >::iterator iter = m_properties.begin(); iter != m_properties.end(); ++iter) {
+      retval.push_back( iter->first );
+    }
+    return retval;
 }
 
 

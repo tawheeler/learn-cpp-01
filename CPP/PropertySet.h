@@ -14,7 +14,8 @@
 #pragma once
 
 #include <string>
-#include "HashTable.h"
+#include <map>
+#include <list>
 #include "Property.h"
 #include "assert.h"
 
@@ -24,7 +25,7 @@ namespace MysticDave {
 
 	    //----- Properties -----//
     protected:
-	    HashTable<Property>	m_properties;
+	    std::map< std::string, Property * >	m_properties;
 
 	    //----- Methods -----//
     private:
@@ -35,10 +36,6 @@ namespace MysticDave {
 
     public:
 	    PropertySet();
-	    PropertySet(const PropertySet& source)
-	    {
-		    Copy(source);
-	    }
 
 	    ~PropertySet();
 

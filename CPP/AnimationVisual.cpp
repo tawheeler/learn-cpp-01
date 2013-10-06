@@ -35,7 +35,7 @@ void AnimationVisual::Cleanup() {
 	animation = 0; // someone else will delete the animation
 }
 
-void AnimationVisual::Render() {
+void AnimationVisual::Render( int x, int y ) {
 
 	bool renderAnim = false;
 	if ( animation != 0 ) {
@@ -54,9 +54,9 @@ void AnimationVisual::Render() {
 	}
 
 	if ( renderAnim ) {
-		animation->tex->RenderTexture( animation->frameIDs[frameIndex], pos->x, pos->y );
+		animation->tex->RenderTexture( animation->frameIDs[frameIndex], pos->x - x, pos->y - y );
 	} else {
-		al_draw_bitmap( bitmap, pos->x, pos->y, 0 );
+		al_draw_bitmap( bitmap, pos->x - x, pos->y - y, 0 );
 	}
 }
 

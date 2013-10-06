@@ -12,8 +12,8 @@
 #include "Utils.h"
 #include "TileEntity.h"
 
-using namespace MysticDave;
 using jsoncons::json;
+using namespace MysticDave;
 
 int Chamber::CHAMBER_TILE_WIDTH = 13;
 int Chamber::CHAMBER_TILE_HEIGHT = 11;
@@ -25,12 +25,38 @@ Chamber::Chamber( int chamberID ) {
 	tileHeight = CHAMBER_TILE_HEIGHT;
 	numTiles   = tileWidth * tileHeight;
 
-	tileArr = new Tile[numTiles];
+    tileImageAddrArr = new int[numTiles];
+    tilePassableArr = new bool[numTiles];
+    tileEntityTileListArr = new std::deque < TileEntity * >[numTiles];
+
+    int chamberTileInd[] = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2,
+					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
+					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
+					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
+					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
+					 20, 21, 21, 21, 21, 21,  6, 21, 21, 21, 21, 21, 22,
+					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
+					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
+					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
+					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
+					 40, 41, 41, 41, 41, 41, 41, 41, 41, 41, 41, 41, 42 };
+
+	int ind = 0;
+	for ( int y = 0; y < 11; y ++ ) {
+		for ( int x = 0; x < 13; x ++ ) {
+			tileImageAddrArr[ind] = chamberTileInd[ind];
+			if ( x == 0 || x == 11 || y == 0 || y == 10 ) {
+				tilePassableArr[ind] = false;
+			}
+			ind++;
+		}
+	}
 
 	floorImage = 0;
 
 	// TODO: make this not-hardcoded
 	texSheet = new TextureSheet( "./res/BackgroundTiles.gif", 64, 64 );
+    GenerateFloorImage();
 }
 
 Chamber::Chamber( jsoncons::json jobj ) {
@@ -41,23 +67,35 @@ Chamber::Chamber( jsoncons::json jobj ) {
 	tileHeight = Chamber::chamberID = jobj["tileHeight"].as_int();
 	numTiles   = tileWidth * tileHeight;
 
-    tileArr = new Tile[numTiles];
+    //tileArr = new Tile[numTiles];
+    tileImageAddrArr = new int[numTiles];
+    tilePassableArr = new bool[numTiles];
+    tileEntityTileListArr = new std::deque < TileEntity * >[numTiles];
+
     floorImage = 0;
 
-    json jtileArr = jobj["tileArr"];
     int i = 0;
-    for (auto it = jtileArr.begin_elements(); it != jtileArr.end_elements(); ++it)
-    {
-        tileArr[i] = it->as_int();
+    json tileImageAddrArrJSON = jobj["tileImageAddrArr"];
+    for ( auto it = tileImageAddrArrJSON.begin_elements(); it != tileImageAddrArrJSON.end_elements(); ++it ) {
+        tileImageAddrArr[i] = (*it).as_int();
         ++i;
+    }
+
+    i = 0;
+    json tilePassableArrJSON = jobj["tilePassableArr"];
+    for ( auto it = tilePassableArrJSON.begin_elements(); it != tilePassableArrJSON.end_elements(); ++it ) {
+        tilePassableArr[i] = (*it).as_bool();
     }
 
     // TODO: make this not-hardcoded
 	texSheet = new TextureSheet( "./res/BackgroundTiles.gif", 64, 64 );
+    GenerateFloorImage();
 }
 
 Chamber::~Chamber() {
-	delete[] tileArr;
+    delete[] tileImageAddrArr;
+    delete[] tilePassableArr;
+    delete[] tileEntityTileListArr;  //okay to delete this; tile entities are appropriately deleted below
 	
 	if ( floorImage != 0 ) {
 		al_destroy_bitmap( floorImage );
@@ -72,6 +110,10 @@ Chamber::~Chamber() {
 		iter = tileEntityList.erase(iter);
 	}
 }
+
+void Chamber::Cleanup() {
+    // TODO: this
+}
 	
 void Chamber::Update() {
     std::deque < TileEntity * >::iterator iter;
@@ -80,13 +122,13 @@ void Chamber::Update() {
 	}
 }
 
-void Chamber::Render() {
+void Chamber::Render( int x, int y ) {
 	al_draw_bitmap( GetFloorImage(), 0, 0, 0 );
 
     std::deque < TileEntity * >::iterator iter;
 	for ( iter = tileEntityList.begin(); iter != tileEntityList.end(); ++iter ) {
 		if ( (*iter)->GetVisual() != 0 ) {
-			(*iter)->GetVisual()->Render();
+			(*iter)->GetVisual()->Render( x, y );
 		}
 	}
 }
@@ -99,10 +141,6 @@ void Chamber::AddTileEntity( TileEntity * te ) {
 	
 	tileEntityList.push_back( te );
     */
-}
-
-Tile * Chamber::GetTile( int x, int y ) {
-	return &(tileArr[x + y*tileWidth]);
 }
 
 int Chamber::GetTileWidth() const {
@@ -131,7 +169,8 @@ void Chamber::GenerateFloorImage() {
 	int ind = 0;
 	for ( int y = 0; y < tileHeight; y ++ ) {
 		for ( int x = 0; x < tileWidth; x ++ ) {
-			texSheet->RenderTexture( (&(tileArr[ind]))->imageAddr, x*TILE_DIM, y*TILE_DIM );
+            texSheet->RenderTexture( tileImageAddrArr[ind], x*TILE_DIM, y*TILE_DIM );
+			//texSheet->RenderTexture( (&(tileArr[ind]))->GetImageAddr(), x*TILE_DIM, y*TILE_DIM );
 			ind ++;
 		}
 	}
@@ -149,6 +188,25 @@ bool Chamber::IsInChamber_Pixel( float x, float y ) {
 	return ( x >= 0 && x < tileWidth*TILE_DIM && y >= 0 && y < tileHeight*TILE_DIM );
 }
 
+bool Chamber::CanTileBeEntered( int x, int y ) {
+    bool retval = false;
+    if ( !IsInChamber_Tile( x, y ) && tilePassableArr[GetTileNumFromPos(x,y)] ) {
+        retval = true;
+
+        //check associated list of tile entities for blocking
+        retval = true;
+        std::deque < TileEntity * > list = tileEntityTileListArr[GetTileNumFromPos(x,y)];
+        std::deque < TileEntity * >::iterator iter;
+	    for ( iter = list.begin(); iter != list.end(); ++iter ) {
+            if ( (*iter)->BlocksOccupation() ) {
+                retval = false;
+                break;
+            }
+        }
+    }
+    return retval;
+}
+
 jsoncons::json Chamber::GetJSON() {
 
     json obj( json::an_object );
@@ -157,12 +215,16 @@ jsoncons::json Chamber::GetJSON() {
     obj["tileWidth"] = tileWidth;
     obj["tileHeight"] = tileHeight;
 
-    json jtileArr( json::an_array );
-    for ( int i = 0; i < numTiles; ++i ) {
-        jtileArr.add( tileArr[i].imageAddr );
+    json tileImageAddrArrJSON( json::an_array );
+    json tilePassableArrJSON( json::an_array );
+    for ( int i = 0; i < numTiles;  ++i ) {
+        tileImageAddrArrJSON.add( tileImageAddrArr[i] );
+        tilePassableArrJSON.add( tilePassableArr[i] );
     }
+    obj["tileImageAddrArr"] = tileImageAddrArrJSON;
+    obj["tilePassableArr"] = tilePassableArrJSON;
 
-    obj["tileArr"] = jtileArr;
+    // TODO: add array of tile entitiy list, and entity list
 
     return obj;
     

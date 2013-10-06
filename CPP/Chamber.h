@@ -37,8 +37,9 @@ namespace MysticDave {
                                                 Chamber( jsoncons::json jobj );
 											    ~Chamber();
 
+        void                                    Cleanup();
 	    void									Update();
-	    void									Render();
+	    void									Render( int x, int y );
 
         void									GenerateFloorImage();
 
@@ -50,30 +51,35 @@ namespace MysticDave {
 	    void									AddTileEntity( TileEntity * te );
         void                                    AddEntity( Entity * e );
 	
-	    Tile *									GetTile( int x, int y );
 	    int										GetTileWidth() const;
 	    int										GetTileHeight() const;
 	    ALLEGRO_BITMAP *						GetFloorImage() const;
 
         jsoncons::json                          GetJSON();
 
+        static int GetTileNumFromPos( int x, int y ) { return x + y * CHAMBER_TILE_WIDTH; };
+
     private:
 
         int	      								chamberID; // a unique chamber identifier
 
-	    Tile *									tileArr;     // array of tiles
+	    //Tile *									tileArr;     // array of tiles
 	    int										numTiles;    // how many tiles we have
 	    int										tileWidth;   // how many tiles wide the chamber is
 	    int										tileHeight;  // how many tiles high the chamber is
 
+        int *                                   tileImageAddrArr;  // array of image addresses for the chamber
+        bool *                                  tilePassableArr; // array of tile impassability (if true, tile is fundamentally passable)
+
 	    ALLEGRO_BITMAP *						floorImage;  // image created by tile base images
 	    TextureSheet *							texSheet;    // texture sheet for the tiles
 
-	    std::deque < TileEntity * >				tileEntityList;
+	    std::deque < TileEntity * >				tileEntityList; // list of all tile entities in the chamber
         
-        std::map< std::string, Entity * >       entityStringMap;
-        std::map< long,        Entity * >       entityUIDMap;
-        std::deque< Entity * >                  entityList;
+        std::deque < TileEntity * > *           tileEntityTileListArr; // array of tile entity lists for the tiles
+        
+        std::map< long,        Entity * >       entityUIDMap;     // maps UIDs to any entity in chamber (including Tile Entities)
+        std::deque< Entity * >                  entityList;       // list of all plain entities (ie, does not include Tile Entities)
 
     };
 }

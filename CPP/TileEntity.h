@@ -23,7 +23,7 @@ namespace MysticDave {
     class TileEntity : public Entity {
     public:
 
-                                    TileEntity( std::string name, long uid );
+                                    TileEntity( std::string name, int uid );
 						            ~TileEntity();
 
 	    bool				        BlocksOccupation();
@@ -68,7 +68,5 @@ namespace MysticDave {
         Vec2i *                     pos;  // position in pixel space
         Visual*				        visual;
 	    std::deque < Motion * >		motionQueue;
-	    
-	
     };
 }

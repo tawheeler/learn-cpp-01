@@ -29,6 +29,6 @@ void BitmapVisual::Cleanup() {
 	pos = 0;    // someone else will delete pos
 }
 
-void BitmapVisual::Render() {
-	al_draw_bitmap( bitmap, pos->x - halfWidth, pos->y - halfHeight, 0 );
+void BitmapVisual::Render( int x, int y ) {
+	al_draw_bitmap( bitmap, pos->x - halfWidth - x, pos->y - halfHeight - y, 0 );
 }

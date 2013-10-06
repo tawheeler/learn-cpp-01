@@ -17,6 +17,6 @@ namespace MysticDave {
 						    Visual();
 						    ~Visual();
 	    virtual void		Cleanup() = 0;
-	    virtual void		Render() = 0;
+	    virtual void		Render( int x, int y ) = 0;  // render, where (x,y) = (0,0) renders appropriates for the chamber being appropraitely placed on the screen
     };
 }

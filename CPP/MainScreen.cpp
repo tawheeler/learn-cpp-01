@@ -14,26 +14,30 @@
 #include "Motion.h"
 #include "Utils.h"
 #include "TileBitmapVisual.h"
-
-#include <iostream>
-#include <fstream>
+#include "Entity.h"
 #include "jsoncons/json.hpp"
 
+using jsoncons::json;
 using namespace MysticDave;
 
 void MainScreen::Init() {
 	keys[UP] = keys[DOWN] = keys[LEFT] = keys[RIGHT] = keys[SPACE] = false;
 	
-    using jsoncons::json;
+    //Entity e = Entity("dude", 101);
+    //UTIL::WriteJSONToFile( e.GetJSON(), "./saves/dude.json" );
+
+    //json dude_obj = json::parse_file( "./saves/dude.json" );
+    //Entity e = Entity( dude_obj );
 
     json jobj = json::parse_file("./saves/chamber.json");
     curChamber = new Chamber( jobj );
 
     // add a chamber mananger that can import / export chambers
 
-    /*curChamber = new Chamber(1);
+    //curChamber = new Chamber(1);
 
-	int chamberTileInd[] = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2,
+	/*
+    int chamberTileInd[] = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2,
 					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
 					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
 					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
@@ -48,15 +52,14 @@ void MainScreen::Init() {
 	int ind = 0;
 	for ( int y = 0; y < 11; y ++ ) {
 		for ( int x = 0; x < 13; x ++ ) {
-			curChamber->GetTile( x, y )->imageAddr = chamberTileInd[ind];
+			curChamber->GetTile( x, y )->SetImageAddr(chamberTileInd[ind]);
 			if ( x == 0 || x == 11 || y == 0 || y == 10 ) {
-				curChamber->GetTile( x, y )->blocksOccupation = true;
+				curChamber->GetTile( x, y )->SetBlocksOccupation(true);
 			}
 			ind++;
 		}
-	}*/
-
-	curChamber->GenerateFloorImage();
+	}
+    */
 
     /*using namespace std;
     using jsoncons::json;
@@ -174,6 +177,7 @@ void MainScreen::Update() {
 }
 
 void MainScreen::Render() const {
-	curChamber->Render();
+    // TODO: add camera
+	curChamber->Render( 0, 0 );
 	//player->visual->Render();
 }

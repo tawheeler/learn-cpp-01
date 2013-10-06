@@ -12,9 +12,10 @@
 #include "TileEntity.h"
 #include "Utils.h"
 
+using jsoncons::json;
 using namespace MysticDave;
 
-TileEntity::TileEntity( std::string name, long uid ) : Entity( name, uid ) {
+TileEntity::TileEntity( std::string name, int uid ) : Entity( name, uid ) {
     renderZ = 1;
     sourceTileLoc = -1;
 
@@ -107,9 +108,8 @@ void TileEntity::Update() {
 }
 
 void TileEntity::Render( int x, int y ) {
-    //TODO: change visual render to Render(x,y)
     if ( visual != 0 ) {
-        visual->Render();
+        visual->Render( x, y );
     }
 }
 
@@ -147,5 +147,15 @@ bool TileEntity::IsInMotion() {
 }
 
 jsoncons::json TileEntity::GetJSON() {
-    return Entity::GetJSON();
+
+    json jobj = Entity::GetJSON();
+
+    jobj["renderZ"] = renderZ;
+    jobj["sourceTileLoc"] = sourceTileLoc;
+    jobj["blocksOccupation"] = blocksOccupation;
+    jobj["flammable"] = flammable;
+    jobj["x"] = pos->x;
+    jobj["y"] = pos->y;
+
+    return jobj;
 }
