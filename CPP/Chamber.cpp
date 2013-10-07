@@ -48,7 +48,9 @@ Chamber::Chamber( int chamberID ) {
 			tileImageAddrArr[ind] = chamberTileInd[ind];
 			if ( x == 0 || x == 12 || y == 0 || y == 10 ) {
 				tilePassableArr[ind] = false;
-			}
+			} else {
+                tilePassableArr[ind] = true;
+            }
 			ind++;
 		}
 	}

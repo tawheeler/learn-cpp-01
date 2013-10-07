@@ -51,7 +51,7 @@ void MainScreen::Init() {
     curChamber->AddTileEntity( cf4 );
     curChamber->RegisterTileEntityInTile( cf4, 10, 8 );
 
-    using namespace std;
+    /*using namespace std;
     using jsoncons::json;
     using jsoncons::pretty_print;
 
@@ -60,7 +60,7 @@ void MainScreen::Init() {
     ofstream myfile;
     myfile.open ("./saves/chamber.json");
     myfile << pretty_print(jobj_out) << std::endl;
-    myfile.close();
+    myfile.close(); */
 
     player = new PlayerEntity();
     player->SetPosTile( 6, 4 );
@@ -125,10 +125,10 @@ void MainScreen::Update() {
                     //curChamber->AddTileEntityToTile( player, curx + dx, cury + dy );
                     player->MoveDir( desDir, Chamber::GetTileNumFromPos( curx + dx, cury + dy ), 24 );
                     switch ( desDir ) {
-                    case ( UTIL::DIR_NORTH ): player->PlayAnimation( "walkNorth" ); break;
-                    case ( UTIL::DIR_EAST ):  player->PlayAnimation( "walkEast" );  break;
-                    case ( UTIL::DIR_SOUTH ): player->PlayAnimation( "walkSouth" ); break;
-                    case ( UTIL::DIR_WEST ):  player->PlayAnimation( "walkWest" );  break;
+                        case ( UTIL::DIR_NORTH ): player->PlayAnimation( "walkNorth" ); break;
+                        case ( UTIL::DIR_EAST ):  player->PlayAnimation( "walkEast" );  break;
+                        case ( UTIL::DIR_SOUTH ): player->PlayAnimation( "walkSouth" ); break;
+                        case ( UTIL::DIR_WEST ):  player->PlayAnimation( "walkWest" );  break;
                     }
                 }
 				/*
