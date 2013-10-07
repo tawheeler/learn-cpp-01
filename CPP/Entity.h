@@ -46,12 +46,15 @@ namespace MysticDave {
         
     protected:
 	    std::string								name;
+        std::string                             type;
         int                                     uid;
 
         bool                                    shouldBeRemoved;
 
         std::map< std::string, std::list<OutputStruct> >  outputMap;
         std::set< std::string >                           inputs;
+
+        void                                   Init();
 	
     };
 }

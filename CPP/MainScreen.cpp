@@ -16,54 +16,42 @@
 #include "Entity.h"
 #include "jsoncons/json.hpp"
 #include "CampFire.h"
+#include "PlayerEntity.h"
 
 using jsoncons::json;
 using namespace MysticDave;
 
 void MainScreen::Init() {
 	keys[UP] = keys[DOWN] = keys[LEFT] = keys[RIGHT] = keys[SPACE] = false;
-	
+
     //Entity e = Entity("dude", 101);
     //UTIL::WriteJSONToFile( e.GetJSON(), "./saves/dude.json" );
 
     //json dude_obj = json::parse_file( "./saves/dude.json" );
     //Entity e = Entity( dude_obj );
 
-    curChamber = new Chamber( json::parse_file("./saves/chamber.json") );
+    //curChamber = new Chamber( json::parse_file("./saves/chamber.json") );
     
-    /*
-    curChamber->AddTileEntity( new CampFire( "campFire1", 2 ), 2, 2 );
-    curChamber->AddTileEntity( new CampFire( "campFire2", 3 ), 10, 2 );
-    curChamber->AddTileEntity( new CampFire( "campFire3", 4 ), 2, 8 );
-    curChamber->AddTileEntity( new CampFire( "campFire4", 5 ), 10, 8 );
-    */
+    curChamber = new Chamber(1);
 
-	/*
-    int chamberTileInd[] = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2,
-					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
-					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
-					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
-					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
-					 20, 21, 21, 21, 21, 21,  6, 21, 21, 21, 21, 21, 22,
-					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
-					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
-					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
-					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
-					 40, 41, 41, 41, 41, 41, 41, 41, 41, 41, 41, 41, 42 };
+    CampFire * cf1 = new CampFire( "campFire1", 2 );
+    CampFire * cf2 = new CampFire( "campFire2", 3 );
+    CampFire * cf3 = new CampFire( "campFire2", 3 );
+    CampFire * cf4 = new CampFire( "campFire2", 3 );
+    cf1->SetPosTile( 2, 2 );
+    curChamber->AddTileEntity( cf1 );
+    curChamber->RegisterTileEntityInTile( cf1, 2, 2 );
+    cf2->SetPosTile( 10, 2 );
+    curChamber->AddTileEntity( cf2 );
+    curChamber->RegisterTileEntityInTile( cf2, 10, 2 );
+    cf3->SetPosTile( 2, 8 );
+    curChamber->AddTileEntity( cf3 );
+    curChamber->RegisterTileEntityInTile( cf3, 2, 8 );
+    cf4->SetPosTile( 10, 8 );
+    curChamber->AddTileEntity( cf4 );
+    curChamber->RegisterTileEntityInTile( cf4, 10, 8 );
 
-	int ind = 0;
-	for ( int y = 0; y < 11; y ++ ) {
-		for ( int x = 0; x < 13; x ++ ) {
-			curChamber->GetTile( x, y )->SetImageAddr(chamberTileInd[ind]);
-			if ( x == 0 || x == 11 || y == 0 || y == 10 ) {
-				curChamber->GetTile( x, y )->SetBlocksOccupation(true);
-			}
-			ind++;
-		}
-	}
-    */
-
-    /*using namespace std;
+    using namespace std;
     using jsoncons::json;
     using jsoncons::pretty_print;
 
@@ -72,33 +60,16 @@ void MainScreen::Init() {
     ofstream myfile;
     myfile.open ("./saves/chamber.json");
     myfile << pretty_print(jobj_out) << std::endl;
-    myfile.close();*/
+    myfile.close();
 
-	/*player = new PlayerEntity();
-	player->tileX = 5;
-	player->tileY = 4;
-	player->SetPixPosToMatchTilePos();
-
-	TileEntity * block = new TileEntity( Entity::TYPE_BLOCK );
-	block->visual = new TileBitmapVisual( block->pos, (ResourceManager::GetInstance()).GetBitmap("./res/Pot.png") );
-	block->tileX = 6;
-	block->tileY = 6;
-	block->SetPixPosToMatchTilePos();
-	curChamber->AddTileEntity( block );
-
-	block = new TileEntity( Entity::TYPE_BLOCK );
-	block->visual = new TileBitmapVisual( block->pos, (ResourceManager::GetInstance()).GetBitmap("./res/Pot.png") );
-	block->tileX = 7;
-	block->tileY = 6;
-	block->SetPixPosToMatchTilePos();
-	curChamber->AddTileEntity( block );*/
-
+    player = new PlayerEntity();
+    player->SetPosTile( 6, 4 );
 }
 
 void MainScreen::Cleanup() {
 	delete curChamber;
-	//player->Cleanup();
-	//delete player;
+	player->Cleanup();
+	delete player;
 }
 
 void MainScreen::HandleEvent( ALLEGRO_EVENT evt ) {
@@ -123,11 +94,11 @@ void MainScreen::HandleEvent( ALLEGRO_EVENT evt ) {
 
 void MainScreen::Update() {
 
-	/*if ( player != 0 ) {
+	if ( player != 0 ) {
 
 		int numDirsPressed = (keys[DOWN] ? 1 : 0) + (keys[UP] ? 1 : 0) + (keys[LEFT] ? 1 : 0) + (keys[RIGHT] ? 1 : 0);
 
-		if ( numDirsPressed == 1 && !(player->IsInMotion()) ) {
+        if ( numDirsPressed == 1 && !(player->IsInMotion()) ) {
 
 
 			int dx = 0;
@@ -146,33 +117,39 @@ void MainScreen::Update() {
 			if ( player->GetDir() != desDir ) {
 				player->SetDir( desDir );
 			} else {
-				int tx = player->tileX;
-				int ty = player->tileY;
-				if ( curChamber->IsInChamber( tx + dx, ty + dy ) ) {
-					// check if target is free
-					Tile * targetTile = curChamber->GetTile( tx + dx, ty + dy );
-					if ( !(targetTile->IsOccupied()) ) { // if free
-						targetTile->tileEntity = player;  // add to next
-						player->Move( desDir, curChamber->GetTile( tx, ty ) );
-					} else if ( targetTile->tileEntity != 0 && targetTile->tileEntity->type == Entity::TYPE_BLOCK ) {
-						// we are pushing a block
-						Tile * farTargetTile = curChamber->GetTile( tx + 2*dx, ty + 2*dy );
-						TileEntity * block = targetTile->tileEntity;
-						if ( !farTargetTile->IsOccupied() ) { // if free
-							targetTile->tileEntity = player;  // add to next
-							player->PushMove( desDir, curChamber->GetTile( tx, ty ) );
-							farTargetTile->tileEntity = block; // move it
-							block->Move( desDir, 0 );
-						}
+                int curx = player->GetClosestTileX();
+                int cury = player->GetClosestTileY();
 
+				// check if target is free
+                if ( curChamber->CanTileBeEntered( curx + dx, cury + dy ) ) {
+                    //curChamber->AddTileEntityToTile( player, curx + dx, cury + dy );
+                    player->MoveDir( desDir, Chamber::GetTileNumFromPos( curx + dx, cury + dy ), 24 );
+                }
+				/*
+                Tile * targetTile = curChamber->GetTile( tx + dx, ty + dy );
+				if ( !(targetTile->IsOccupied()) ) { // if free
+					targetTile->tileEntity = player;  // add to next
+					player->Move( desDir, curChamber->GetTile( tx, ty ) );
+				} 
+                */
+                /*else if ( targetTile->tileEntity != 0 && targetTile->tileEntity->type == Entity::TYPE_BLOCK ) {
+					// we are pushing a block
+					Tile * farTargetTile = curChamber->GetTile( tx + 2*dx, ty + 2*dy );
+					TileEntity * block = targetTile->tileEntity;
+					if ( !farTargetTile->IsOccupied() ) { // if free
+						targetTile->tileEntity = player;  // add to next
+						player->PushMove( desDir, curChamber->GetTile( tx, ty ) );
+						farTargetTile->tileEntity = block; // move it
+						block->Move( desDir, 0 );
 					}
-				}
+
+				}*/
 			}
 
 		}
 
 		player->Update();
-	}*/
+	}
 
 	curChamber->Update();
 
@@ -181,5 +158,5 @@ void MainScreen::Update() {
 void MainScreen::Render() const {
     // TODO: add camera
 	curChamber->Render( 0, 0 );
-	//player->visual->Render();
+	player->GetVisual()->Render( 0, 0 );
 }

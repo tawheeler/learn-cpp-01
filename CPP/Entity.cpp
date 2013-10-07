@@ -19,13 +19,12 @@ using namespace MysticDave;
 Entity::Entity( std::string name, int uid ) {
 	Entity::name = name;
     Entity::uid  = uid;
-    shouldBeRemoved = false;
+    Init();
 }
 
 Entity::Entity( jsoncons::json jobj ) {
     Entity::name = std::string(jobj["name"].as_string().c_str());
     Entity::uid  = jobj["uid"].as_int();
-    shouldBeRemoved = false;
 
     json jPropertiesArr = jobj["properties"];
     for (auto it = jPropertiesArr.begin_members(); it != jPropertiesArr.end_members(); ++it) {
@@ -43,10 +42,17 @@ Entity::Entity( jsoncons::json jobj ) {
             Register( std::string(it->first.c_str()), &i );
         }
     }
+
+    Init();
 }
 
 Entity::~Entity() {
 	// do nothing
+}
+
+void Entity::Init() {
+    shouldBeRemoved = false;
+    type = "Entity";
 }
 
 void Entity::Update() {
@@ -99,6 +105,7 @@ jsoncons::json Entity::GetJSON() {
 
     json obj(json::an_object);
     obj["name"] = name;
+    obj["type"] = type;
     obj["uid"]  = uid;
     
     // add the properties

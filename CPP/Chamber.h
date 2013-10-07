@@ -47,9 +47,10 @@ namespace MysticDave {
 
         bool                                    CanTileBeEntered( int x, int y );
 
-	    void									AddTileEntity( TileEntity * te );
-        void									AddTileEntity( TileEntity * te, int tileX, int tileY ); //place it at the given tile loc
         void                                    AddEntity( Entity * e );
+	    void									AddTileEntity( TileEntity * te );
+        void									RegisterTileEntityInTile( TileEntity * te, int tileX, int tileY ); //place it at the given tile loc
+        
 	
 	    int										GetTileWidth() const;
 	    int										GetTileHeight() const;
@@ -78,7 +79,7 @@ namespace MysticDave {
         
         std::deque < TileEntity * > *           tileEntityTileListArr; // array of tile entity lists for the tiles
         
-        std::map< long,        Entity * >       entityUIDMap;     // maps UIDs to any entity in chamber (including Tile Entities)
+        std::map< int, Entity * >               entityUIDMap;     // maps UIDs to any entity in chamber (including Tile Entities)
         std::deque< Entity * >                  entityList;       // list of all plain entities (ie, does not include Tile Entities)
 
     };

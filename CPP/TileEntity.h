@@ -30,6 +30,9 @@ namespace MysticDave {
         void                        SetBlocksOccupation( bool blocks );
 
         Vec2i *                     GetPos();
+        int                         GetClosestTileX();
+        int                         GetClosestTileY();
+        void                        SetPosTile( int tileX, int tileY );
 
         Visual *                    GetVisual();
         void                        SetVisual( Visual * visual );
@@ -45,7 +48,7 @@ namespace MysticDave {
 
         void				        AddMotion( Motion * motion );
         void                        HaltAllMotion( Motion * motion ); // halts all motions in the stack
-	    void 		                MoveDir( int dir, int sourceTileLoc ); // have the TE move one tile in the specified direction
+	    void 		                MoveDir( int dir, int sourceTileLoc, int ticksInMove ); // have the TE move one tile in the specified direction
         //void                        MoveTarget( int targetTileLoc, int sourceTileLoc ); // have the TE move to the target tile
 
 	    virtual void		        Update();
@@ -68,5 +71,7 @@ namespace MysticDave {
         Vec2i *                     pos;  // position in pixel space
         Visual*				        visual;
 	    std::deque < Motion * >		motionQueue;
+
+        void                        Init();
     };
 }

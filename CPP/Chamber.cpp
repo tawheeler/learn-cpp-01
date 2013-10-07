@@ -46,7 +46,7 @@ Chamber::Chamber( int chamberID ) {
 	for ( int y = 0; y < 11; y ++ ) {
 		for ( int x = 0; x < 13; x ++ ) {
 			tileImageAddrArr[ind] = chamberTileInd[ind];
-			if ( x == 0 || x == 11 || y == 0 || y == 10 ) {
+			if ( x == 0 || x == 12 || y == 0 || y == 10 ) {
 				tilePassableArr[ind] = false;
 			}
 			ind++;
@@ -98,12 +98,17 @@ Chamber::Chamber( jsoncons::json jobj ) {
     json jTileEntities = jobj["tileEntities"];
     for ( auto it = jTileEntities.begin_elements(); it != jTileEntities.end_elements(); ++it ) {
 
+        TileEntity * te = 0;
         if ( (*it)["type"].as_string().compare( "TileEntity" ) == 0 ) {
-            AddTileEntity( new TileEntity( *it ) );
+            te = new TileEntity( *it );
         } else if ( (*it)["type"].as_string().compare( "CampFire" ) == 0 ) {
-            AddTileEntity( new CampFire( *it ) );
+            te = new CampFire( *it );
         }
-        
+
+        if ( te != 0 ) {
+            RegisterTileEntityInTile( te, te->GetClosestTileX(), te->GetClosestTileY() );
+            AddTileEntity( te );
+        }
     }
 
     // TODO: make this not-hardcoded
@@ -152,19 +157,19 @@ void Chamber::Render( int x, int y ) {
 	}
 }
 
-void Chamber::AddTileEntity( TileEntity * te ) {
-    int tileX = UTIL::PixToGrid( te->GetPos()->x );
-	int tileY = UTIL::PixToGrid( te->GetPos()->y );
-    tileEntityTileListArr[GetTileNumFromPos(tileX, tileY)].push_back( te );
-	tileEntityList.push_back( te );
+void Chamber::AddEntity( Entity * e) {
+    entityList.push_back( e );
+    entityUIDMap[ e->GetUID() ] = e;
 }
 
-void Chamber::AddTileEntity( TileEntity * te, int tileX, int tileY ) {
-    int pixX = UTIL::GridToPix( tileX );
-	int pixY = UTIL::GridToPix( tileY );
-    te->GetPos()->Set( pixX, pixY );
+void Chamber::AddTileEntity( TileEntity * te ) {
+    tileEntityList.push_back( te );
+    entityUIDMap[ te->GetUID() ] = te;
+}
+
+void Chamber::RegisterTileEntityInTile( TileEntity * te, int tileX, int tileY ) {
+    // TODO: insert in list in order of zbuffer
     tileEntityTileListArr[GetTileNumFromPos(tileX, tileY)].push_back( te );
-	tileEntityList.push_back( te );
 }
 
 int Chamber::GetTileWidth() const {
@@ -214,11 +219,10 @@ bool Chamber::IsInChamber_Pixel( float x, float y ) {
 
 bool Chamber::CanTileBeEntered( int x, int y ) {
     bool retval = false;
-    if ( !IsInChamber_Tile( x, y ) && tilePassableArr[GetTileNumFromPos(x,y)] ) {
+    if ( IsInChamber_Tile( x, y ) && tilePassableArr[GetTileNumFromPos(x,y)] ) {
         retval = true;
 
         //check associated list of tile entities for blocking
-        retval = true;
         std::deque < TileEntity * > list = tileEntityTileListArr[GetTileNumFromPos(x,y)];
         std::deque < TileEntity * >::iterator iter;
 	    for ( iter = list.begin(); iter != list.end(); ++iter ) {

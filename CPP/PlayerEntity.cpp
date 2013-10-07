@@ -1,7 +1,7 @@
 /*
 ========================================================================
 
-	An entity controlled by the player
+	A tile entity controlled by the player
 	Mystic Dave!
 
     Author: Tim Wheeler
@@ -22,11 +22,34 @@
 using namespace MysticDave;
 
 PlayerEntity::PlayerEntity() : TileEntity( "MysticDave", 1 ) {
+
 	// TODO: fix UID 1 by default
-	animVis = new AnimationVisual( pos, (ResourceManager::GetInstance()).GetBitmap( "./res/Sprites/Dave2/Dave_S_L.png" ) );
+    Init();
+
+}
+
+PlayerEntity::PlayerEntity( jsoncons::json jobj ) : TileEntity( jobj ) {
+    Init();
+}
+
+PlayerEntity::~PlayerEntity() {
+    // do nothing
+}
+
+void PlayerEntity::Init() {
+
+    type = "PlayerEntity";
+
+    renderZ = 1;
+    blocksOccupation = true;
+    flammable = true;
+
+    animVis = new AnimationVisual( pos, (ResourceManager::GetInstance()).GetBitmap( "./res/Sprites/Dave2/Dave_S_L.png" ) );
 	visual = animVis;
-	sourceTileLoc = -1;
+
+    sourceTileLoc = -1;
 	dir = UTIL::DIR_SOUTH;
+    Register( "dir", &dir );
 
 	standingArr = new int[4];
 	standingArr[UTIL::DIR_NORTH] = 3;
@@ -34,7 +57,6 @@ PlayerEntity::PlayerEntity() : TileEntity( "MysticDave", 1 ) {
 	standingArr[UTIL::DIR_SOUTH] = 7;
 	standingArr[UTIL::DIR_WEST]  = 29;
 
-	// note: resource manager will delete this
 	TextureSheet * tex = (ResourceManager::GetInstance()).LoadTextureSheet("./res/Sprites/DaveSpriteSheet.png", TILE_DIM, TILE_DIM);
 
 	animNorth = new Animation( 2, tex );
@@ -78,16 +100,22 @@ PlayerEntity::PlayerEntity() : TileEntity( "MysticDave", 1 ) {
 	animPushWest->Init();
 }
 
-PlayerEntity::~PlayerEntity() {
+void PlayerEntity::Cleanup() {
 	animVis = 0;
 	
-    // delete everything in the motion stack
-
+    // TODO: delete everything in the motion stack
 
 	delete animNorth;
 	delete animWest;
 	delete animSouth;
 	delete animEast;
+
+    delete animPushNorth;
+    delete animPushEast;
+    delete animPushSouth;
+    delete animPushWest;
+
+    TileEntity::Cleanup();
 }
 
 int PlayerEntity::GetDir() {
@@ -110,46 +138,5 @@ bool PlayerEntity::IsPlayingAnimation() {
 }
 
 jsoncons::json PlayerEntity::GetJSON() {
-    // Obtain a JSON entity for the player entity
-    // This will be a JSON object, with the following values:
-    //
-    // name - string
-    // uid - number
-    // 
-    // properties - json object
-    // outputs    - json object
-    //
-    // <TILE ENTITY:>
-    // blocksOccupation - bool
-    // posX - float
-    // posY - float
-    //
-    // <PlayerEntity>
-    // dir - float
-
-    //using jsoncons::json;
-
-    //TODO: add outputs list
-
-    //// A boolean value
-    //json flag(true);
-
-    //// A numeric value
-    //json number(10.5);
-
-    //// An object value with four members
-    //json obj(json::an_object);
-    //obj["first_name"] = "Jane";
-    //obj["last_name"] = "Roe";
-    //obj["events_attended"] = 10;
-    //obj["accept_waiver_of_liability"] = true;
-
-    //// An array value with four elements
-    //json arr(json::an_array);
-    //arr.add(null_val);
-    //arr.add(flag);
-    //arr.add(number);
-    //arr.add(obj);
-
-    return Entity::GetJSON();
+    return TileEntity::GetJSON();
 }

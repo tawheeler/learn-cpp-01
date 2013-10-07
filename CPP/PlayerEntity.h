@@ -1,7 +1,7 @@
 /*
 ========================================================================
 
-	An entity controlled by the player
+	A tile entity controlled by the player
 	Mystic Dave!
 
     Author: Tim Wheeler
@@ -24,10 +24,16 @@ namespace MysticDave {
     public:
 
 						        PlayerEntity();
+                                PlayerEntity( jsoncons::json jobj );
 						        ~PlayerEntity();
+
+        virtual void            Cleanup();
 
 	    int					    GetDir();
 	    void				    SetDir( int dir );
+        
+        //void                    AddAction( std::string animName, int dir ); // Add the given action to the action stack
+        //bool                    IsActing(); // whether it is currently playing an action
 
 	    void				    PlayAnimation( Animation * anim );
 	    bool				    IsPlayingAnimation();
@@ -51,5 +57,7 @@ namespace MysticDave {
 	    Animation *			    animPushSouth;
 	    Animation *			    animPushWest;
 
+
+        void                    Init();
     };
 }
