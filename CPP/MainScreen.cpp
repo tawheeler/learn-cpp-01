@@ -124,6 +124,12 @@ void MainScreen::Update() {
                 if ( curChamber->CanTileBeEntered( curx + dx, cury + dy ) ) {
                     //curChamber->AddTileEntityToTile( player, curx + dx, cury + dy );
                     player->MoveDir( desDir, Chamber::GetTileNumFromPos( curx + dx, cury + dy ), 24 );
+                    switch ( desDir ) {
+                    case ( UTIL::DIR_NORTH ): player->PlayAnimation( "walkNorth" ); break;
+                    case ( UTIL::DIR_EAST ):  player->PlayAnimation( "walkEast" );  break;
+                    case ( UTIL::DIR_SOUTH ): player->PlayAnimation( "walkSouth" ); break;
+                    case ( UTIL::DIR_WEST ):  player->PlayAnimation( "walkWest" );  break;
+                    }
                 }
 				/*
                 Tile * targetTile = curChamber->GetTile( tx + dx, ty + dy );

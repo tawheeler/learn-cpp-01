@@ -133,6 +133,13 @@ Chamber::~Chamber() {
 		delete (*iter);
 		iter = tileEntityList.erase(iter);
 	}
+
+    std::deque < Entity * >::iterator iter2;
+	for ( iter2 = entityList.begin(); iter2 != entityList.end(); ) {
+		(*iter2)->Cleanup();
+		delete (*iter2);
+		iter2 = entityList.erase(iter2);
+	}
 }
 
 void Chamber::Cleanup() {

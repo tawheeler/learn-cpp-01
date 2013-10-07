@@ -35,7 +35,7 @@ namespace MysticDave {
         //void                    AddAction( std::string animName, int dir ); // Add the given action to the action stack
         //bool                    IsActing(); // whether it is currently playing an action
 
-	    void				    PlayAnimation( Animation * anim );
+	    void				    PlayAnimation( std::string animName );
 	    bool				    IsPlayingAnimation();
 
         virtual jsoncons::json  GetJSON();
@@ -47,16 +47,7 @@ namespace MysticDave {
 	    int					    dir;         // the direction faced
 	    int *				    standingArr; // images for the various directions
 
-	    Animation *			    animNorth;
-	    Animation *			    animEast;
-	    Animation *			    animSouth;
-	    Animation *			    animWest;
-
-	    Animation *			    animPushNorth;
-	    Animation *			    animPushEast;
-	    Animation *			    animPushSouth;
-	    Animation *			    animPushWest;
-
+        std::map< std::string, Animation * > animationMap;
 
         void                    Init();
     };
