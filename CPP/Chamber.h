@@ -17,7 +17,7 @@
 #include "TextureSheet.h"
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
-#include <deque>
+#include <list>
 #include <map>
 #include <string>
 #include "jsoncons/json.hpp"
@@ -50,11 +50,18 @@ namespace MysticDave {
         void                                    AddEntity( Entity * e );
 	    void									AddTileEntity( TileEntity * te );
         void									RegisterTileEntityInTile( TileEntity * te, int tileX, int tileY ); //place it at the given tile loc
+        void									RegisterTileEntityInTile( TileEntity * te, int tileNum );
         
+        void                                    RemoveEntity( Entity * e );
+        void                                    RemoveTileEntity( TileEntity * te );
+        void                                    UnregisterTileEntityInTile( TileEntity * te, int tileX, int tileY );
+        void                                    UnregisterTileEntityInTile( TileEntity * te, int tileNum );
 	
 	    int										GetTileWidth() const;
 	    int										GetTileHeight() const;
 	    ALLEGRO_BITMAP *						GetFloorImage() const;
+
+        TileEntity *                            GetEntityWithPropertyInTile( std::string propertyName, int tileNum );
 
         jsoncons::json                          GetJSON();
 
@@ -75,12 +82,12 @@ namespace MysticDave {
 	    ALLEGRO_BITMAP *						floorImage;  // image created by tile base images
 	    TextureSheet *							texSheet;    // texture sheet for the tiles
 
-	    std::deque < TileEntity * >				tileEntityList; // list of all tile entities in the chamber
+	    std::list < TileEntity * >				tileEntityList; // list of all tile entities in the chamber
         
-        std::deque < TileEntity * > *           tileEntityTileListArr; // array of tile entity lists for the tiles
+        std::list < TileEntity * > *            tileEntityTileListArr; // array of tile entity lists for the tiles
         
         std::map< int, Entity * >               entityUIDMap;     // maps UIDs to any entity in chamber (including Tile Entities)
-        std::deque< Entity * >                  entityList;       // list of all plain entities (ie, does not include Tile Entities)
+        std::list< Entity * >                   entityList;       // list of all plain entities (ie, does not include Tile Entities)
 
     };
 }

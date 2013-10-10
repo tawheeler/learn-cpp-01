@@ -12,6 +12,7 @@
 #include "Utils.h"
 #include "TileEntity.h"
 #include "CampFire.h"
+#include "StoneBlock.h"
 
 using jsoncons::json;
 using namespace MysticDave;
@@ -28,7 +29,7 @@ Chamber::Chamber( int chamberID ) {
 
     tileImageAddrArr = new int[numTiles];
     tilePassableArr = new bool[numTiles];
-    tileEntityTileListArr = new std::deque < TileEntity * >[numTiles];
+    tileEntityTileListArr = new std::list < TileEntity * >[numTiles];
 
     int chamberTileInd[] = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2,
 					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
@@ -73,7 +74,7 @@ Chamber::Chamber( jsoncons::json jobj ) {
     //tileArr = new Tile[numTiles];
     tileImageAddrArr = new int[numTiles];
     tilePassableArr = new bool[numTiles];
-    tileEntityTileListArr = new std::deque < TileEntity * >[numTiles];
+    tileEntityTileListArr = new std::list < TileEntity * >[numTiles];
 
     floorImage = 0;
 
@@ -105,6 +106,8 @@ Chamber::Chamber( jsoncons::json jobj ) {
             te = new TileEntity( *it );
         } else if ( (*it)["type"].as_string().compare( "CampFire" ) == 0 ) {
             te = new CampFire( *it );
+        } else if ( (*it)["type"].as_string().compare( "StoneBlock" ) == 0 ) {
+            te = new StoneBlock( *it );
         }
 
         if ( te != 0 ) {
@@ -129,14 +132,14 @@ Chamber::~Chamber() {
 	
 	delete texSheet;
 
-    std::deque < TileEntity * >::iterator iter;
+    std::list < TileEntity * >::iterator iter;
 	for ( iter = tileEntityList.begin(); iter != tileEntityList.end(); ) {
 		(*iter)->Cleanup();
 		delete (*iter);
 		iter = tileEntityList.erase(iter);
 	}
 
-    std::deque < Entity * >::iterator iter2;
+    std::list < Entity * >::iterator iter2;
 	for ( iter2 = entityList.begin(); iter2 != entityList.end(); ) {
 		(*iter2)->Cleanup();
 		delete (*iter2);
@@ -149,7 +152,7 @@ void Chamber::Cleanup() {
 }
 	
 void Chamber::Update() {
-    std::deque < TileEntity * >::iterator iter;
+    std::list < TileEntity * >::iterator iter;
 	for ( iter = tileEntityList.begin(); iter != tileEntityList.end(); ++iter ) {
 		(*iter)->Update();
 	}
@@ -158,7 +161,7 @@ void Chamber::Update() {
 void Chamber::Render( int x, int y ) {
 	al_draw_bitmap( GetFloorImage(), 0, 0, 0 );
 
-    std::deque < TileEntity * >::iterator iter;
+    std::list < TileEntity * >::iterator iter;
 	for ( iter = tileEntityList.begin(); iter != tileEntityList.end(); ++iter ) {
 		if ( (*iter)->GetVisual() != 0 ) {
 			(*iter)->GetVisual()->Render( x, y );
@@ -179,6 +182,27 @@ void Chamber::AddTileEntity( TileEntity * te ) {
 void Chamber::RegisterTileEntityInTile( TileEntity * te, int tileX, int tileY ) {
     // TODO: insert in list in order of zbuffer
     tileEntityTileListArr[GetTileNumFromPos(tileX, tileY)].push_back( te );
+}
+
+void Chamber::RegisterTileEntityInTile( TileEntity * te, int tileNum ) {
+    // TODO: insert in list in order of zbuffer
+    tileEntityTileListArr[tileNum].push_back( te );
+}
+
+void Chamber::RemoveEntity( Entity * e ) {
+    entityList.remove( e );
+}
+
+void Chamber::RemoveTileEntity( TileEntity * te ) {
+    tileEntityList.remove( te );
+}
+
+void Chamber::UnregisterTileEntityInTile( TileEntity * te, int tileX, int tileY ) {
+    tileEntityTileListArr[GetTileNumFromPos(tileX, tileY)].remove( te );
+}
+
+void Chamber::UnregisterTileEntityInTile( TileEntity * te, int tileNum ) {
+    tileEntityTileListArr[tileNum].remove( te );
 }
 
 int Chamber::GetTileWidth() const {
@@ -232,8 +256,8 @@ bool Chamber::CanTileBeEntered( int x, int y ) {
         retval = true;
 
         //check associated list of tile entities for blocking
-        std::deque < TileEntity * > list = tileEntityTileListArr[GetTileNumFromPos(x,y)];
-        std::deque < TileEntity * >::iterator iter;
+        std::list < TileEntity * > list = tileEntityTileListArr[GetTileNumFromPos(x,y)];
+        std::list < TileEntity * >::iterator iter;
 	    for ( iter = list.begin(); iter != list.end(); ++iter ) {
             if ( (*iter)->BlocksOccupation() ) {
                 retval = false;
@@ -241,6 +265,21 @@ bool Chamber::CanTileBeEntered( int x, int y ) {
             }
         }
     }
+    return retval;
+}
+
+TileEntity * Chamber::GetEntityWithPropertyInTile( std::string propertyName, int tileNum ) {
+    TileEntity * retval = 0;
+
+    std::list < TileEntity * > list = tileEntityTileListArr[tileNum];
+    std::list < TileEntity * >::iterator iter;
+	for ( iter = list.begin(); iter != list.end(); ++iter ) {
+        if ( (*iter)->Lookup(propertyName) ) {
+            retval = (*iter);
+            break;
+        }
+    }
+
     return retval;
 }
 
@@ -263,7 +302,7 @@ jsoncons::json Chamber::GetJSON() {
 
     // Add list of plain entities
     json entitiesJSON( json::an_array );
-    std::deque < Entity * >::iterator iterA;
+    std::list < Entity * >::iterator iterA;
     for ( iterA = entityList.begin(); iterA != entityList.end(); ++iterA ) {
         entitiesJSON.add( (*iterA)->GetJSON() );
     }
@@ -271,7 +310,7 @@ jsoncons::json Chamber::GetJSON() {
 
     // Add list of tile entities
     json tileEntitiesJSON( json::an_array );
-    std::deque < TileEntity * >::iterator iterB;
+    std::list < TileEntity * >::iterator iterB;
     for ( iterB = tileEntityList.begin(); iterB != tileEntityList.end(); ++iterB ) {
         tileEntitiesJSON.add( (*iterB)->GetJSON() );
     }

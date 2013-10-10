@@ -8,6 +8,7 @@
 
 #include "MainScreen.h"
 #include "ResourceManager.h"
+#include "ChamberManager.h"
 #include "LogManager.h"
 #include "Globals.h"
 #include "Motion.h"
@@ -17,6 +18,7 @@
 #include "jsoncons/json.hpp"
 #include "CampFire.h"
 #include "PlayerEntity.h"
+#include "StoneBlock.h"
 
 using jsoncons::json;
 using namespace MysticDave;
@@ -36,8 +38,8 @@ void MainScreen::Init() {
 
     CampFire * cf1 = new CampFire( "campFire1", 2 );
     CampFire * cf2 = new CampFire( "campFire2", 3 );
-    CampFire * cf3 = new CampFire( "campFire2", 3 );
-    CampFire * cf4 = new CampFire( "campFire2", 3 );
+    CampFire * cf3 = new CampFire( "campFire2", 4 );
+    CampFire * cf4 = new CampFire( "campFire2", 5 );
     cf1->SetPosTile( 2, 2 );
     curChamber->AddTileEntity( cf1 );
     curChamber->RegisterTileEntityInTile( cf1, 2, 2 );
@@ -50,6 +52,13 @@ void MainScreen::Init() {
     cf4->SetPosTile( 10, 8 );
     curChamber->AddTileEntity( cf4 );
     curChamber->RegisterTileEntityInTile( cf4, 10, 8 );
+
+    StoneBlock * sb1 = new StoneBlock( "stoneBlock1", 6 );
+    sb1->SetPosTile( 3, 3 );
+    curChamber->AddTileEntity( sb1 );
+    curChamber->RegisterTileEntityInTile( sb1, 3, 3 );
+
+    (ChamberManager::GetInstance()).SetCurrentChamber( curChamber ); // set the current chamber
 
     /*using namespace std;
     using jsoncons::json;
@@ -119,11 +128,13 @@ void MainScreen::Update() {
 			} else {
                 int curx = player->GetClosestTileX();
                 int cury = player->GetClosestTileY();
+                int tx = curx + dx;
+                int ty = cury + dy;
 
 				// check if target is free
-                if ( curChamber->CanTileBeEntered( curx + dx, cury + dy ) ) {
-                    //curChamber->AddTileEntityToTile( player, curx + dx, cury + dy );
-                    player->MoveDir( desDir, Chamber::GetTileNumFromPos( curx + dx, cury + dy ), 24 );
+                if ( curChamber->CanTileBeEntered( tx, ty ) ) {
+                    curChamber->RegisterTileEntityInTile( player, tx, ty );
+                    player->MoveDir( desDir, Chamber::GetTileNumFromPos( curx, cury ), 24 );
                     switch ( desDir ) {
                         case ( UTIL::DIR_NORTH ): player->PlayAnimation( "walkNorth" ); break;
                         case ( UTIL::DIR_EAST ):  player->PlayAnimation( "walkEast" );  break;
@@ -131,25 +142,24 @@ void MainScreen::Update() {
                         case ( UTIL::DIR_WEST ):  player->PlayAnimation( "walkWest" );  break;
                     }
                 }
-				/*
-                Tile * targetTile = curChamber->GetTile( tx + dx, ty + dy );
-				if ( !(targetTile->IsOccupied()) ) { // if free
-					targetTile->tileEntity = player;  // add to next
-					player->Move( desDir, curChamber->GetTile( tx, ty ) );
-				} 
-                */
-                /*else if ( targetTile->tileEntity != 0 && targetTile->tileEntity->type == Entity::TYPE_BLOCK ) {
-					// we are pushing a block
-					Tile * farTargetTile = curChamber->GetTile( tx + 2*dx, ty + 2*dy );
-					TileEntity * block = targetTile->tileEntity;
-					if ( !farTargetTile->IsOccupied() ) { // if free
-						targetTile->tileEntity = player;  // add to next
-						player->PushMove( desDir, curChamber->GetTile( tx, ty ) );
-						farTargetTile->tileEntity = block; // move it
-						block->Move( desDir, 0 );
-					}
-
-				}*/
+                else {
+                    TileEntity * pushable = curChamber->GetEntityWithPropertyInTile( "MoveType", Chamber::GetTileNumFromPos( tx, ty) );
+                    if ( pushable != 0 ) {
+                        // we are pushing something
+                        if ( curChamber->CanTileBeEntered( tx + dx, ty + dy ) ) { //if we can push through into next space
+                            curChamber->RegisterTileEntityInTile( player, tx, ty );
+                            player->MoveDir( desDir, Chamber::GetTileNumFromPos( curx, cury ), 36 );
+                            switch ( desDir ) {
+                                case ( UTIL::DIR_NORTH ): player->PlayAnimation( "pushNorth" ); break;
+                                case ( UTIL::DIR_EAST ):  player->PlayAnimation( "pushEast" );  break;
+                                case ( UTIL::DIR_SOUTH ): player->PlayAnimation( "pushSouth" ); break;
+                                case ( UTIL::DIR_WEST ):  player->PlayAnimation( "pushWest" );  break;
+                            }
+                            curChamber->RegisterTileEntityInTile( pushable, tx + dx, ty + dy );
+                            pushable->MoveDir( desDir, Chamber::GetTileNumFromPos( tx, ty ), 36 );
+                        }
+                    }
+                }
 			}
 
 		}

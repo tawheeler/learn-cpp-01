@@ -84,26 +84,26 @@ void PlayerEntity::Init() {
     animationMap["walkWest"] = animWest;
 
 	Animation * animPushNorth = new Animation( 2, tex );
-	animPushNorth->frameDurations[0] = 24; animPushNorth->frameIDs[0] = 6;
-	animPushNorth->frameDurations[1] = 24; animPushNorth->frameIDs[1] = 25;
+	animPushNorth->frameDurations[0] = 18; animPushNorth->frameIDs[0] = 6;
+	animPushNorth->frameDurations[1] = 18; animPushNorth->frameIDs[1] = 25;
 	animPushNorth->Init();
     animationMap["pushNorth"] = animPushNorth;
 
 	Animation * animPushEast = new Animation( 2, tex );
-	animPushEast->frameDurations[0] = 24; animPushEast->frameIDs[0] = 5;
-	animPushEast->frameDurations[1] = 24; animPushEast->frameIDs[1] = 12;
+	animPushEast->frameDurations[0] = 18; animPushEast->frameIDs[0] = 5;
+	animPushEast->frameDurations[1] = 18; animPushEast->frameIDs[1] = 12;
 	animPushEast->Init();
     animationMap["pushEast"] = animPushEast;
 
 	Animation * animPushSouth = new Animation( 2, tex );
-	animPushSouth->frameDurations[0] = 24; animPushSouth->frameIDs[0] = 20;
-	animPushSouth->frameDurations[1] = 24; animPushSouth->frameIDs[1] = 21;
+	animPushSouth->frameDurations[0] = 18; animPushSouth->frameIDs[0] = 20;
+	animPushSouth->frameDurations[1] = 18; animPushSouth->frameIDs[1] = 21;
 	animPushSouth->Init();
     animationMap["pushSouth"] = animPushSouth;
 
 	Animation * animPushWest = new Animation( 2, tex );
-	animPushWest->frameDurations[0] = 24; animPushWest->frameIDs[0] = 28;
-	animPushWest->frameDurations[1] = 24; animPushWest->frameIDs[1] = 14;
+	animPushWest->frameDurations[0] = 18; animPushWest->frameIDs[0] = 28;
+	animPushWest->frameDurations[1] = 18; animPushWest->frameIDs[1] = 14;
 	animPushWest->Init();
     animationMap["pushWest"] = animPushWest;
 }
@@ -133,7 +133,6 @@ void PlayerEntity::SetDir( int dir ) {
 void PlayerEntity::PlayAnimation( std::string animName ) {
 	animVis->PlayAnimation( animationMap[animName] );
 }
-
 
 bool PlayerEntity::IsPlayingAnimation() {
 	return animVis->IsPlayingAnimation();

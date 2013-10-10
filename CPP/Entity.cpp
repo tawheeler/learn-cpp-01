@@ -26,6 +26,7 @@ Entity::Entity( jsoncons::json jobj ) {
     Entity::name = std::string(jobj["name"].as_string().c_str());
     Entity::uid  = jobj["uid"].as_int();
 
+    /*
     json jPropertiesArr = jobj["properties"];
     for (auto it = jPropertiesArr.begin_members(); it != jPropertiesArr.end_members(); ++it) {
         if ( it->second.is_bool() ) {
@@ -42,6 +43,7 @@ Entity::Entity( jsoncons::json jobj ) {
             Register( std::string(it->first.c_str()), &i );
         }
     }
+    */
 
     Init();
 }

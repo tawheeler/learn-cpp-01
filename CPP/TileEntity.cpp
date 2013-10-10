@@ -11,6 +11,7 @@
 
 #include "TileEntity.h"
 #include "Utils.h"
+#include "ChamberManager.h"
 
 using jsoncons::json;
 using namespace MysticDave;
@@ -135,8 +136,10 @@ void TileEntity::Update() {
             motionQueue.pop_front();
             delete curMotion;
             if ( sourceTileLoc != -1 ) {
-                // TODO: free previous location
                 // grab current chamber and remove from location
+                // TODO: call on extited tile
+                // TODO: call on entered tile
+                (ChamberManager::GetInstance()).GetCurrentChamber()->UnregisterTileEntityInTile( this, sourceTileLoc );
                 sourceTileLoc = -1;
             }
         }
