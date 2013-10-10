@@ -26,14 +26,9 @@ using namespace MysticDave;
 void MainScreen::Init() {
 	keys[UP] = keys[DOWN] = keys[LEFT] = keys[RIGHT] = keys[SPACE] = false;
 
-    //Entity e = Entity("dude", 101);
-    //UTIL::WriteJSONToFile( e.GetJSON(), "./saves/dude.json" );
-
-    //json dude_obj = json::parse_file( "./saves/dude.json" );
-    //Entity e = Entity( dude_obj );
-
-    //curChamber = new Chamber( json::parse_file("./saves/chamber.json") );
+    curChamber = new Chamber( json::parse_file("./saves/chamber.json") );
     
+    /*
     curChamber = new Chamber(1);
 
     CampFire * cf1 = new CampFire( "campFire1", 2 );
@@ -58,9 +53,25 @@ void MainScreen::Init() {
     curChamber->AddTileEntity( sb1 );
     curChamber->RegisterTileEntityInTile( sb1, 3, 3 );
 
-    (ChamberManager::GetInstance()).SetCurrentChamber( curChamber ); // set the current chamber
+    StoneBlock * sb2 = new StoneBlock( "stoneBlock2", 7 );
+    sb2->SetPosTile( 9, 3 );
+    curChamber->AddTileEntity( sb2 );
+    curChamber->RegisterTileEntityInTile( sb2, 9, 3 );
 
-    /*using namespace std;
+    StoneBlock * sb3 = new StoneBlock( "stoneBlock3", 8 );
+    sb3->SetPosTile( 3, 7 );
+    curChamber->AddTileEntity( sb3 );
+    curChamber->RegisterTileEntityInTile( sb3, 3, 7 );
+
+    StoneBlock * sb4 = new StoneBlock( "stoneBlock4", 9 );
+    sb4->SetPosTile( 9, 7 );
+    curChamber->AddTileEntity( sb4 );
+    curChamber->RegisterTileEntityInTile( sb4, 9, 7 );
+    */
+
+
+    /*
+    using namespace std;
     using jsoncons::json;
     using jsoncons::pretty_print;
 
@@ -69,10 +80,13 @@ void MainScreen::Init() {
     ofstream myfile;
     myfile.open ("./saves/chamber.json");
     myfile << pretty_print(jobj_out) << std::endl;
-    myfile.close(); */
+    myfile.close();
+    */
 
     player = new PlayerEntity();
     player->SetPosTile( 6, 4 );
+
+    (ChamberManager::GetInstance()).SetCurrentChamber( curChamber ); // set the current chamber
 }
 
 void MainScreen::Cleanup() {
