@@ -13,7 +13,6 @@
 
 #pragma once
 
-#include <allegro5/allegro5.h>
 #include <deque>
 #include "BaseScreen.h"
 
@@ -29,7 +28,6 @@ namespace MysticDave {
 	    void								ShutDown();
 	    static ScreenManager&				GetInstance();
 
-	    void								HandleEvent( ALLEGRO_EVENT evt );
 	    void								Update();
 	    void								Render();
 

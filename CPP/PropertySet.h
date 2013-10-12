@@ -45,6 +45,7 @@ namespace MysticDave {
 	    void Register(std::string const& name, bool* value); 
 
 	    Property* Lookup(std::string const& name);
+        bool      HasProperty( std::string const& name );
 
 	    // use this for generic access when the data type is unknown
 	    // this will convert to the proper format.

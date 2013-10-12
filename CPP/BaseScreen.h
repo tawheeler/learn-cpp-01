@@ -26,7 +26,6 @@ namespace MysticDave {
 	    void				SetBlockRender( bool val );
 	    bool				BlocksUpdate() const;
 	    bool				BlocksRender() const;
-	    virtual void		HandleEvent( ALLEGRO_EVENT event ) = 0;
 	    virtual void		Update() = 0;
 	    virtual void		Render() const = 0;
 

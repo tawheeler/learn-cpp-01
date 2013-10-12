@@ -46,6 +46,11 @@ Property* PropertySet::Lookup(std::string const& name) {
     return pos->second;
 }
 
+bool PropertySet::HasProperty( std::string const& name ) {
+    std::map< std::string, Property *>::iterator pos = m_properties.find(name);
+    return pos != m_properties.end();
+}
+
 bool PropertySet::SetValue(std::string const& name, std::string const& value) {
 	bool return_value = false;
 	Property* property = Lookup(name);

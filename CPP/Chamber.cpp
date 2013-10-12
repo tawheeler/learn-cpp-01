@@ -89,6 +89,7 @@ Chamber::Chamber( jsoncons::json jobj ) {
     json tilePassableArrJSON = jobj["tilePassableArr"];
     for ( auto it = tilePassableArrJSON.begin_elements(); it != tilePassableArrJSON.end_elements(); ++it ) {
         tilePassableArr[i] = (*it).as_bool();
+        ++i;
     }
 
     // extract plain entities
@@ -274,7 +275,7 @@ TileEntity * Chamber::GetEntityWithPropertyInTile( std::string propertyName, int
     std::list < TileEntity * > list = tileEntityTileListArr[tileNum];
     std::list < TileEntity * >::iterator iter;
 	for ( iter = list.begin(); iter != list.end(); ++iter ) {
-        if ( (*iter)->Lookup(propertyName) ) {
+        if ( (*iter)->HasProperty(propertyName) ) {
             retval = (*iter);
             break;
         }

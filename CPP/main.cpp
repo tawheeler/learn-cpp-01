@@ -23,7 +23,7 @@
 #include "LogManager.h"
 #include "ScreenManager.h" 
 #include "ResourceManager.h"
-//#include "GameObjectManager.h"
+#include "InputManager.h"
 
 #include "BaseScreen.h"
 #include "MainScreen.h"
@@ -32,8 +32,8 @@ using namespace MysticDave;
 
 LogManager *				myLogManager;
 ScreenManager *				myScreenManager;
-//GameObjectManager *		myGameObjectManager;
 ResourceManager *			myResourceManager;
+InputManager *              myInputManager;
 
 bool						done;
 ALLEGRO_EVENT_QUEUE *		event_queue;
@@ -80,8 +80,8 @@ void Init( void ) {
 	myScreenManager->StartUp();
 	myResourceManager = &(ResourceManager::GetInstance());
 	myResourceManager->StartUp();
-	/*myGameObjectManager = &(GameObjectManager::GetInstance());
-	myGameObjectManager->StartUp();*/
+    myInputManager = &(InputManager::GetInstance());
+    myInputManager->StartUp();
 	
     timer = al_create_timer( 1.0 / FPS ); //set fps
     if ( !timer ) {
@@ -137,8 +137,8 @@ void Shutdown(void) {
 	}
 
 	//free all user-defined objects
-	//myGameObjectManager->ShutDown();
-	//delete myGameObjectManager;
+	myInputManager->ShutDown();
+    delete myInputManager;
 	myResourceManager->ShutDown();
 	delete myResourceManager;
 	myScreenManager->ShutDown();
@@ -174,6 +174,7 @@ void GameLoop( void ) {
        if ( evt.type == ALLEGRO_EVENT_TIMER ) {
            redraw = true;
            UpdateLogic();
+           myInputManager->ZeroToggled();
        } else {
 			if ( evt.type == ALLEGRO_EVENT_KEY_DOWN ) {
 				if ( evt.keyboard.keycode == ALLEGRO_KEY_ESCAPE ) {
@@ -183,7 +184,7 @@ void GameLoop( void ) {
 			} else if ( evt.type == ALLEGRO_EVENT_DISPLAY_CLOSE ) {  //close button pressed
 				done = true;
 			}
-			myScreenManager->HandleEvent( evt ); //pass it on
+			myInputManager->HandleEvent( evt ); //pass it on
         }
  
 	    //render

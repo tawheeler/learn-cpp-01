@@ -48,28 +48,6 @@ ScreenManager& ScreenManager::GetInstance() {
 
 /*
 ================================================
-HandleEvent
-
-	Has the game screens handle events starting 
-	from the top of the stack, working its way 
-	down until it hits bottom, or a screen 
-	which blocks updating
-================================================
- */
-void ScreenManager::HandleEvent( ALLEGRO_EVENT evt ) {
-	//start from the top (index 0) and work your way down (last index)
-    //for ( deque< twBaseScreen * >::size_type i = 0; i < states.size(); i++ ) {
-
-	for ( iter = states.begin(); iter != states.end(); ++iter ) {
-        (*iter)->HandleEvent( evt );  //update it
-        if ( (*iter)->BlocksUpdate() ) {
-            break;  //exit the for loop, since it blocks further travel
-        }
-    }
-}
-
-/*
-================================================
 Update
 
 	Update the game screens, starting from the
