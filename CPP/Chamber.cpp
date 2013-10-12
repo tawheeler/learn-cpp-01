@@ -9,6 +9,7 @@
 
 #include "Chamber.h"
 #include "Globals.h"
+#include "ForceNet.h"
 #include "Utils.h"
 #include "TileEntity.h"
 #include "CampFire.h"
@@ -146,6 +147,12 @@ Chamber::~Chamber() {
 		delete (*iter2);
 		iter2 = entityList.erase(iter2);
 	}
+
+    std::list < ForceNet * >::iterator iterFNet;
+	for ( iterFNet = forceNetList.begin(); iterFNet != forceNetList.end(); ) {
+		delete (*iterFNet);
+		iterFNet = forceNetList.erase(iterFNet);
+	}
 }
 
 void Chamber::Cleanup() {
@@ -280,6 +287,52 @@ TileEntity * Chamber::GetEntityWithPropertyInTile( std::string propertyName, int
             break;
         }
     }
+
+    return retval;
+}
+
+void Chamber::CalcForceNets() {
+
+    // delete the current force nets
+    std::list < ForceNet * >::iterator iterFNet;
+	for ( iterFNet = forceNetList.begin(); iterFNet != forceNetList.end(); ) {
+		delete (*iterFNet);
+		iterFNet = forceNetList.erase(iterFNet);
+	}
+
+    // run through tile entities and add them to the force nets as appropriate
+    ForceNet * farr[6] = { new ForceNet(), new ForceNet(), new ForceNet(), new ForceNet(), new ForceNet(), new ForceNet() };
+    std::list < TileEntity * >::iterator iter;
+	for ( iter = tileEntityList.begin(); iter != tileEntityList.end(); ++iter ) {
+        if ( (*iter)->HasProperty("SygaldryA") ) {
+            int sygA = (*iter)->Lookup( "SygaldryA" )->GetInt();
+            char runeIndex = (sygA & 0x00FF);
+            char runeColor = (sygA >> 8 ) & 0x00FF;
+            if ( runeIndex == 1 ) { // if a force rune
+                farr[runeColor]->AddTileEntity( *iter ); // add this tile entity to the given force net
+            }
+        }
+    }
+
+    // save the force nets that contain entities
+    for ( int i = 0; i < 6; i ++ ) {
+        if ( farr[i]->GetSize() > 0 ) {
+            forceNetList.push_back( farr[i] );
+        }
+    }
+}
+
+ForceNet * Chamber::GetForceNetContaining( int uid ) {
+
+    ForceNet * retval = 0;
+
+    std::list < ForceNet * >::iterator iter;
+	for ( iter = forceNetList.begin(); iter != forceNetList.end(); ++iter) {
+		if ( (*iter)->Contains( uid ) ) {
+            retval = (*iter);
+            break;
+        }
+	}
 
     return retval;
 }

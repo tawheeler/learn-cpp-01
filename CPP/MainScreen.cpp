@@ -87,6 +87,7 @@ void MainScreen::Init() {
     player->SetPosTile( 6, 4 );
 
     (ChamberManager::GetInstance()).SetCurrentChamber( curChamber ); // set the current chamber
+    curChamber->CalcForceNets();
 }
 
 void MainScreen::Cleanup() {
@@ -106,9 +107,19 @@ void MainScreen::Update() {
             // interaction with environment
             if ( keysToggled[INTERACT] && keysPressed[INTERACT] ) {
                 
-                BaseScreen * bs = new SygaldryScreen( player );
-                bs->Init();
-                (ScreenManager::GetInstance()).PushGameScreen( bs );
+                int dx = UTIL::DirToXAdjustment( player->GetDir() );
+                int dy = UTIL::DirToYAdjustment( player->GetDir() );
+                int curx = player->GetClosestTileX();
+                int cury = player->GetClosestTileY();
+
+                // check to see if there is an entity with the sygaldry property in the tile we are facing
+                TileEntity * sygaldryAble = curChamber->GetEntityWithPropertyInTile( "SygaldryA", Chamber::GetTileNumFromPos(curx + dx, cury + dy) );
+                if ( sygaldryAble != 0 ) {
+                    // open the SygaldryScreen on that object
+                    BaseScreen * bs = new SygaldryScreen( sygaldryAble );
+                    bs->Init();
+                    (ScreenManager::GetInstance()).PushGameScreen( bs );
+                }
                 
             } else if ( numDirsPressed == 1 ) {
 
@@ -149,17 +160,36 @@ void MainScreen::Update() {
                         TileEntity * pushable = curChamber->GetEntityWithPropertyInTile( "MoveType", Chamber::GetTileNumFromPos( tx, ty) );
                         if ( pushable != 0 ) {
                             // we are pushing something
-                            if ( curChamber->CanTileBeEntered( tx + dx, ty + dy ) ) { //if we can push through into next space
-                                curChamber->RegisterTileEntityInTile( player, tx, ty );
-                                player->MoveDir( desDir, Chamber::GetTileNumFromPos( curx, cury ), 36 );
-                                switch ( desDir ) {
-                                    case ( UTIL::DIR_NORTH ): player->PlayAnimation( "pushNorth" ); break;
-                                    case ( UTIL::DIR_EAST ):  player->PlayAnimation( "pushEast" );  break;
-                                    case ( UTIL::DIR_SOUTH ): player->PlayAnimation( "pushSouth" ); break;
-                                    case ( UTIL::DIR_WEST ):  player->PlayAnimation( "pushWest" );  break;
+                            ForceNet * fnet = curChamber->GetForceNetContaining( pushable->GetUID() );
+                            if ( fnet != 0 ) {
+                                // handle pushing a force net
+
+                                if ( fnet->CanMove( desDir, curChamber ) ) {
+                                    curChamber->RegisterTileEntityInTile( player, tx, ty );
+                                    player->MoveDir( desDir, Chamber::GetTileNumFromPos( curx, cury ), 36 );
+                                    switch ( desDir ) {
+                                        case ( UTIL::DIR_NORTH ): player->PlayAnimation( "pushNorth" ); break;
+                                        case ( UTIL::DIR_EAST ):  player->PlayAnimation( "pushEast" );  break;
+                                        case ( UTIL::DIR_SOUTH ): player->PlayAnimation( "pushSouth" ); break;
+                                        case ( UTIL::DIR_WEST ):  player->PlayAnimation( "pushWest" );  break;
+                                    }
+                                    fnet->Move( desDir, curChamber );
                                 }
-                                curChamber->RegisterTileEntityInTile( pushable, tx + dx, ty + dy );
-                                pushable->MoveDir( desDir, Chamber::GetTileNumFromPos( tx, ty ), 36 );
+
+                            } else {
+                                // handle pushing a single tile entity
+                                if ( curChamber->CanTileBeEntered( tx + dx, ty + dy ) ) { //if we can push through into next space
+                                    curChamber->RegisterTileEntityInTile( player, tx, ty );
+                                    player->MoveDir( desDir, Chamber::GetTileNumFromPos( curx, cury ), 36 );
+                                    switch ( desDir ) {
+                                        case ( UTIL::DIR_NORTH ): player->PlayAnimation( "pushNorth" ); break;
+                                        case ( UTIL::DIR_EAST ):  player->PlayAnimation( "pushEast" );  break;
+                                        case ( UTIL::DIR_SOUTH ): player->PlayAnimation( "pushSouth" ); break;
+                                        case ( UTIL::DIR_WEST ):  player->PlayAnimation( "pushWest" );  break;
+                                    }
+                                    curChamber->RegisterTileEntityInTile( pushable, tx + dx, ty + dy );
+                                    pushable->MoveDir( desDir, Chamber::GetTileNumFromPos( tx, ty ), 36 );
+                                }
                             }
                         }
                     }

@@ -12,7 +12,7 @@
 
 #include "StoneBlock.h"
 #include "ResourceManager.h"
-#include "AnimationVisual.h"
+#include "SygaldryVisualOverlay.h"
 #include "Utils.h"
 
 using jsoncons::json;
@@ -39,8 +39,8 @@ void StoneBlock::InitStoneBlock() {
     type = "StoneBlock";
 
     moveType = 1;
-    sygaldryA = -1;
-    sygaldryB = -1;
+    sygaldryA = 0;
+    sygaldryB = 0;
 
     Register( "MoveType", &moveType );
     Register( "SygaldryA", &sygaldryA );
@@ -50,5 +50,8 @@ void StoneBlock::InitStoneBlock() {
     blocksOccupation = true;
     flammable = false;
     
-    visual = new AnimationVisual( pos, (ResourceManager::GetInstance()).GetBitmap( "./res/Pot.png" ) );
+    
+    SygaldryVisualOverlay * vis = new SygaldryVisualOverlay( pos, (ResourceManager::GetInstance()).GetBitmap( "./res/Pot.png" ) );
+    vis->SetSygaldry( sygaldryA, 0.0f, 1.0f, 0.0f );
+    visual = vis;
 }

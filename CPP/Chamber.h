@@ -23,6 +23,9 @@
 #include "jsoncons/json.hpp"
 
 namespace MysticDave {
+
+    class ForceNet;
+
     class Chamber {
 
     public:
@@ -63,6 +66,9 @@ namespace MysticDave {
 
         TileEntity *                            GetEntityWithPropertyInTile( std::string propertyName, int tileNum );
 
+        void                                    CalcForceNets();
+        ForceNet *                              GetForceNetContaining( int uid );
+
         jsoncons::json                          GetJSON();
 
         static int GetTileNumFromPos( int x, int y ) { return x + y * CHAMBER_TILE_WIDTH; };
@@ -88,6 +94,8 @@ namespace MysticDave {
         
         std::map< int, Entity * >               entityUIDMap;     // maps UIDs to any entity in chamber (including Tile Entities)
         std::list< Entity * >                   entityList;       // list of all plain entities (ie, does not include Tile Entities)
+
+        std::list< ForceNet * >                 forceNetList;     // list of force nets
 
     };
 }

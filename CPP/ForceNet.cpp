@@ -23,53 +23,40 @@ ForceNet::~ForceNet() {
 	// do nothing, someone else will delete the tile entities
 }
 
-/*
-bool ForceNet::CanAct( int dir, Chamber * C ) {
-	int dx = 0, dy = 0;
-	switch ( dir ) {
-		case( UTIL::DIR_NORTH ): dy = -1; break;
-		case( UTIL::DIR_EAST ):  dx =  1; break;
-		case( UTIL::DIR_SOUTH ): dy =  1; break;
-		case( UTIL::DIR_WEST ):  dx = -1; break;
-	}
 
+bool ForceNet::CanMove( int dir, Chamber * C ) {
+    int dx = UTIL::DirToXAdjustment( dir );
+    int dy = UTIL::DirToYAdjustment( dir );
 	int x, y;
 
 	bool retval =  true;
 	std::deque < TileEntity * >::iterator iter = tileEntityList.begin();
 	while ( retval && iter != tileEntityList.end() ) {
-		x = (*iter)->tileX + dx;
-		y = (*iter)->tileY + dy;
-		retval = (C->IsInChamber( x, y )) && !(C->GetTile( x, y )->IsOccupied());
+        x = (*iter)->GetClosestTileX();
+        y = (*iter)->GetClosestTileY();
+        retval = C->CanTileBeEntered( x + dx, y + dy );
 		++iter;
 	}
 	return retval;
-} */
+}
 
-/*
-void ForceNet::Act( int dir, Chamber * C ) {
-	int dx = 0, dy = 0;
-	switch ( dir ) {
-		case( UTIL::DIR_NORTH ): dy = -1; break;
-		case( UTIL::DIR_EAST ):  dx =  1; break;
-		case( UTIL::DIR_SOUTH ): dy =  1; break;
-		case( UTIL::DIR_WEST ):  dx = -1; break;
-	}
-
+void ForceNet::Move( int dir, Chamber * C ) {
+	int dx = UTIL::DirToXAdjustment( dir );
+    int dy = UTIL::DirToYAdjustment( dir );
 	int x, y;
 
-	// TODO: ensure we aren't clearing areas being moved into
+    // TODO: check to see whether the target tile is an entity within this fnet
 
 	std::deque < TileEntity * >::iterator iter;
 	for ( iter = tileEntityList.begin(); iter != tileEntityList.end(); ++iter ) {
-		x = (*iter)->tileX + dx;
-		y = (*iter)->tileY + dy;
-		Tile * targetTile = C->GetTile( x, y );
-		targetTile->tileEntity = (*iter);
-		(*iter)->Move( dir, C->GetTile( (*iter)->tileX, (*iter)->tileY ) );
+		x = (*iter)->GetClosestTileX();
+        y = (*iter)->GetClosestTileY();
+
+		C->RegisterTileEntityInTile( (*iter), x + dx, y + dy );
+        (*iter)->MoveDir( dir, Chamber::GetTileNumFromPos( x, y ), 36 );
 	}
 	
-}*/
+}
 
 void ForceNet::AddTileEntity( TileEntity * toAdd ) {
 	tileEntityList.push_back( toAdd );

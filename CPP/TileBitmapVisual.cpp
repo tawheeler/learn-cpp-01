@@ -10,7 +10,6 @@
 */
 
 #include "TileBitmapVisual.h"
-#include "Globals.h"
 
 using namespace MysticDave;
 
@@ -24,4 +23,8 @@ TileBitmapVisual::~TileBitmapVisual() {
 
 void TileBitmapVisual::Render( int x, int y ) {
 	al_draw_bitmap( bitmap, pos->x - x, pos->y - y, 0 );
+}
+
+void TileBitmapVisual::Render( int x, int y, float cx, float cy, float cz ) {
+	al_draw_tinted_bitmap( bitmap, al_map_rgba_f(cx, cy, cz, 1), pos->x - x, pos->y - y, 0 );
 }

@@ -36,8 +36,11 @@ void AnimationVisual::Cleanup() {
 }
 
 void AnimationVisual::Render( int x, int y ) {
+    Render( x, y, 1.0f, 1.0f, 1.0f );
+}
 
-	bool renderAnim = false;
+void AnimationVisual::Render( int x, int y, float cx, float cy, float cz ) {
+    bool renderAnim = false;
 	if ( animation != 0 ) {
 		frameTick --;
 		if ( frameTick <= 0 ) { // move to a new frame, if possible
@@ -56,7 +59,7 @@ void AnimationVisual::Render( int x, int y ) {
 	if ( renderAnim ) {
 		animation->tex->RenderTexture( animation->frameIDs[frameIndex], pos->x - x, pos->y - y );
 	} else {
-		al_draw_bitmap( bitmap, pos->x - x, pos->y - y, 0 );
+		al_draw_tinted_bitmap( bitmap, al_map_rgba_f(cx, cy, cz, 1), pos->x - x, pos->y - y, 0 );
 	}
 }
 

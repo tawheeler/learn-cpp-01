@@ -24,6 +24,7 @@ namespace MysticDave {
 
 	    virtual void		Cleanup();
 	    virtual void		Render( int x, int y );
+        virtual void		Render( int x, int y, float cx, float cy, float cz );
 
 	    void				PlayAnimation( Animation * anim );
 	    void				SetBitmap( ALLEGRO_BITMAP * bitmap );

@@ -24,6 +24,7 @@ namespace MysticDave {
 									    ~TileBitmapVisual();
 
 	    virtual void					Render( int x, int y );
+        virtual void                    Render( int x, int y, float cx, float cy, float cz );
 
     };
 }

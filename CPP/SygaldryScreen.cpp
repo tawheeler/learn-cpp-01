@@ -14,8 +14,10 @@
 #include "SygaldryScreen.h"
 #include "ScreenManager.h"
 #include "ResourceManager.h"
+#include "ChamberManager.h"
 #include "Globals.h"
 #include "InputManager.h"
+#include "SygaldryVisualOverlay.h"
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 
@@ -46,7 +48,7 @@ void SygaldryScreen::Init() {
     colorMap[12] = 255; colorMap[13] = 255; colorMap[14] =   0; //yellow
     colorMap[15] = 248; colorMap[16] = 133; colorMap[17] =  29; //orange
 
-    rune = (0x0001 << 8) & 0x01;
+    rune = sygaldryEntity->Lookup("SygaldryA")->GetInt();
 
     inputDelayCounter = 0;
 }
@@ -58,7 +60,22 @@ void SygaldryScreen::Cleanup() {
 void SygaldryScreen::Update() {
 
     if ( keysToggled[ENTER] && keysPressed[ENTER] ) {
+
+        sygaldryEntity->Lookup("SygaldryA")->Set( rune );
+
+        int runeIndex = (rune & 0x00FF);
+        char runeColor = (rune >> 8 ) & 0x00FF;
+        float cx = colorMap[3*runeColor] / 256.0f;
+        float cy = colorMap[3*runeColor+1] / 256.0f;
+        float cz = colorMap[3*runeColor+2] / 256.0f;
+
+        SygaldryVisualOverlay * vis = static_cast<SygaldryVisualOverlay *>(sygaldryEntity->GetVisual());
+        vis->SetSygaldry( runeIndex, cx, cy, cz );
+
+        (ChamberManager::GetInstance()).GetCurrentChamber()->CalcForceNets();
+
         this->SetDead();
+
     } else if ( inputDelayCounter <= 0 ){
 
         char runeSymbol = rune & 0x00FF;
@@ -108,14 +125,11 @@ void SygaldryScreen::Update() {
 void SygaldryScreen::Render() const {
     sygaldryPanel->Render( 0, 0 );
 
-    if ( (rune & 0x00FF) > 0 ) {
+    int runeIndex = (rune & 0x00FF);
+    char runeColor = (rune >> 8 ) & 0x00FF;
+    float cx = colorMap[3*runeColor] / 256.0f;
+    float cy = colorMap[3*runeColor+1] / 256.0f;
+    float cz = colorMap[3*runeColor+2] / 256.0f;
 
-        int runeIndex = (rune & 0x00FF) - 1;
-        char runeColor = (rune >> 8 ) & 0x00FF;
-        float cx = colorMap[3*runeColor] / 256.0f;
-        float cy = colorMap[3*runeColor+1] / 256.0f;
-        float cz = colorMap[3*runeColor+2] / 256.0f;
-
-        al_draw_tinted_bitmap( runeSetTextureSheet->GetTexture( runeIndex ), al_map_rgba_f(cx, cy, cz, 1), panelPos->x - 32, panelPos->y - 32, 0);
-    }
+    al_draw_tinted_bitmap( runeSetTextureSheet->GetTexture( runeIndex ), al_map_rgba_f(cx, cy, cz, 1), panelPos->x - 32, panelPos->y - 32, 0);
 }

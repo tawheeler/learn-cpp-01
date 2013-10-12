@@ -52,8 +52,8 @@
             "properties":
             {
                 "MoveType":1,
-                "SygaldryA":-1,
-                "SygaldryB":-1
+                "SygaldryA":0,
+                "SygaldryB":0
             },
             "sourceTileLoc":-1,
             "type":"StoneBlock",
@@ -66,8 +66,8 @@
             "properties":
             {
                 "MoveType":1,
-                "SygaldryA":-1,
-                "SygaldryB":-1
+                "SygaldryA":0,
+                "SygaldryB":0
             },
             "sourceTileLoc":-1,
             "type":"StoneBlock",
@@ -80,8 +80,8 @@
             "properties":
             {
                 "MoveType":1,
-                "SygaldryA":-1,
-                "SygaldryB":-1
+                "SygaldryA":0,
+                "SygaldryB":0
             },
             "sourceTileLoc":-1,
             "type":"StoneBlock",
@@ -94,8 +94,8 @@
             "properties":
             {
                 "MoveType":1,
-                "SygaldryA":-1,
-                "SygaldryB":-1
+                "SygaldryA":0,
+                "SygaldryB":0
             },
             "sourceTileLoc":-1,
             "type":"StoneBlock",

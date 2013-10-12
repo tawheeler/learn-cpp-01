@@ -23,11 +23,12 @@ namespace MysticDave {
 											    ForceNet();
 											    ~ForceNet();
 
-	    //bool									CanAct( int dir, Chamber * C );
-	    //void									Act( int dir, Chamber * C );
+	    bool									CanMove( int dir, Chamber * C );
+	    void									Move( int dir, Chamber * C );
 
 	    void									AddTileEntity( TileEntity * toAdd );
 
+        int                                     GetSize() { return tileEntityList.size(); }
 	    bool									Contains( int uid );
 
     private:
