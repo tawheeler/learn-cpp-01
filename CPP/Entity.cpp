@@ -12,6 +12,8 @@
 */
 
 #include "Entity.h"
+#include "LogManager.h"
+#include "EntityEventManager.h"
 
 using jsoncons::json;
 using namespace MysticDave;
@@ -25,26 +27,6 @@ Entity::Entity( std::string name, int uid ) {
 Entity::Entity( jsoncons::json jobj ) {
     Entity::name = std::string(jobj["name"].as_string().c_str());
     Entity::uid  = jobj["uid"].as_int();
-
-    /*
-    json jPropertiesArr = jobj["properties"];
-    for (auto it = jPropertiesArr.begin_members(); it != jPropertiesArr.end_members(); ++it) {
-        if ( it->second.is_bool() ) {
-            bool b = it->second.as_bool();
-            Register( std::string(it->first.c_str()), &b );
-        } else if ( it->second.is_double() ) {
-            float f = (float)(it->second.as_double());
-            Register( std::string(it->first.c_str()), &f );
-        } else if ( it->second.is_string() ) {
-            std::string str = std::string(it->second.as_string().c_str());
-            Register( std::string(it->first.c_str()), &str );
-        } else if ( it->second.is_number() ) {
-            int i = it->second.as_int();
-            Register( std::string(it->first.c_str()), &i );
-        }
-    }
-    */
-
     Init();
 }
 
@@ -62,38 +44,64 @@ void Entity::Update() {
 }
 
 void Entity::Cleanup() {
-    // free the Outputs list TODO
-    //std::list< Output * >::iterator iter;
-    //for ( iter = outputs.begin(); iter != outputs.end(); ) {
-    //    delete (*iter);
-    //    iter = outputs.erase(iter);
-    //}
-    //
-    // TODO: clear out the properties list
+    // free the Outputs list
+    std::map< std::string, std::list<OutputStruct> * >::iterator iter;
+    for( iter = outputMap.begin(); iter != outputMap.end(); ) {
+        delete ((*iter).second);
+        iter = outputMap.erase(iter);
+    }
 }
 
-void Entity::OnInput( Input * I ) {
+void Entity::OnInput( const std::string I ) {
 
     // KILL - set entity to be removed
-    if ( I->inputName.compare( "Kill" ) ) {
+    if ( I.compare( "Kill" ) == 0 ) {
         shouldBeRemoved = true;
-        // TODO: call output OnKilled
-        // trigger all OnKilled outputs
+        TriggerOutput( "OnKilled" );
     }
 }
 
 void Entity::AddOutput( OutputStruct os ) {
-    std::map< std::string, std::list< OutputStruct > >::iterator it = outputMap.find( os.outputName );
+    std::map< std::string, std::list< OutputStruct > * >::iterator it = outputMap.find( os.outputName );
     if ( it != outputMap.end() ) {
-       // the output name exists, add the output to the end of the list
-       std::list< OutputStruct > mylist = (it->second);
-       mylist.push_back( os );
+        // the output name exists, add the output to the end of the list
+        (it->second)->push_back( os );
     } else {
         // the output name does not exist. Add the output to a new list
-        std::list< OutputStruct > mylist = std::list< OutputStruct> ();
-        mylist.push_back( os );
+        std::list< OutputStruct > * mylist = new std::list< OutputStruct> ();
+        mylist->push_back( os );
         outputMap[ os.outputName ] = mylist;
     }
+}
+
+void Entity::TriggerOutput( const std::string outputName ) {
+    std::map< std::string, std::list< OutputStruct > * >::iterator map_it = outputMap.find( outputName );
+    if ( map_it != outputMap.end() ) {
+       // the output name exists, fire all in it
+       std::list< OutputStruct > * outputList = (map_it->second);
+       std::list< OutputStruct >::iterator iter;
+       for ( iter = outputList->begin(); iter != outputList->end(); ) {
+
+            MessageStruct * ms = new MessageStruct();
+            ms->inputName = (*iter).inputName;
+            ms->targetEntityID = (*iter).targetEntityID;
+            ms->timeDelay = (*iter).timeDelay;
+ 
+            (EntityEventManager::GetInstance()).AddEvent( ms );
+ 
+            // remove if fireOnceOnly
+            if ( (*iter).fireOnceOnly ) {
+                iter = outputList->erase(iter);
+            } else {
+                ++iter;
+            }
+        }
+
+        if ( outputList->empty() ) {
+            delete outputList;
+            outputMap.erase( map_it );
+        }
+    } 
 }
 
 jsoncons::json Entity::GetJSON() {

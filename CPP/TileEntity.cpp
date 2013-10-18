@@ -137,9 +137,16 @@ void TileEntity::Update() {
             delete curMotion;
             if ( sourceTileLoc != -1 ) {
                 // grab current chamber and remove from location
-                // TODO: call on extited tile
-                // TODO: call on entered tile
-                (ChamberManager::GetInstance()).GetCurrentChamber()->UnregisterTileEntityInTile( this, sourceTileLoc );
+                Chamber * curChamber = (ChamberManager::GetInstance()).GetCurrentChamber();
+                curChamber->UnregisterTileEntityInTile( this, sourceTileLoc );
+                
+                // Call onExtited tile on all tile entities in previous tile
+                curChamber->OnEntityExitedTile( this, sourceTileLoc );
+                
+                // Call onEntered tile on all tile entities except for this one in current tile
+                curChamber->OnEntityEnteredTile( this, Chamber::GetTileNumFromPos( GetClosestTileX(), GetClosestTileY() ) );
+
+                // forget where it came from
                 sourceTileLoc = -1;
             }
         }
@@ -184,6 +191,19 @@ void TileEntity::MoveDir( int dir, int sourceTileLoc, int ticksInMove ) {
 	
 bool TileEntity::IsInMotion() {
 	return !motionQueue.empty();
+}
+
+void TileEntity::OnInput( const std::string I ) {
+    
+    Entity::OnInput( I );
+
+    if ( I.compare( "EnableCollision" ) == 0 ) {
+        // Sets the blocksOccupation to true
+        blocksOccupation = true;
+    } else if ( I.compare( "DisableCollision" ) == 0 ) {
+        // Sets the blocksOccupation to false
+        blocksOccupation = false;
+    }
 }
 
 jsoncons::json TileEntity::GetJSON() {

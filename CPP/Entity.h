@@ -19,7 +19,6 @@
 #include <set>
 #include "jsoncons/json.hpp"
 #include "Property.h"
-#include "Input.h"
 #include "OutputStruct.h"
 #include "PropertySet.h"
 
@@ -37,8 +36,9 @@ namespace MysticDave {
 	    virtual void		                    Update();
 	    virtual void		                    Cleanup();
 
-        virtual void                            OnInput( Input * I );
+        virtual void                            OnInput( const std::string I );
         void                                    AddOutput( OutputStruct os );
+        void                                    TriggerOutput( const std::string outputName );
 
         bool                                    ShouldBeRemoved() { return shouldBeRemoved; }
 
@@ -51,7 +51,7 @@ namespace MysticDave {
 
         bool                                    shouldBeRemoved;
 
-        std::map< std::string, std::list<OutputStruct> >  outputMap;
+        std::map< std::string, std::list<OutputStruct> * >  outputMap;
         std::set< std::string >                           inputs;
 
         void                                   Init();

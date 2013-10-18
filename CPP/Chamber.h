@@ -64,10 +64,14 @@ namespace MysticDave {
 	    int										GetTileHeight() const;
 	    ALLEGRO_BITMAP *						GetFloorImage() const;
 
+        Entity *                                GetEntity( int uid );
         TileEntity *                            GetEntityWithPropertyInTile( std::string propertyName, int tileNum );
 
         void                                    CalcForceNets();
         ForceNet *                              GetForceNetContaining( int uid );
+
+        void                                    OnEntityExitedTile( TileEntity * actor, int tileLoc ); // Call onExtited tile on all tile entities in given tile
+        void                                    OnEntityEnteredTile( TileEntity * actor, int tileLoc ); // Call onEntered tile on all tile entities in given tile
 
         jsoncons::json                          GetJSON();
 

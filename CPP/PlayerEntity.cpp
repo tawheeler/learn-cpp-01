@@ -106,6 +106,26 @@ void PlayerEntity::Init() {
 	animPushWest->frameDurations[1] = 18; animPushWest->frameIDs[1] = 14;
 	animPushWest->Init();
     animationMap["pushWest"] = animPushWest;
+
+    Animation * animTryPushNorth = new Animation( 1, tex );
+    animTryPushNorth->frameDurations[0] = 5; animTryPushNorth->frameIDs[0] = 6;
+    animTryPushNorth->Init();
+    animationMap["tryPushNorth"] = animTryPushNorth;
+
+    Animation * animTryPushEast = new Animation( 1, tex );
+    animTryPushEast->frameDurations[0] = 5; animTryPushEast->frameIDs[0] = 5;
+    animTryPushEast->Init();
+    animationMap["tryPushEast"] = animTryPushEast;
+
+    Animation * animTryPushSouth = new Animation( 1, tex );
+    animTryPushSouth->frameDurations[0] = 5; animTryPushSouth->frameIDs[0] = 20;
+    animTryPushSouth->Init();
+    animationMap["tryPushSouth"] = animTryPushSouth;
+
+    Animation * animTryPushWest = new Animation( 1, tex );
+    animTryPushWest->frameDurations[0] = 5; animTryPushWest->frameIDs[0] = 28;
+    animTryPushWest->Init();
+    animationMap["tryPushWest"] = animTryPushWest;
 }
 
 void PlayerEntity::Cleanup() {

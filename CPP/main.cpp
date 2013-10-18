@@ -24,6 +24,7 @@
 #include "ScreenManager.h" 
 #include "ResourceManager.h"
 #include "InputManager.h"
+#include "EntityEventManager.h"
 
 #include "BaseScreen.h"
 #include "MainScreen.h"
@@ -34,6 +35,7 @@ LogManager *				myLogManager;
 ScreenManager *				myScreenManager;
 ResourceManager *			myResourceManager;
 InputManager *              myInputManager;
+EntityEventManager *        myEntityEventManager;
 
 bool						done;
 ALLEGRO_EVENT_QUEUE *		event_queue;
@@ -82,6 +84,8 @@ void Init( void ) {
 	myResourceManager->StartUp();
     myInputManager = &(InputManager::GetInstance());
     myInputManager->StartUp();
+    myEntityEventManager = &(EntityEventManager::GetInstance());
+    myEntityEventManager->StartUp();
 	
     timer = al_create_timer( 1.0 / FPS ); //set fps
     if ( !timer ) {
@@ -137,6 +141,8 @@ void Shutdown(void) {
 	}
 
 	//free all user-defined objects
+    myEntityEventManager->ShutDown();
+    delete myEntityEventManager;
 	myInputManager->ShutDown();
     delete myInputManager;
 	myResourceManager->ShutDown();
@@ -174,6 +180,7 @@ void GameLoop( void ) {
        if ( evt.type == ALLEGRO_EVENT_TIMER ) {
            redraw = true;
            UpdateLogic();
+           myEntityEventManager->Update();
            myInputManager->ZeroToggled();
        } else {
 			if ( evt.type == ALLEGRO_EVENT_KEY_DOWN ) {

@@ -14,12 +14,14 @@
 #include "Globals.h"
 #include "Motion.h"
 #include "Utils.h"
+#include "OutputStruct.h"
 #include "TileBitmapVisual.h"
 #include "Entity.h"
 #include "jsoncons/json.hpp"
 #include "CampFire.h"
 #include "PlayerEntity.h"
 #include "StoneBlock.h"
+#include "Trigger.h"
 #include "SygaldryScreen.h"
 #include "InputManager.h"
 
@@ -71,6 +73,19 @@ void MainScreen::Init() {
     sb4->SetPosTile( 9, 7 );
     curChamber->AddTileEntity( sb4 );
     curChamber->RegisterTileEntityInTile( sb4, 9, 7 );
+
+    Trigger * tr1 = new Trigger( "trigger1", 10 );
+    tr1->SetPosTile( 6, 5 );
+    curChamber->AddTileEntity( tr1 );
+    curChamber->RegisterTileEntityInTile( tr1, 6, 5 );    
+
+    OutputStruct os2 = OutputStruct();
+    os2.fireOnceOnly = true;
+    os2.inputName = "Kill";
+    os2.outputName = "OnTrigger";
+    os2.targetEntityID = 2;
+    os2.timeDelay = 0;
+    tr1->AddOutput( os2 );
     
     using namespace std;
     using jsoncons::json;
@@ -161,7 +176,7 @@ void MainScreen::Update() {
                         if ( pushable != 0 ) {
                             // we are pushing something
                             ForceNet * fnet = curChamber->GetForceNetContaining( pushable->GetUID() );
-                            if ( fnet != 0 ) {
+                            if ( fnet != 0  ) {
                                 // handle pushing a force net
 
                                 if ( fnet->CanMove( desDir, curChamber ) ) {
@@ -174,6 +189,13 @@ void MainScreen::Update() {
                                         case ( UTIL::DIR_WEST ):  player->PlayAnimation( "pushWest" );  break;
                                     }
                                     fnet->Move( desDir, curChamber );
+                                } else {
+                                    switch ( desDir ) {
+                                        case ( UTIL::DIR_NORTH ): player->PlayAnimation( "tryPushNorth" ); break;
+                                        case ( UTIL::DIR_EAST ):  player->PlayAnimation( "tryPushEast" );  break;
+                                        case ( UTIL::DIR_SOUTH ): player->PlayAnimation( "tryPushSouth" ); break;
+                                        case ( UTIL::DIR_WEST ):  player->PlayAnimation( "tryPushWest" );  break;
+                                    }
                                 }
 
                             } else {
@@ -189,6 +211,13 @@ void MainScreen::Update() {
                                     }
                                     curChamber->RegisterTileEntityInTile( pushable, tx + dx, ty + dy );
                                     pushable->MoveDir( desDir, Chamber::GetTileNumFromPos( tx, ty ), 36 );
+                                } else {
+                                    switch ( desDir ) {
+                                        case ( UTIL::DIR_NORTH ): player->PlayAnimation( "tryPushNorth" ); break;
+                                        case ( UTIL::DIR_EAST ):  player->PlayAnimation( "tryPushEast" );  break;
+                                        case ( UTIL::DIR_SOUTH ): player->PlayAnimation( "tryPushSouth" ); break;
+                                        case ( UTIL::DIR_WEST ):  player->PlayAnimation( "tryPushWest" );  break;
+                                    }
                                 }
                             }
                         }

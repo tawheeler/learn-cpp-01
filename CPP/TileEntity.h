@@ -58,6 +58,8 @@ namespace MysticDave {
         virtual void                OnEntered( TileEntity * actor ) {} // called when actor enteres the space this TE is in
         virtual void                OnExited( TileEntity * actor ) {}  // called when actor leaves the space this TE is in
 
+        virtual void                OnInput( const std::string I );
+
         virtual jsoncons::json      GetJSON();
 
     protected:

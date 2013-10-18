@@ -14,6 +14,8 @@
 #include "TileEntity.h"
 #include "CampFire.h"
 #include "StoneBlock.h"
+#include "Trigger.h"
+#include <assert.h>
 
 using jsoncons::json;
 using namespace MysticDave;
@@ -110,6 +112,8 @@ Chamber::Chamber( jsoncons::json jobj ) {
             te = new CampFire( *it );
         } else if ( (*it)["type"].as_string().compare( "StoneBlock" ) == 0 ) {
             te = new StoneBlock( *it );
+        } else if ( (*it)["type"].as_string().compare( "Trigger" ) == 0 ) {
+            te = new Trigger( *it );
         }
 
         if ( te != 0 ) {
@@ -161,9 +165,28 @@ void Chamber::Cleanup() {
 	
 void Chamber::Update() {
     std::list < TileEntity * >::iterator iter;
-	for ( iter = tileEntityList.begin(); iter != tileEntityList.end(); ++iter ) {
-		(*iter)->Update();
+	for ( iter = tileEntityList.begin(); iter != tileEntityList.end(); ) {
+        if ( (*iter)->ShouldBeRemoved() ) {
+            (*iter)->Cleanup();
+            delete  (*iter);
+            iter = tileEntityList.erase(iter);
+        } else {
+		    (*iter)->Update();
+            ++iter;
+        }
 	}
+
+    std::list < Entity * >::iterator iter2;
+    for ( iter2 = entityList.begin(); iter2 != entityList.end(); ++iter2 ) {
+        if ( (*iter2)->ShouldBeRemoved() ) {
+            (*iter2)->Cleanup();
+            delete  (*iter2);
+            iter2 = entityList.erase(iter2);
+        } else {
+		    (*iter2)->Update();
+            ++iter2;
+        }
+    }
 }
 
 void Chamber::Render( int x, int y ) {
@@ -276,6 +299,15 @@ bool Chamber::CanTileBeEntered( int x, int y ) {
     return retval;
 }
 
+Entity * Chamber::GetEntity( int uid ) {
+    std::map< int, Entity *>::iterator pos = entityUIDMap.find(uid);
+    //assert(pos != entityUIDMap.end());
+    if ( pos == entityUIDMap.end() ) {
+        return 0;
+    }
+    return pos->second;
+}
+
 TileEntity * Chamber::GetEntityWithPropertyInTile( std::string propertyName, int tileNum ) {
     TileEntity * retval = 0;
 
@@ -335,6 +367,20 @@ ForceNet * Chamber::GetForceNetContaining( int uid ) {
 	}
 
     return retval;
+}
+
+void Chamber::OnEntityExitedTile( TileEntity * actor, int tileLoc ) {
+    std::list< TileEntity * >::iterator iter;
+    for ( iter = tileEntityTileListArr[tileLoc].begin(); iter != tileEntityTileListArr[tileLoc].end(); ++iter ) {
+        (*iter)->OnExited( actor );
+    }
+}
+
+void Chamber::OnEntityEnteredTile( TileEntity * actor, int tileLoc ) {
+    std::list< TileEntity * >::iterator iter;
+    for ( iter = tileEntityTileListArr[tileLoc].begin(); iter != tileEntityTileListArr[tileLoc].end(); ++iter ) {
+        (*iter)->OnEntered( actor );
+    }
 }
 
 jsoncons::json Chamber::GetJSON() {

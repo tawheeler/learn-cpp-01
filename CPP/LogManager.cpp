@@ -20,8 +20,8 @@ using namespace MysticDave;
 void LogManager::StartUp() {
 	debug = true;
 	appLog.open( "applog.txt" );
-	clientLog.open( "clntlog.txt" );
-	serverLog.open( "srvrlog.txt" );
+	//clientLog.open( "clntlog.txt" );
+	//serverLog.open( "srvrlog.txt" );
 	Write( LogManager::LOG_APP, "Log Manager created\n" );
 }
 
@@ -67,14 +67,14 @@ int LogManager::DebugPrintF( int target, const char* format, va_list argList ) {
 				appLog.write( s_buffer, len );
 				appLog.flush();
 				break;
-			case ( LogManager::LOG_CLIENT ):
+			/*case ( LogManager::LOG_CLIENT ):
 				clientLog.write( s_buffer, len );
 				clientLog.flush();
 				break;
 			case ( LogManager::LOG_SERVER ):
 				serverLog.write( s_buffer, len );
 				serverLog.flush();
-				break;
+				break;*/
 			case ( LogManager::LOG_USER ):
 				//TODO: have a way to display to the user terminal
 				break;
