@@ -10,6 +10,7 @@
 */
 
 #include "ChamberManager.h"
+#include "LogManager.h"
 #include <assert.h>
 
 using namespace MysticDave;
@@ -42,20 +43,33 @@ ChamberManager& ChamberManager::GetInstance() {
 
 Chamber * ChamberManager::GetChamber( const int uid ) {
 	std::map < int, Chamber * >::iterator iter = chamberMap.find( uid );
-	Chamber * retval;
-	if ( iter != chamberMap.end() ) {
-	   //element found;
-	   retval = iter->second;
-	} else { // not found!
-		retval = 0;
-	}
-	return retval;
+    assert( iter != chamberMap.end() );
+	return iter->second;
 }
 
 Chamber * ChamberManager::GetCurrentChamber() {
     return curChamber;
 }
 
-void ChamberManager::SetCurrentChamber( Chamber * C ) {
-    curChamber = C;
+void ChamberManager::SetCurrentChamber( const int uid ) {
+    //curChamber = C;
+    
+    if ( HasChamber( uid ) ) {
+        // TODO: call some sort of reset() function?
+        (LogManager::GetInstance()).Write( LogManager::LOG_APP, "ChamberManager::SetCurrentChamber: Switching to chamber %d\n", uid );
+        curChamber = GetChamber( uid );
+    } else {
+        (LogManager::GetInstance()).Write( LogManager::LOG_APP, "ChamberManager::SetCurrentChamber: Failed to switch to chamber %d\n", uid );
+    }
+}
+
+bool ChamberManager::HasChamber( const int uid ) {
+    std::map < int, Chamber * >::iterator iter = chamberMap.find( uid );
+    return ( iter != chamberMap.end() );
+}
+
+void ChamberManager::AddChamber( Chamber * chamber ) {
+    if ( !HasChamber( chamber->GetUID() ) ) {
+        chamberMap[ chamber->GetUID() ] = chamber;
+    }
 }

@@ -36,9 +36,6 @@ namespace MysticDave {
 	    virtual void							Update();
 	    virtual void							Render() const;
 
-	    Chamber *								curChamber;
 	    PlayerEntity *							player;
-
-	    ForceNet *								fnet;
     };
 }

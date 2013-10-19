@@ -27,6 +27,25 @@ Entity::Entity( std::string name, int uid ) {
 Entity::Entity( jsoncons::json jobj ) {
     Entity::name = std::string(jobj["name"].as_string().c_str());
     Entity::uid  = jobj["uid"].as_int();
+
+    // add the outputs
+    json outputsJSON = jobj["outputs"];
+    
+    for (auto it_obj = outputsJSON.begin_members(); it_obj != outputsJSON.end_members(); ++it_obj ) {
+        json outputsListJSON = it_obj->second;
+
+        for (auto it_arr = outputsListJSON.begin_elements(); it_arr != outputsListJSON.end_elements(); ++it_arr) {
+
+            OutputStruct os = OutputStruct();
+            os.fireOnceOnly   = (*it_arr)[ "fireOnceOnly" ].as_bool();
+            os.inputName      = (*it_arr)[ "inputName" ].as_string();
+            os.outputName     = (*it_arr)[ "outputName" ].as_string();
+            os.targetEntityID = (*it_arr)[ "targetEntityID" ].as_int();
+            os.timeDelay      = (*it_arr)[ "timeDelay" ].as_int();
+            AddOutput( os );
+        }
+    }
+
     Init();
 }
 
@@ -134,24 +153,23 @@ jsoncons::json Entity::GetJSON() {
     obj["properties"] = propertiesJSON;
 
     // add the outputs
-    /*
     json outputsJSON(json::an_object);
-    std::map< std::string, std::list<OutputStruct> >::iterator iter2;
-    for ( iter2 = outputs.begin(); iter2 != outputs.end(); ++iter2 ) {
+    std::map< std::string, std::list<OutputStruct> * >::iterator iter2;
+    for ( iter2 = outputMap.begin(); iter2 != outputMap.end(); ++iter2 ) {
         std::string key = iter2->first;
-        std::list<OutputStruct> list = iter2->second;
+        std::list<OutputStruct> * list = iter2->second;
 
         json outputsListJSON(json::an_array);
         std::list<OutputStruct>::iterator iter3;
-        for ( iter3 = list.begin(); iter3 != list.end(); ++iter3 ) {
+        for ( iter3 = list->begin(); iter3 != list->end(); ++iter3 ) {
 
             json osJSON( json::an_object );
 
-            osJSON[ "outputName" ] = (*iter3).outputName;
-            osJSON[ "targetEntity" ] = (*iter3).targetEntity;
-            osJSON[ "inputName" ] = (*iter3).inputName;
-            osJSON[ "timeDelay" ] = (*iter3).timeDelay;
-            osJSON[ "fireOnceOnly" ] = (*iter3).fireOnceOnly;
+            osJSON[ "outputName" ]     = (*iter3).outputName;
+            osJSON[ "targetEntityID" ] = (*iter3).targetEntityID;
+            osJSON[ "inputName" ]      = (*iter3).inputName;
+            osJSON[ "timeDelay" ]      = (*iter3).timeDelay;
+            osJSON[ "fireOnceOnly" ]   = (*iter3).fireOnceOnly;
 
             outputsListJSON.add( osJSON );
         }
@@ -159,6 +177,6 @@ jsoncons::json Entity::GetJSON() {
         outputsJSON[ key ] = outputsListJSON;
     }
     obj["outputs"] = outputsJSON;
-    */
+    
     return obj;
 }

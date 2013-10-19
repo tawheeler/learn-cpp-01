@@ -5,6 +5,9 @@
     [
         {
             "name":"campFire1",
+            "outputs":
+            {
+            },
             "properties":
             {
             },
@@ -16,6 +19,9 @@
         },
         {
             "name":"campFire2",
+            "outputs":
+            {
+            },
             "properties":
             {
             },
@@ -26,7 +32,10 @@
             "y":128
         },
         {
-            "name":"campFire2",
+            "name":"campFire3",
+            "outputs":
+            {
+            },
             "properties":
             {
             },
@@ -37,7 +46,10 @@
             "y":512
         },
         {
-            "name":"campFire2",
+            "name":"campFire4",
+            "outputs":
+            {
+            },
             "properties":
             {
             },
@@ -49,6 +61,9 @@
         },
         {
             "name":"stoneBlock1",
+            "outputs":
+            {
+            },
             "properties":
             {
                 "MoveType":1,
@@ -63,6 +78,9 @@
         },
         {
             "name":"stoneBlock2",
+            "outputs":
+            {
+            },
             "properties":
             {
                 "MoveType":1,
@@ -77,6 +95,9 @@
         },
         {
             "name":"stoneBlock3",
+            "outputs":
+            {
+            },
             "properties":
             {
                 "MoveType":1,
@@ -91,6 +112,9 @@
         },
         {
             "name":"stoneBlock4",
+            "outputs":
+            {
+            },
             "properties":
             {
                 "MoveType":1,
@@ -102,6 +126,49 @@
             "uid":9,
             "x":576,
             "y":448
+        },
+        {
+            "name":"trigger1",
+            "outputs":
+            {
+                "OnTrigger":
+                [
+                    {
+                        "fireOnceOnly":true,
+                        "inputName":"Kill",
+                        "outputName":"OnTrigger",
+                        "targetEntityID":2,
+                        "timeDelay":0
+                    }
+                ]
+            },
+            "properties":
+            {
+                "StartDisabled":false
+            },
+            "sourceTileLoc":-1,
+            "type":"Trigger",
+            "uid":10,
+            "x":384,
+            "y":320
+        },
+        {
+            "name":"transitionEntity1",
+            "outputs":
+            {
+            },
+            "properties":
+            {
+                "Param":1,
+                "TargetChamberUID":2,
+                "TransitionDuration":6,
+                "TransitionType":1
+            },
+            "sourceTileLoc":-1,
+            "type":"TransitionEntity",
+            "uid":11,
+            "x":384,
+            "y":384
         }
     ],
     "tileHeight":11,

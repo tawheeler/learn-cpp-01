@@ -24,7 +24,10 @@ namespace MysticDave {
 
         Chamber *                                           GetChamber( const int uid ); // obtain the Chamber with the given id
         Chamber *                                           GetCurrentChamber();
-        void                                                SetCurrentChamber( Chamber * C );  // TODO: change this to (const int uid)
+        void                                                SetCurrentChamber( const int uid );
+        bool                                                HasChamber( const int uid );
+
+        void                                                AddChamber( Chamber * chamber ); // add the chamber to the set
 
     private:
 														    ChamberManager() {};

@@ -15,6 +15,8 @@
 #include "CampFire.h"
 #include "StoneBlock.h"
 #include "Trigger.h"
+#include "TransitionEntity.h"
+#include "LogManager.h"
 #include <assert.h>
 
 using jsoncons::json;
@@ -70,8 +72,8 @@ Chamber::Chamber( jsoncons::json jobj ) {
 
     Chamber::chamberID = jobj["uid"].as_int();
 
-    tileWidth  = Chamber::chamberID = jobj["tileWidth"].as_int();
-	tileHeight = Chamber::chamberID = jobj["tileHeight"].as_int();
+    tileWidth  = jobj["tileWidth"].as_int();
+	tileHeight = jobj["tileHeight"].as_int();
 	numTiles   = tileWidth * tileHeight;
 
     //tileArr = new Tile[numTiles];
@@ -114,6 +116,8 @@ Chamber::Chamber( jsoncons::json jobj ) {
             te = new StoneBlock( *it );
         } else if ( (*it)["type"].as_string().compare( "Trigger" ) == 0 ) {
             te = new Trigger( *it );
+        } else if ( (*it)["type"].as_string().compare( "TransitionEntity" ) == 0 ) {
+            te = new TransitionEntity( *it );
         }
 
         if ( te != 0 ) {

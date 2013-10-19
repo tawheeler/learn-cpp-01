@@ -25,7 +25,7 @@ namespace MysticDave {
 
 						        PlayerEntity();
                                 PlayerEntity( jsoncons::json jobj );
-						        ~PlayerEntity();
+		virtual 		        ~PlayerEntity();
 
         virtual void            Cleanup();
 

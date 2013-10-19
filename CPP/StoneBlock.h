@@ -21,7 +21,7 @@ namespace MysticDave {
 
                                     StoneBlock( std::string name, int uid );
                                     StoneBlock( jsoncons::json jobj );
-		                            ~StoneBlock();
+		virtual                     ~StoneBlock();
 
         void                        InitStoneBlock();
 

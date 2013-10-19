@@ -22,6 +22,7 @@
 #include "PlayerEntity.h"
 #include "StoneBlock.h"
 #include "Trigger.h"
+#include "TransitionEntity.h"
 #include "SygaldryScreen.h"
 #include "InputManager.h"
 
@@ -33,14 +34,15 @@ void MainScreen::Init() {
     keysPressed = (InputManager::GetInstance()).GetKeysPressed();
     keysToggled = (InputManager::GetInstance()).GetKeysToggled();
 
-    //curChamber = new Chamber( json::parse_file("./saves/chamber.json") );
+    Chamber * curChamber = new Chamber( json::parse_file("./saves/chamber.json") );
     
-    curChamber = new Chamber(1);
+    /*
+    Chamber * curChamber = new Chamber(1);
 
     CampFire * cf1 = new CampFire( "campFire1", 2 );
     CampFire * cf2 = new CampFire( "campFire2", 3 );
-    CampFire * cf3 = new CampFire( "campFire2", 4 );
-    CampFire * cf4 = new CampFire( "campFire2", 5 );
+    CampFire * cf3 = new CampFire( "campFire3", 4 );
+    CampFire * cf4 = new CampFire( "campFire4", 5 );
     cf1->SetPosTile( 2, 2 );
     curChamber->AddTileEntity( cf1 );
     curChamber->RegisterTileEntityInTile( cf1, 2, 2 );
@@ -86,7 +88,12 @@ void MainScreen::Init() {
     os2.targetEntityID = 2;
     os2.timeDelay = 0;
     tr1->AddOutput( os2 );
-    
+
+    TransitionEntity * transitionEntity = new TransitionEntity( "transitionEntity1", 11, TransitionEntity::Transition::TRANSITION_BLACKOUT, 2, 60, 1 );
+    transitionEntity->SetPosTile( 6, 6 );
+    curChamber->AddTileEntity( transitionEntity );
+    curChamber->RegisterTileEntityInTile( transitionEntity, 6, 6 );
+
     using namespace std;
     using jsoncons::json;
     using jsoncons::pretty_print;
@@ -97,21 +104,28 @@ void MainScreen::Init() {
     myfile.open ("./saves/chamber.json");
     myfile << pretty_print(jobj_out) << std::endl;
     myfile.close();
+    */
 
     player = new PlayerEntity();
     player->SetPosTile( 6, 4 );
 
-    (ChamberManager::GetInstance()).SetCurrentChamber( curChamber ); // set the current chamber
+    (ChamberManager::GetInstance()).AddChamber( curChamber );
+    (ChamberManager::GetInstance()).SetCurrentChamber( curChamber->GetUID() ); // set the current chamber
     curChamber->CalcForceNets();
+
+    Chamber * chamberB = new Chamber( json::parse_file("./saves/chamber2.json") );
+    (ChamberManager::GetInstance()).AddChamber( chamberB );
+    chamberB->CalcForceNets();
 }
 
 void MainScreen::Cleanup() {
-	delete curChamber;
 	player->Cleanup();
 	delete player;
 }
 
 void MainScreen::Update() {
+
+    Chamber * curChamber = (ChamberManager::GetInstance()).GetCurrentChamber();
 
 	if ( player != 0 ) {
 
@@ -236,6 +250,6 @@ void MainScreen::Update() {
 
 void MainScreen::Render() const {
     // TODO: add camera
-	curChamber->Render( 0, 0 );
+	(ChamberManager::GetInstance()).GetCurrentChamber()->Render( 0, 0 );
 	player->GetVisual()->Render( 0, 0 );
 }

@@ -35,10 +35,10 @@ namespace MysticDave {
 
                                                 SygaldryScreen( TileEntity * te );
 
-	    void									Init();
-	    void									Cleanup();
-	    void									Update();
-	    void									Render() const;
+	    virtual void							Init();
+	    virtual void							Cleanup();
+	    virtual void							Update();
+	    virtual void							Render() const;
 
     private:
         TileEntity *                            sygaldryEntity;

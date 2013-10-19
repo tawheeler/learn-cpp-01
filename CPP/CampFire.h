@@ -23,7 +23,7 @@ namespace MysticDave {
 
                                     CampFire( std::string name, int uid );
                                     CampFire( jsoncons::json jobj );
-		                            ~CampFire();
+		virtual                     ~CampFire();
 
         void                        InitCampFire();
 	    virtual void		        Update();

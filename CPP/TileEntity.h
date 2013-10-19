@@ -24,7 +24,7 @@ namespace MysticDave {
 
                                     TileEntity( std::string name, int uid );
                                     TileEntity( jsoncons::json jobj );
-		                            ~TileEntity();
+		virtual                     ~TileEntity();
 
 	    bool				        BlocksOccupation();
         void                        SetBlocksOccupation( bool blocks );
@@ -32,6 +32,7 @@ namespace MysticDave {
         Vec2i *                     GetPos();
         int                         GetClosestTileX();
         int                         GetClosestTileY();
+        int                         GetClosestTileLoc();
         void                        SetPosTile( int tileX, int tileY );
 
         Visual *                    GetVisual();
