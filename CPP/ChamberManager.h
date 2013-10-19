@@ -12,6 +12,7 @@
 #pragma once
 
 #include "Chamber.h"
+#include "PlayerEntity.h"
 #include <map>
 
 namespace MysticDave {
@@ -29,6 +30,8 @@ namespace MysticDave {
 
         void                                                AddChamber( Chamber * chamber ); // add the chamber to the set
 
+        PlayerEntity *                                      GetPlayer();
+
     private:
 														    ChamberManager() {};
 														    ChamberManager( ChamberManager const& );  //do not implement
@@ -37,6 +40,7 @@ namespace MysticDave {
 	    std::map < int, Chamber * >			                chamberMap;
 
         Chamber *                                           curChamber; // the currently active chamber
+        PlayerEntity *                                      player;
 	
     };
 }

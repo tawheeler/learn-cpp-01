@@ -128,7 +128,6 @@ void TileEntity::SetFlammable( bool b ) {
 void TileEntity::Update() {
 	Entity::Update();
 	
-    // TODO: this
     // update the motion, if we have one
     if ( !motionQueue.empty() ) {
 

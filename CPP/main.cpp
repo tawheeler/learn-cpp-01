@@ -24,6 +24,7 @@
 #include "ScreenManager.h" 
 #include "ResourceManager.h"
 #include "InputManager.h"
+#include "ChamberManager.h"
 #include "EntityEventManager.h"
 
 #include "BaseScreen.h"
@@ -35,7 +36,9 @@ LogManager *				myLogManager;
 ScreenManager *				myScreenManager;
 ResourceManager *			myResourceManager;
 InputManager *              myInputManager;
+ChamberManager *            myChamberManager;
 EntityEventManager *        myEntityEventManager;
+
 
 bool						done;
 ALLEGRO_EVENT_QUEUE *		event_queue;
@@ -84,8 +87,6 @@ void Init( void ) {
 	myResourceManager->StartUp();
     myInputManager = &(InputManager::GetInstance());
     myInputManager->StartUp();
-    myEntityEventManager = &(EntityEventManager::GetInstance());
-    myEntityEventManager->StartUp();
 	
     timer = al_create_timer( 1.0 / FPS ); //set fps
     if ( !timer ) {
@@ -116,6 +117,12 @@ void Init( void ) {
 
 	al_set_window_title( display, "Mystic Dave" );
 
+    // load secondary managers
+    myChamberManager = &(ChamberManager::GetInstance());
+    myChamberManager->StartUp();
+    myEntityEventManager = &(EntityEventManager::GetInstance());
+    myEntityEventManager->StartUp();
+
 	BaseScreen * screen = new MainScreen();
 	screen->Init();
 	myScreenManager->PushGameScreen( screen );
@@ -143,6 +150,8 @@ void Shutdown(void) {
 	//free all user-defined objects
     myEntityEventManager->ShutDown();
     delete myEntityEventManager;
+    myChamberManager->ShutDown();
+    delete myChamberManager;
 	myInputManager->ShutDown();
     delete myInputManager;
 	myResourceManager->ShutDown();

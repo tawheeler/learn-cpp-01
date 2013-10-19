@@ -8,7 +8,6 @@
 
 #include "MainScreen.h"
 #include "ResourceManager.h"
-#include "ChamberManager.h"
 #include "ScreenManager.h"
 #include "LogManager.h"
 #include "Globals.h"
@@ -25,6 +24,7 @@
 #include "TransitionEntity.h"
 #include "SygaldryScreen.h"
 #include "InputManager.h"
+#include "ForceNet.h"
 
 using jsoncons::json;
 using namespace MysticDave;
@@ -33,6 +33,8 @@ void MainScreen::Init() {
 
     keysPressed = (InputManager::GetInstance()).GetKeysPressed();
     keysToggled = (InputManager::GetInstance()).GetKeysToggled();
+
+    CM = &(ChamberManager::GetInstance());
 
     Chamber * curChamber = new Chamber( json::parse_file("./saves/chamber.json") );
     
@@ -106,8 +108,9 @@ void MainScreen::Init() {
     myfile.close();
     */
 
-    player = new PlayerEntity();
-    player->SetPosTile( 6, 4 );
+    
+    // TODO: properly place the player into the chamber
+    CM->GetPlayer()->SetPosTile( 6, 4 );
 
     (ChamberManager::GetInstance()).AddChamber( curChamber );
     (ChamberManager::GetInstance()).SetCurrentChamber( curChamber->GetUID() ); // set the current chamber
@@ -119,13 +122,13 @@ void MainScreen::Init() {
 }
 
 void MainScreen::Cleanup() {
-	player->Cleanup();
-	delete player;
+	// do nothing
 }
 
 void MainScreen::Update() {
 
-    Chamber * curChamber = (ChamberManager::GetInstance()).GetCurrentChamber();
+    Chamber * curChamber = CM->GetCurrentChamber();
+    PlayerEntity * player = CM->GetPlayer();
 
 	if ( player != 0 ) {
 
@@ -250,6 +253,6 @@ void MainScreen::Update() {
 
 void MainScreen::Render() const {
     // TODO: add camera
-	(ChamberManager::GetInstance()).GetCurrentChamber()->Render( 0, 0 );
-	player->GetVisual()->Render( 0, 0 );
+	CM->GetCurrentChamber()->Render( 0, 0 );
+	CM->GetPlayer()->GetVisual()->Render( 0, 0 );
 }

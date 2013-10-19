@@ -11,15 +11,20 @@
 
 #pragma once
 
-#include <allegro5/allegro5.h>
 #include "BaseScreen.h"
-#include "Chamber.h"
-#include "PlayerEntity.h"
-#include "ForceNet.h"
+#include "ChamberManager.h"
 
 namespace MysticDave {
     class MainScreen : public BaseScreen {
+
     public:
+
+	    virtual void						    Init();
+	    virtual void							Cleanup();
+	    virtual void							Update();
+	    virtual void							Render() const;
+
+    private:
 
         bool * keysPressed;
         bool * keysToggled;
@@ -31,11 +36,7 @@ namespace MysticDave {
                    INTERACT = ALLEGRO_KEY_E,
                    SPACE    = ALLEGRO_KEY_SPACE };
 
-	    virtual void						    Init();
-	    virtual void							Cleanup();
-	    virtual void							Update();
-	    virtual void							Render() const;
+        ChamberManager * CM; // pointer to out chamber manager
 
-	    PlayerEntity *							player;
     };
 }

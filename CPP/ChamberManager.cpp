@@ -18,10 +18,16 @@ using namespace MysticDave;
 void ChamberManager::StartUp() {
     curChamber = 0;
 	// TODO: load chambers from JSON file or something
+    player = new PlayerEntity();
+    // TODO: load last save or something. Move player to a GameManager or something?
 }
 
 void ChamberManager::ShutDown() {
 	
+    // clean up the player
+    player->Cleanup();
+    delete player;
+
 	// free chambers
 	std::map < int, Chamber * >::iterator iter;
 	for ( iter = chamberMap.begin(); iter != chamberMap.end(); ) {
@@ -72,4 +78,8 @@ void ChamberManager::AddChamber( Chamber * chamber ) {
     if ( !HasChamber( chamber->GetUID() ) ) {
         chamberMap[ chamber->GetUID() ] = chamber;
     }
+}
+
+PlayerEntity * ChamberManager::GetPlayer() {
+    return player;
 }

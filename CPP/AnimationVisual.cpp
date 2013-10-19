@@ -10,6 +10,8 @@
 */
 
 #include "AnimationVisual.h"
+#include "ResourceManager.h"
+#include "LogManager.h"
 #include "Globals.h"
 
 using namespace MysticDave;
@@ -46,7 +48,7 @@ void AnimationVisual::Render( int x, int y, float cx, float cy, float cz ) {
 		if ( frameTick <= 0 ) { // move to a new frame, if possible
 			frameIndex ++; // move to next frame
 			if ( frameIndex >= animation->numFrames ) { // ran out of frames
-				animation = 0; // done with animations
+				animation = 0; // done with animations (renderAnim = false)
 			} else {
 				frameTick = animation->frameDurations[frameIndex];
 				renderAnim = true;
