@@ -14,6 +14,7 @@
 #include "Chamber.h"
 #include "PlayerEntity.h"
 #include <map>
+#include <string>
 
 namespace MysticDave {
     class ChamberManager {
@@ -32,15 +33,19 @@ namespace MysticDave {
 
         PlayerEntity *                                      GetPlayer();
 
-    private:
-														    ChamberManager() {};
-														    ChamberManager( ChamberManager const& );  //do not implement
-	    void operator = ( ChamberManager const& ); // don't implement
+        
 
-	    std::map < int, Chamber * >			                chamberMap;
+    private:
+		std::map < int, Chamber * >			                chamberMap;
+        std::map < int, std::string >                       chamberFileLocMap;
 
         Chamber *                                           curChamber; // the currently active chamber
         PlayerEntity *                                      player;
-	
+                                                            
+                                                            ChamberManager() {};
+														    ChamberManager( ChamberManager const& );  //do not implement
+	    void operator = ( ChamberManager const& ); // don't implement
+
+        void                                                LoadChamberSet();
     };
 }

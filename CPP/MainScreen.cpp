@@ -35,8 +35,8 @@ void MainScreen::Init() {
     keysToggled = (InputManager::GetInstance()).GetKeysToggled();
 
     CM = &(ChamberManager::GetInstance());
-
-    Chamber * curChamber = new Chamber( json::parse_file("./saves/chamber.json") );
+    Chamber * curChamber = CM->GetChamber( 1 );
+    //Chamber * curChamber = new Chamber( json::parse_file("./saves/chamber.json") );
     
     /*
     Chamber * curChamber = new Chamber(1);
@@ -112,13 +112,8 @@ void MainScreen::Init() {
     // TODO: properly place the player into the chamber
     CM->GetPlayer()->SetPosTile( 6, 4 );
 
-    (ChamberManager::GetInstance()).AddChamber( curChamber );
     (ChamberManager::GetInstance()).SetCurrentChamber( curChamber->GetUID() ); // set the current chamber
     curChamber->CalcForceNets();
-
-    Chamber * chamberB = new Chamber( json::parse_file("./saves/chamber2.json") );
-    (ChamberManager::GetInstance()).AddChamber( chamberB );
-    chamberB->CalcForceNets();
 }
 
 void MainScreen::Cleanup() {

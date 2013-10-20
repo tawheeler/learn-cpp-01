@@ -11,13 +11,15 @@
 
 #include "ChamberManager.h"
 #include "LogManager.h"
+#include "jsoncons/json.hpp"
 #include <assert.h>
 
+using jsoncons::json;
 using namespace MysticDave;
 
 void ChamberManager::StartUp() {
     curChamber = 0;
-	// TODO: load chambers from JSON file or something
+    LoadChamberSet();
     player = new PlayerEntity();
     // TODO: load last save or something. Move player to a GameManager or something?
 }
@@ -48,9 +50,17 @@ ChamberManager& ChamberManager::GetInstance() {
 }
 
 Chamber * ChamberManager::GetChamber( const int uid ) {
+    assert( HasChamber( uid ) );
 	std::map < int, Chamber * >::iterator iter = chamberMap.find( uid );
-    assert( iter != chamberMap.end() );
-	return iter->second;
+    if ( iter == chamberMap.end() ) {
+        // Load the chamber from file
+        Chamber * C = new Chamber( json::parse_file(chamberFileLocMap[ uid ]) );
+        // add it to the list
+        chamberMap[uid] = C;
+        return C;
+    } else {
+	    return iter->second;
+    }
 }
 
 Chamber * ChamberManager::GetCurrentChamber() {
@@ -70,16 +80,20 @@ void ChamberManager::SetCurrentChamber( const int uid ) {
 }
 
 bool ChamberManager::HasChamber( const int uid ) {
-    std::map < int, Chamber * >::iterator iter = chamberMap.find( uid );
-    return ( iter != chamberMap.end() );
-}
-
-void ChamberManager::AddChamber( Chamber * chamber ) {
-    if ( !HasChamber( chamber->GetUID() ) ) {
-        chamberMap[ chamber->GetUID() ] = chamber;
-    }
+    std::map < int, std::string >::iterator iter = chamberFileLocMap.find( uid );
+    return ( iter != chamberFileLocMap.end() );
 }
 
 PlayerEntity * ChamberManager::GetPlayer() {
     return player;
+}
+
+void ChamberManager::LoadChamberSet() {
+    json chamberSet = json::parse_file("./saves/chamberSet.json");
+
+    for (auto it_obj = chamberSet.begin_members(); it_obj != chamberSet.end_members(); ++it_obj ) {
+        std::string fileLoc = it_obj->first;
+        int chamberID = it_obj->second.as_int();
+        chamberFileLocMap[ chamberID ] = fileLoc; // insert into map!
+    }
 }
