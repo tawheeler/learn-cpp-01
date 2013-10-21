@@ -15,6 +15,7 @@
 #include "ScreenManager.h"
 #include "ChamberManager.h"
 #include "Globals.h"
+#include "PlayerEntity.h"
 
 using namespace MysticDave;
 
@@ -37,7 +38,15 @@ void BlackoutScreen::Update() {
 
     --blackoutCounter;
     if ( blackoutCounter <= 0 ) {
+        // switch to the new chamber
         (ChamberManager::GetInstance()).SetCurrentChamber( targetChamberUID );
+
+        // add player to the new chamber
+        PlayerEntity * player = (ChamberManager::GetInstance()).GetPlayer();
+        Chamber * curChamber = (ChamberManager::GetInstance()).GetCurrentChamber();
+        player->SetPosTile( targetTile );
+        curChamber->RegisterTileEntityInTile( player, targetTile );
+
         this->SetDead();
     } 
 

@@ -97,6 +97,12 @@ int TileEntity::GetClosestTileLoc() {
     return Chamber::GetTileNumFromPos( GetClosestTileX(), GetClosestTileY() );
 }
 
+void TileEntity::SetPosTile( int tileLoc ) {
+    int x = Chamber::GetTileXFromNum( tileLoc );
+    int y = Chamber::GetTileYFromNum( tileLoc );
+    SetPosTile( x, y );
+}
+
 void TileEntity::SetPosTile( int tileX, int tileY ) {
     pos->Set( UTIL::GridToPix( tileX ), UTIL::GridToPix( tileY ) );
 }

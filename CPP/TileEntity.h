@@ -33,6 +33,7 @@ namespace MysticDave {
         int                         GetClosestTileX();
         int                         GetClosestTileY();
         int                         GetClosestTileLoc();
+        void                        SetPosTile( int tileLoc );
         void                        SetPosTile( int tileX, int tileY );
 
         Visual *                    GetVisual();

@@ -75,7 +75,9 @@ namespace MysticDave {
 
         jsoncons::json                          GetJSON();
 
-        static int GetTileNumFromPos( int x, int y ) { return x + y * CHAMBER_TILE_WIDTH; };
+        static int GetTileNumFromPos( int x, int y ) { return x + y * CHAMBER_TILE_WIDTH; }
+        static int GetTileXFromNum( int n ) { return n % CHAMBER_TILE_WIDTH; }
+        static int GetTileYFromNum( int n ) { return n / CHAMBER_TILE_WIDTH; }
 
     private:
 
