@@ -194,7 +194,7 @@ void Chamber::Update() {
 }
 
 void Chamber::Render( int x, int y ) {
-	al_draw_bitmap( GetFloorImage(), 0, 0, 0 );
+	al_draw_bitmap( GetFloorImage(), -x, -y, 0 );
 
     std::list < TileEntity * >::iterator iter;
 	for ( iter = tileEntityList.begin(); iter != tileEntityList.end(); ++iter ) {
@@ -277,6 +277,10 @@ void Chamber::GenerateFloorImage() {
 
 }
 
+bool Chamber::IsInChamber_Tile( int tileNum ) {
+	return IsInChamber_Tile( Chamber::GetTileXFromNum(tileNum), Chamber::GetTileYFromNum(tileNum) );
+}
+
 bool Chamber::IsInChamber_Tile( int x, int y ) {
 	return ( x >= 0 && x < tileWidth && y >= 0 && y < tileHeight );
 }
@@ -315,12 +319,14 @@ Entity * Chamber::GetEntity( int uid ) {
 TileEntity * Chamber::GetEntityWithPropertyInTile( std::string propertyName, int tileNum ) {
     TileEntity * retval = 0;
 
-    std::list < TileEntity * > list = tileEntityTileListArr[tileNum];
-    std::list < TileEntity * >::iterator iter;
-	for ( iter = list.begin(); iter != list.end(); ++iter ) {
-        if ( (*iter)->HasProperty(propertyName) ) {
-            retval = (*iter);
-            break;
+    if ( IsInChamber_Tile( tileNum ) ) {
+        std::list < TileEntity * > list = tileEntityTileListArr[tileNum];
+        std::list < TileEntity * >::iterator iter;
+	    for ( iter = list.begin(); iter != list.end(); ++iter ) {
+            if ( (*iter)->HasProperty(propertyName) ) {
+                retval = (*iter);
+                break;
+            }
         }
     }
 

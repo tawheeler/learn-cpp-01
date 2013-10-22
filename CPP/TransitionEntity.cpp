@@ -15,6 +15,7 @@
 #include "ChamberManager.h"
 #include "BlackoutScreen.h"
 #include "ScreenManager.h"
+#include "TransitionScrollScreen.h"
 
 using jsoncons::json;
 using namespace MysticDave;
@@ -70,6 +71,7 @@ void TransitionEntity::OnEntered( TileEntity * actor ) {
             bs = new BlackoutScreen( targetChamberUID, transitionDuration, param );
             break;
         case ( Transition::TRANSITION_SCROLL ):
+            bs = new TransitionScrollScreen( targetChamberUID, transitionDuration, param );
             break;
         case ( Transition::TRANSITION_SPIN_TILE ):
             break;

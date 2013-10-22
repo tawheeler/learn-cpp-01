@@ -46,6 +46,7 @@ namespace MysticDave {
         void									GenerateFloorImage();
 
         bool									IsInChamber_Tile( int x, int y ); // whether the given tile point is in the chamber
+        bool									IsInChamber_Tile( int tileNum ); // whether the given tile point is in the chamber
         bool                                    IsInChamber_Pixel( float x, float y ); // whether the given pixel point is in the chamber
 
         bool                                    CanTileBeEntered( int x, int y );
