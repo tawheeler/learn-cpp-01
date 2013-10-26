@@ -44,7 +44,7 @@ void BlackoutScreen::Update() {
         // add player to the new chamber
         PlayerEntity * player = (ChamberManager::GetInstance()).GetPlayer();
         Chamber * curChamber = (ChamberManager::GetInstance()).GetCurrentChamber();
-        player->SetPosTile( targetTile );
+        player->GetPos()->SetPosFromTile( targetTile );
         curChamber->RegisterTileEntityInTile( player, targetTile );
 
         this->SetDead();

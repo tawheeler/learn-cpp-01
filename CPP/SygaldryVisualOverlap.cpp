@@ -17,7 +17,7 @@
 
 using namespace MysticDave;
 
-SygaldryVisualOverlay::SygaldryVisualOverlay( Vec2i * pos, ALLEGRO_BITMAP * bitmap ) {
+SygaldryVisualOverlay::SygaldryVisualOverlay( Pos2D * pos, ALLEGRO_BITMAP * bitmap ) {
 	primaryVisual = new TileBitmapVisual( pos, bitmap );
     sygaldryVisual = new TileBitmapVisual( pos, bitmap );
     SetSygaldry( 0, 1, 1, 1 );

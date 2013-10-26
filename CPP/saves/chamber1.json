@@ -14,8 +14,8 @@
             "sourceTileLoc":-1,
             "type":"CampFire",
             "uid":2,
-            "x":128,
-            "y":128
+            "x":2,
+            "y":2
         },
         {
             "name":"campFire2",
@@ -28,8 +28,8 @@
             "sourceTileLoc":-1,
             "type":"CampFire",
             "uid":3,
-            "x":640,
-            "y":128
+            "x":10,
+            "y":2
         },
         {
             "name":"campFire3",
@@ -42,8 +42,8 @@
             "sourceTileLoc":-1,
             "type":"CampFire",
             "uid":4,
-            "x":128,
-            "y":512
+            "x":2,
+            "y":8
         },
         {
             "name":"campFire4",
@@ -56,8 +56,8 @@
             "sourceTileLoc":-1,
             "type":"CampFire",
             "uid":5,
-            "x":640,
-            "y":512
+            "x":10,
+            "y":8
         },
         {
             "name":"stoneBlock1",
@@ -73,8 +73,8 @@
             "sourceTileLoc":-1,
             "type":"StoneBlock",
             "uid":6,
-            "x":192,
-            "y":192
+            "x":3,
+            "y":3
         },
         {
             "name":"stoneBlock2",
@@ -90,8 +90,8 @@
             "sourceTileLoc":-1,
             "type":"StoneBlock",
             "uid":7,
-            "x":576,
-            "y":192
+            "x":9,
+            "y":3
         },
         {
             "name":"stoneBlock3",
@@ -107,8 +107,8 @@
             "sourceTileLoc":-1,
             "type":"StoneBlock",
             "uid":8,
-            "x":192,
-            "y":448
+            "x":3,
+            "y":7
         },
         {
             "name":"stoneBlock4",
@@ -124,8 +124,8 @@
             "sourceTileLoc":-1,
             "type":"StoneBlock",
             "uid":9,
-            "x":576,
-            "y":448
+            "x":9,
+            "y":7
         },
         {
             "name":"trigger1",
@@ -149,8 +149,8 @@
             "sourceTileLoc":-1,
             "type":"Trigger",
             "uid":10,
-            "x":384,
-            "y":320
+            "x":6,
+            "y":5
         },
         {
             "name":"transitionEntity1",
@@ -168,7 +168,7 @@
             "type":"TransitionEntity",
             "uid":11,
             "x":0,
-            "y":320
+            "y":5
         }
         {
             "name":"transitionEntity4",
@@ -185,8 +185,8 @@
             "sourceTileLoc":-1,
             "type":"TransitionEntity",
             "uid":14,
-            "x":384,
-            "y":640
+            "x":6,
+            "y":10
         }
     ],
     "tileHeight":11,

@@ -13,13 +13,13 @@
 
 #include "Visual.h"
 #include "Animation.h"
-#include "Vec2i.h"
+#include "Pos2D.h"
 
 namespace MysticDave {
     class AnimationVisual : public Visual {
     public:
 
-						    AnimationVisual( Vec2i * pos, ALLEGRO_BITMAP * bitmap );
+						    AnimationVisual( Pos2D * pos, ALLEGRO_BITMAP * bitmap );
 						    ~AnimationVisual();
 
 	    virtual void		Cleanup();
@@ -32,7 +32,7 @@ namespace MysticDave {
 
     private:
 
-	    Vec2i *				pos;
+	    Pos2D *				pos;
 	    ALLEGRO_BITMAP *	bitmap; // default bitmap to play
 	    int					halfWidth;  // bitmap width
 	    int					halfHeight;  // bitmap height

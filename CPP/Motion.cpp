@@ -14,14 +14,15 @@
 
 using namespace MysticDave;
 
-Motion::Motion( Vec2i * vec, int destX, int destY, int totalMotionTime ) {
-	Motion::vec             = vec;
-	Motion::startX          = vec->x;
-	Motion::startY          = vec->y;
-	Motion::destX           = destX;
-	Motion::destY           = destY;
-	Motion::totalMotionTime = totalMotionTime;
-	Motion::motionTick      = totalMotionTime;
+Motion::Motion( Pos2D * pos, int dX, int dY, int totalMotionTime )
+    : startX( pos->GetPixDX() ),
+      startY( pos->GetPixDY() ),
+      destX( pos->GetPixDX() + dX ),
+      destY( pos->GetPixDY() + dY ),
+      totalMotionTime( totalMotionTime ),
+      motionTick( totalMotionTime )
+{ 
+    Motion::pos = pos;
 }
 
 Motion::~Motion() {
@@ -32,12 +33,12 @@ void Motion::Update() {
 	//move countdown
     if ( motionTick > 0 ) {
         motionTick--;
-		vec->x = GetPixelX();
-		vec->y = GetPixelY();
+        pos->SetPixDX( GetPixelX() );
+		pos->SetPixDY( GetPixelY() );
     }
 }
 
-bool Motion::IsDone() {
+bool Motion::IsDone() const {
 	return motionTick <= 0;
 }
 

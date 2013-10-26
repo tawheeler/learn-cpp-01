@@ -32,8 +32,8 @@ bool ForceNet::CanMove( int dir, Chamber * C ) {
 	bool retval =  true;
 	std::deque < TileEntity * >::iterator iter = tileEntityList.begin();
 	while ( retval && iter != tileEntityList.end() ) {
-        x = (*iter)->GetClosestTileX();
-        y = (*iter)->GetClosestTileY();
+        x = (*iter)->GetPos()->GetTileX();
+        y = (*iter)->GetPos()->GetTileY();
         retval = C->CanTileBeEntered( x + dx, y + dy );
 		++iter;
 	}
@@ -49,8 +49,8 @@ void ForceNet::Move( int dir, Chamber * C ) {
 
 	std::deque < TileEntity * >::iterator iter;
 	for ( iter = tileEntityList.begin(); iter != tileEntityList.end(); ++iter ) {
-		x = (*iter)->GetClosestTileX();
-        y = (*iter)->GetClosestTileY();
+		x = (*iter)->GetPos()->GetTileX();
+        y = (*iter)->GetPos()->GetTileY();
 
 		C->RegisterTileEntityInTile( (*iter), x + dx, y + dy );
         (*iter)->MoveDir( dir, Chamber::GetTileNumFromPos( x, y ), 36 );

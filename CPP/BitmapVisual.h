@@ -14,13 +14,14 @@
 #include "Visual.h"
 #include "Vec2i.h"
 #include "TextureSheet.h"
+#include "Pos2D.h"
 
 namespace MysticDave {
     class BitmapVisual : public Visual {
 
     public:
 
-									    BitmapVisual( Vec2i * pos, ALLEGRO_BITMAP * bitmap );
+									    BitmapVisual( Pos2D * pos, ALLEGRO_BITMAP * bitmap );
 									    ~BitmapVisual();
 
 	    virtual void				    Cleanup();
@@ -31,7 +32,7 @@ namespace MysticDave {
 
     protected:
 
-	    Vec2i *							pos;
+	    Pos2D *							pos;
 	    ALLEGRO_BITMAP *				bitmap;
 	    int								halfWidth;  // bitmap width
 	    int								halfHeight;  // bitmap height

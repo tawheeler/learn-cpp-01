@@ -34,8 +34,8 @@ TransitionScrollScreen::TransitionScrollScreen( int targetChamberUID, int transi
     destChamber = (ChamberManager::GetInstance()).GetChamber( targetChamberUID );
     player = (ChamberManager::GetInstance()).GetPlayer();
 
-    int playerX = player->GetClosestTileX();
-    int playerY = player->GetClosestTileY();
+    int playerX = player->GetPos()->GetTileX();
+    int playerY = player->GetPos()->GetTileY();
     
     switch (direction) {
         case UTIL::DIR_NORTH:
@@ -81,7 +81,7 @@ void TransitionScrollScreen::Update() {
         (ChamberManager::GetInstance()).SetCurrentChamber( destChamber->GetUID() );
 
         // add player to the new chamber
-        player->SetPosTile( targetTile );
+        player->GetPos()->SetPosFromTile( targetTile );
         destChamber->RegisterTileEntityInTile( player, targetTile );
 
         this->SetDead();

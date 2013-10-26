@@ -18,7 +18,7 @@
 #include "TileEntity.h"
 #include "BitmapVisual.h"
 #include "TextureSheet.h"
-#include "Vec2i.h"
+#include "Pos2D.h"
 
 namespace MysticDave {
     class SygaldryScreen : public BaseScreen {
@@ -46,7 +46,7 @@ namespace MysticDave {
         TextureSheet *                          runeSetTextureSheet;
 
         BitmapVisual *                          sygaldryPanel;
-        Vec2i *                                 panelPos;
+        Pos2D *                                 panelPos;
 
         int                                     rune; // lsb is rune char (0x01 = force, 0x02 = conduction), msb is color (0x01 = k, 0x02 = b, etc.)
         int *                                   colorMap;

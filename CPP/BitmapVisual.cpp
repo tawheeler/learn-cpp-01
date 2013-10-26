@@ -13,7 +13,7 @@
 
 using namespace MysticDave;
 
-BitmapVisual::BitmapVisual( Vec2i * pos, ALLEGRO_BITMAP * bitmap ) {
+BitmapVisual::BitmapVisual( Pos2D * pos, ALLEGRO_BITMAP * bitmap ) {
 	BitmapVisual::pos = pos;
 	BitmapVisual::bitmap = bitmap;
 	BitmapVisual::halfWidth = al_get_bitmap_width( BitmapVisual::bitmap ) / 2;
@@ -30,11 +30,11 @@ void BitmapVisual::Cleanup() {
 }
 
 void BitmapVisual::Render( int x, int y ) {
-	al_draw_bitmap( bitmap, pos->x - halfWidth - x, pos->y - halfHeight - y, 0 );
+	al_draw_bitmap( bitmap, pos->GetPixX() - halfWidth - x, pos->GetPixY() - halfHeight - y, 0 );
 }
 
 void BitmapVisual::Render( int x, int y, float cx, float cy, float cz ) {
-	al_draw_tinted_bitmap( bitmap, al_map_rgba_f(cx, cy, cz, 1), pos->x - halfWidth - x, pos->y - halfHeight - y, 0 );
+	al_draw_tinted_bitmap( bitmap, al_map_rgba_f(cx, cy, cz, 1), pos->GetPixX() - halfWidth - x, pos->GetPixY() - halfHeight - y, 0 );
 }
 
 void BitmapVisual::SetBitmap( ALLEGRO_BITMAP * bitmap ) {

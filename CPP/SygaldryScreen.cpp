@@ -35,7 +35,8 @@ void SygaldryScreen::Init() {
     this->SetBlockUpdate( true );
     this->SetBlockRender( false );
 
-    panelPos = new Vec2i( 256, 256 );
+    panelPos = new Pos2D( 0, 0 );
+    panelPos->SetPixPos( 256, 256 );
     sygaldryPanel = new BitmapVisual( panelPos, (ResourceManager::GetInstance()).GetBitmap("./res/SygaldryPanel.png") );
 
     runeSetTextureSheet = (ResourceManager::GetInstance()).LoadTextureSheet( "./res/RuneSet.png", TILE_DIM, TILE_DIM );
@@ -131,5 +132,5 @@ void SygaldryScreen::Render() const {
     float cy = colorMap[3*runeColor+1] / 256.0f;
     float cz = colorMap[3*runeColor+2] / 256.0f;
 
-    al_draw_tinted_bitmap( runeSetTextureSheet->GetTexture( runeIndex ), al_map_rgba_f(cx, cy, cz, 1), panelPos->x - 32, panelPos->y - 32, 0);
+    al_draw_tinted_bitmap( runeSetTextureSheet->GetTexture( runeIndex ), al_map_rgba_f(cx, cy, cz, 1), panelPos->GetPixX() - 32, panelPos->GetPixY() - 32, 0);
 }

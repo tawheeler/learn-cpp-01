@@ -110,7 +110,7 @@ void MainScreen::Init() {
 
     
     // TODO: properly place the player into the chamber
-    CM->GetPlayer()->SetPosTile( 6, 4 );
+    CM->GetPlayer()->GetPos()->SetPosFromTile( 6, 4 );
 
     (ChamberManager::GetInstance()).SetCurrentChamber( curChamber->GetUID() ); // set the current chamber
     curChamber->CalcForceNets();
@@ -136,8 +136,8 @@ void MainScreen::Update() {
                 
                 int dx = UTIL::DirToXAdjustment( player->GetDir() );
                 int dy = UTIL::DirToYAdjustment( player->GetDir() );
-                int curx = player->GetClosestTileX();
-                int cury = player->GetClosestTileY();
+                int curx = player->GetPos()->GetTileX();
+                int cury = player->GetPos()->GetTileY();
 
                 // check to see if there is an entity with the sygaldry property in the tile we are facing
                 TileEntity * sygaldryAble = curChamber->GetEntityWithPropertyInTile( "SygaldryA", Chamber::GetTileNumFromPos(curx + dx, cury + dy) );
@@ -167,8 +167,8 @@ void MainScreen::Update() {
 			    if ( player->GetDir() != desDir ) {
 				    player->SetDir( desDir );
 			    } else {
-                    int curx = player->GetClosestTileX();
-                    int cury = player->GetClosestTileY();
+                    int curx = player->GetPos()->GetTileX();
+                    int cury = player->GetPos()->GetTileY();
                     int tx = curx + dx;
                     int ty = cury + dy;
 

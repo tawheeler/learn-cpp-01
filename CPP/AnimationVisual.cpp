@@ -16,7 +16,7 @@
 
 using namespace MysticDave;
 
-AnimationVisual::AnimationVisual( Vec2i * pos, ALLEGRO_BITMAP * bitmap ) {
+AnimationVisual::AnimationVisual( Pos2D * pos, ALLEGRO_BITMAP * bitmap ) {
 	AnimationVisual::pos = pos;
 	AnimationVisual::bitmap = bitmap;
 	AnimationVisual::halfWidth  = al_get_bitmap_width( AnimationVisual::bitmap ) / 2;
@@ -59,9 +59,9 @@ void AnimationVisual::Render( int x, int y, float cx, float cy, float cz ) {
 	}
 
 	if ( renderAnim ) {
-		animation->tex->RenderTexture( animation->frameIDs[frameIndex], pos->x - x, pos->y - y );
+		animation->tex->RenderTexture( animation->frameIDs[frameIndex], pos->GetPixX() - x, pos->GetPixY() - y );
 	} else {
-		al_draw_tinted_bitmap( bitmap, al_map_rgba_f(cx, cy, cz, 1), pos->x - x, pos->y - y, 0 );
+		al_draw_tinted_bitmap( bitmap, al_map_rgba_f(cx, cy, cz, 1), pos->GetPixX() - x, pos->GetPixY() - y, 0 );
 	}
 }
 

@@ -18,21 +18,15 @@
 #include <list>
 #include "Property.h"
 #include "assert.h"
+#include "Uncopyable.h"
 
 namespace MysticDave {
     
-    class PropertySet {
+    class PropertySet : private Uncopyable {
 
 	    //----- Properties -----//
     protected:
 	    std::map< std::string, Property * >	m_properties;
-
-	    //----- Methods -----//
-    private:
-	    // declared to prevent unintentional use...
-	    // (Don't forget to move to public access if you declare them!)
-	    PropertySet& Copy(const PropertySet& source_object);
-	    PropertySet& operator= (const PropertySet& source_object);
 
     public:
 	    PropertySet();

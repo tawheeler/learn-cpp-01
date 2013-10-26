@@ -121,7 +121,7 @@ Chamber::Chamber( jsoncons::json jobj ) {
         }
 
         if ( te != 0 ) {
-            RegisterTileEntityInTile( te, te->GetClosestTileX(), te->GetClosestTileY() );
+            RegisterTileEntityInTile( te, te->GetPos()->GetTileX(), te->GetPos()->GetTileY() );
             AddTileEntity( te );
         }
     }

@@ -18,9 +18,6 @@ using namespace MysticDave;
 
 TileEntity::TileEntity( std::string name, int uid ) : Entity( name, uid ) {
     Init();
-    
-    pos = new Vec2i();
-	
 }
 
 TileEntity::TileEntity( jsoncons::json jobj ) : Entity ( jobj ) {
@@ -33,7 +30,7 @@ TileEntity::TileEntity( jsoncons::json jobj ) : Entity ( jobj ) {
     
     int x = jobj["x"].as_int();
     int y = jobj["y"].as_int();
-    pos->Set( x, y );
+    pos->SetPosFromTile( x, y );
 }
 
 TileEntity::~TileEntity() {
@@ -50,7 +47,7 @@ void TileEntity::Init() {
     sourceTileLoc = -1;
 
     visual = 0;
-    pos = new Vec2i();
+    pos = new Pos2D();
 }
 
 void TileEntity::Cleanup() {
@@ -81,54 +78,12 @@ void TileEntity::SetBlocksOccupation( bool blocks ) {
     blocksOccupation = blocks;
 }
 
-Vec2i * TileEntity::GetPos() {
-    return pos;
-}
-
-int TileEntity::GetClosestTileX() {
-    return UTIL::PixToGrid( pos->x );
-}
-
-int TileEntity::GetClosestTileY() {
-    return UTIL::PixToGrid( pos->y );
-}
-
-int TileEntity::GetClosestTileLoc() {
-    return Chamber::GetTileNumFromPos( GetClosestTileX(), GetClosestTileY() );
-}
-
-void TileEntity::SetPosTile( int tileLoc ) {
-    int x = Chamber::GetTileXFromNum( tileLoc );
-    int y = Chamber::GetTileYFromNum( tileLoc );
-    SetPosTile( x, y );
-}
-
-void TileEntity::SetPosTile( int tileX, int tileY ) {
-    pos->Set( UTIL::GridToPix( tileX ), UTIL::GridToPix( tileY ) );
-}
-
-Visual * TileEntity::GetVisual() {
-    return visual;
-}
-
 void TileEntity::SetVisual( Visual * visual ) {
+    if ( visual != 0 ) {
+        visual->Cleanup();
+        delete visual;
+    }
     TileEntity::visual = visual;
-}
-
-int TileEntity::GetRenderZ() {
-    return renderZ;
-}
-
-void TileEntity::SetRenderZ( int z ) {
-    TileEntity::renderZ = z;
-}
-
-bool TileEntity::IsFlammable() {
-    return flammable;
-}
-
-void TileEntity::SetFlammable( bool b ) {
-    TileEntity::flammable = b;
 }
 
 void TileEntity::Update() {
@@ -143,6 +98,8 @@ void TileEntity::Update() {
 
         if ( curMotion->IsDone() ) {
             motionQueue.pop_front();
+            pos->SetToClosestTile();
+
             delete curMotion;
             if ( sourceTileLoc != -1 ) {
                 // grab current chamber and remove from location
@@ -153,7 +110,7 @@ void TileEntity::Update() {
                 curChamber->OnEntityExitedTile( this, sourceTileLoc );
                 
                 // Call onEntered tile on all tile entities except for this one in current tile
-                curChamber->OnEntityEnteredTile( this, Chamber::GetTileNumFromPos( GetClosestTileX(), GetClosestTileY() ) );
+                curChamber->OnEntityEnteredTile( this, Chamber::GetTileNumFromPos( pos->GetTileX(), pos->GetTileY() ) );
 
                 // forget where it came from
                 sourceTileLoc = -1;
@@ -169,10 +126,6 @@ void TileEntity::Render( int x, int y ) {
     }
 }
 
-void TileEntity::AddMotion( Motion * motion ) {
-    motionQueue.push_back( motion );
-}
-
 void TileEntity::HaltAllMotion( Motion * motion ) {
     //TODO: this
     // first blip Dave over to a tile
@@ -182,24 +135,28 @@ void TileEntity::MoveDir( int dir, int sourceTileLoc, int ticksInMove ) {
 	
 	switch ( dir ) {
 		case UTIL::DIR_NORTH:
-            motionQueue.push_back( new Motion( pos, pos->x, pos->y - TILE_DIM, ticksInMove ) ); 
+            motionQueue.push_back( new Motion( pos, 0, -TILE_DIM, ticksInMove ) ); 
 			break;
 		case UTIL::DIR_EAST:  
-			motionQueue.push_back( new Motion( pos, pos->x + TILE_DIM, pos->y, ticksInMove ) ); 
+			motionQueue.push_back( new Motion( pos, TILE_DIM, 0, ticksInMove ) ); 
 			break;
 		case UTIL::DIR_SOUTH: 
-			motionQueue.push_back( new Motion( pos, pos->x, pos->y + TILE_DIM, ticksInMove ) ); 
+			motionQueue.push_back( new Motion( pos, 0, TILE_DIM, ticksInMove ) ); 
 			break;
 		case UTIL::DIR_WEST:  
-			motionQueue.push_back( new Motion( pos, pos->x - TILE_DIM, pos->y, ticksInMove ) ); 
+			motionQueue.push_back( new Motion( pos, -TILE_DIM, 0, ticksInMove ) ); 
 			break;
 	}
 
 	TileEntity::sourceTileLoc = sourceTileLoc;
 }
 	
-bool TileEntity::IsInMotion() {
+bool TileEntity::IsInMotion() const {
 	return !motionQueue.empty();
+}
+
+void TileEntity::AddMotion( Motion * motion ) {
+    motionQueue.push_back( motion );
 }
 
 void TileEntity::OnInput( const std::string I ) {
@@ -215,7 +172,7 @@ void TileEntity::OnInput( const std::string I ) {
         Entity::OnInput( "Kill" );
         // also remove self from chamber
         Chamber * C = (ChamberManager::GetInstance()).GetCurrentChamber();
-        C->UnregisterTileEntityInTile( this, GetClosestTileX(), GetClosestTileY() );
+        C->UnregisterTileEntityInTile( this, pos->GetTileX(), pos->GetTileY() );
         if ( sourceTileLoc != -1 ) {
             C->UnregisterTileEntityInTile( this, sourceTileLoc );
         }
@@ -229,8 +186,8 @@ jsoncons::json TileEntity::GetJSON() {
     json jobj = Entity::GetJSON();
 
     jobj["sourceTileLoc"] = sourceTileLoc;
-    jobj["x"] = pos->x;
-    jobj["y"] = pos->y;
+    jobj["x"] = pos->GetTileX();
+    jobj["y"] = pos->GetTileY();
 
     return jobj;
 }

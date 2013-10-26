@@ -10,17 +10,17 @@
 */
 #pragma once
 
-#include "Vec2i.h"
+#include "Pos2D.h"
 
 namespace MysticDave {
     class Motion {
     public:
 
-				    Motion( Vec2i * vec, int destX, int destY, int totalMotionTime );
+				    Motion( Pos2D * pos, int dX, int dY, int totalMotionTime );
 				    ~Motion();
 
 	    void		Update();
-	    bool		IsDone();
+	    bool		IsDone() const;
 	
 
     private:
@@ -36,7 +36,7 @@ namespace MysticDave {
 	    int			destX;  // [pix]
 	    int			destY;  // [pix]
 
-	    Vec2i *		vec;    // the vector tied to the motion
+	    Pos2D *		pos;    // the vector tied to the motion
 
     };
 }

@@ -13,7 +13,7 @@
 #pragma once
 
 #include "TileBitmapVisual.h"
-#include "Vec2i.h"
+#include "Pos2D.h"
 #include "TextureSheet.h"
 
 namespace MysticDave {
@@ -21,7 +21,7 @@ namespace MysticDave {
 
     public:
 
-									    SygaldryVisualOverlay( Vec2i * pos, ALLEGRO_BITMAP * bitmap );
+									    SygaldryVisualOverlay( Pos2D * pos, ALLEGRO_BITMAP * bitmap );
 									    ~SygaldryVisualOverlay();
         virtual void                    Cleanup();
 

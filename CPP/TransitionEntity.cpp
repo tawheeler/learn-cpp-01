@@ -62,7 +62,7 @@ void TransitionEntity::OnEntered( TileEntity * actor ) {
     if ( actor->GetUID() == 1 ) {
 
         // remove Dave from the currentChamber
-        (ChamberManager::GetInstance()).GetCurrentChamber()->UnregisterTileEntityInTile( actor, actor->GetClosestTileLoc() );
+        (ChamberManager::GetInstance()).GetCurrentChamber()->UnregisterTileEntityInTile( actor, actor->GetPos()->GetTileNum() );
 
         BaseScreen * bs = 0;
 

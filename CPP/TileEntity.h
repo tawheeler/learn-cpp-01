@@ -12,7 +12,7 @@
 #pragma once
 
 #include "Entity.h"
-#include "Vec2i.h"
+#include "Pos2D.h"
 #include "Visual.h"
 #include "Motion.h"
 #include <deque>
@@ -29,24 +29,18 @@ namespace MysticDave {
 	    bool				        BlocksOccupation();
         void                        SetBlocksOccupation( bool blocks );
 
-        Vec2i *                     GetPos();
-        int                         GetClosestTileX();
-        int                         GetClosestTileY();
-        int                         GetClosestTileLoc();
-        void                        SetPosTile( int tileLoc );
-        void                        SetPosTile( int tileX, int tileY );
-
-        Visual *                    GetVisual();
+        Pos2D *                     GetPos() const { return pos; }
+        Visual *                    GetVisual() const { return visual; }
         void                        SetVisual( Visual * visual );
 
-        int                         GetRenderZ();
-        void                        SetRenderZ( int z );
+        int                         GetRenderZ() const { return renderZ; }
+        void                        SetRenderZ( int z ) { TileEntity::renderZ = z; }
 
-        bool                        IsFlammable();
-        void                        SetFlammable( bool b );
+        bool                        IsFlammable() const { return flammable; }
+        void                        SetFlammable( bool b ) { TileEntity::flammable = b; }
 
-        bool				        IsInMotion();
-        int                         GetSourceTileLoc();  //the tile it is moving from or is currently in
+        bool				        IsInMotion() const;
+        int                         GetSourceTileLoc() const { return sourceTileLoc; }  //the tile it is moving from or is currently in
 
         void				        AddMotion( Motion * motion );
         void                        HaltAllMotion( Motion * motion ); // halts all motions in the stack
@@ -72,7 +66,7 @@ namespace MysticDave {
         bool				        blocksOccupation;
         bool                        flammable;
 
-        Vec2i *                     pos;  // position in pixel space
+        Pos2D *                     pos;  // position in pixel space
         Visual*				        visual;
 	    std::deque < Motion * >		motionQueue;
 
