@@ -51,6 +51,14 @@ void TileEntity::Init() {
 }
 
 void TileEntity::Cleanup() {
+
+    // remove self from chamber
+    Chamber * C = (ChamberManager::GetInstance()).GetCurrentChamber();
+    C->UnregisterTileEntityInTile( this, pos->GetTileX(), pos->GetTileY() );
+    if ( sourceTileLoc != -1 ) {
+        C->UnregisterTileEntityInTile( this, sourceTileLoc );
+    }
+
 	Entity::Cleanup();
 
 	// position
@@ -167,15 +175,6 @@ void TileEntity::OnInput( const std::string I ) {
     } else if ( I.compare( "DisableCollision" ) == 0 ) {
         // Sets the blocksOccupation to false
         blocksOccupation = false;
-    } else if ( I.compare( "Kill" ) == 0 ) {
-        // trigger base response
-        Entity::OnInput( "Kill" );
-        // also remove self from chamber
-        Chamber * C = (ChamberManager::GetInstance()).GetCurrentChamber();
-        C->UnregisterTileEntityInTile( this, pos->GetTileX(), pos->GetTileY() );
-        if ( sourceTileLoc != -1 ) {
-            C->UnregisterTileEntityInTile( this, sourceTileLoc );
-        }
     } else {
         Entity::OnInput( I );
     }

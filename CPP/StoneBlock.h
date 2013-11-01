@@ -13,7 +13,6 @@
 #pragma once
 
 #include "TileEntity.h"
-#include "Animation.h"
 
 namespace MysticDave {
     class StoneBlock : public TileEntity {

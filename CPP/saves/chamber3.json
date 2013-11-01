@@ -20,6 +20,22 @@
             "uid":13,
             "x":6,
             "y":0
+        },
+        {
+            "name":"itemEntity1",
+            "outputs":
+            {
+            },
+            "properties":
+            {
+                "MoveType":0,
+                "ItemID":94
+            },
+            "sourceTileLoc":-1,
+            "type":"ItemEntity",
+            "uid":15,
+            "x":6,
+            "y":5
         }
     ],
     "tileImageAddrArr":

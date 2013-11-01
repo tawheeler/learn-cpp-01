@@ -31,6 +31,7 @@ namespace MysticDave {
 		virtual                                 ~Entity();
 
 	    std::string			                    GetName() { return name; }
+        std::string                             GetType() { return type; }
         long                                    GetUID() { return uid; }
 
 	    virtual void		                    Update();

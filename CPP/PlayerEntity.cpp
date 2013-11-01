@@ -19,9 +19,10 @@
 #include <map>
 #include "Property.h"
 
+using jsoncons::json;
 using namespace MysticDave;
 
-PlayerEntity::PlayerEntity() : TileEntity( "MysticDave", 1 ) {
+PlayerEntity::PlayerEntity() : TileEntity( "PlayerEntity", 1 ) {
 
 	// TODO: fix UID 1 by default
     Init();
@@ -30,6 +31,12 @@ PlayerEntity::PlayerEntity() : TileEntity( "MysticDave", 1 ) {
 
 PlayerEntity::PlayerEntity( jsoncons::json jobj ) : TileEntity( jobj ) {
     Init();
+
+    // extract inventory items
+    json inventoryJSON = jobj["inventory"];
+    for ( auto iter = inventory.begin(); iter != inventory.end(); ++iter) {
+        AddInventoryItem( (*iter) );
+    }
 }
 
 PlayerEntity::~PlayerEntity() {
@@ -158,6 +165,32 @@ bool PlayerEntity::IsPlayingAnimation() {
 	return animVis->IsPlayingAnimation();
 }
 
+void PlayerEntity::AddInventoryItem( int id ) {
+    // check whether it contains it first
+    std::list<int>::iterator findIter = std::find( inventory.begin(), inventory.end(), id );
+    if ( findIter != inventory.end() ) {
+        inventory.push_back( id ); // add it to the inventory
+    }
+}
+
+void PlayerEntity::RemoveInventoryItem( int id ) {
+    std::list<int>::iterator findIter = std::find( inventory.begin(), inventory.end(), id );
+    if ( findIter != inventory.end() ) {
+        inventory.erase( findIter );  // get rid of it
+    }
+}
+
 jsoncons::json PlayerEntity::GetJSON() {
-    return TileEntity::GetJSON();
+    
+    jsoncons::json jobj = TileEntity::GetJSON();
+    
+    // add the inventory
+    json inventoryJSON( json::an_array );
+    std::list< int >::iterator iter;
+    for ( iter = inventory.begin(); iter != inventory.end(); ++iter ) {
+        inventoryJSON.add( (*iter) );
+    }
+    jobj["inventory"] = inventoryJSON;
+
+    return jobj;
 }

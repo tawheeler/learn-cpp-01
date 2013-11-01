@@ -17,6 +17,7 @@
 #include "Animation.h"
 #include "Motion.h"
 #include "jsoncons/json.hpp"
+#include <list>
 
 namespace MysticDave {
     class PlayerEntity : public TileEntity {
@@ -31,12 +32,12 @@ namespace MysticDave {
 
 	    int					    GetDir();
 	    void				    SetDir( int dir );
-        
-        //void                    AddAction( std::string animName, int dir ); // Add the given action to the action stack
-        //bool                    IsActing(); // whether it is currently playing an action
 
 	    void				    PlayAnimation( std::string animName );
 	    bool				    IsPlayingAnimation();
+
+        void                    AddInventoryItem( int id );
+        void                    RemoveInventoryItem( int id );
 
         virtual jsoncons::json  GetJSON();
 
@@ -48,6 +49,7 @@ namespace MysticDave {
 	    int *				    standingArr; // images for the various directions
 
         std::map< std::string, Animation * > animationMap;
+        std::list< int >        inventory;   // holds all inventory items
 
         void                    Init();
     };

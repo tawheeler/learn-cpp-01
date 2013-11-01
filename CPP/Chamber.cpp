@@ -16,6 +16,7 @@
 #include "StoneBlock.h"
 #include "Trigger.h"
 #include "TransitionEntity.h"
+#include "ItemEntity.h"
 #include "LogManager.h"
 #include <assert.h>
 
@@ -118,6 +119,8 @@ Chamber::Chamber( jsoncons::json jobj ) {
             te = new Trigger( *it );
         } else if ( (*it)["type"].as_string().compare( "TransitionEntity" ) == 0 ) {
             te = new TransitionEntity( *it );
+        } else if ( (*it)["type"].as_string().compare( "ItemEntity" ) == 0 ) {
+            te = new ItemEntity( *it );
         }
 
         if ( te != 0 ) {
@@ -135,8 +138,10 @@ Chamber::~Chamber() {
     delete[] tileImageAddrArr;
     delete[] tilePassableArr;
     delete[] tileEntityTileListArr;  //okay to delete this; tile entities are appropriately deleted below
-	
-	if ( floorImage != 0 ) {
+}
+
+void Chamber::Cleanup() {
+    if ( floorImage != 0 ) {
 		al_destroy_bitmap( floorImage );
 	}
 	
@@ -161,10 +166,6 @@ Chamber::~Chamber() {
 		delete (*iterFNet);
 		iterFNet = forceNetList.erase(iterFNet);
 	}
-}
-
-void Chamber::Cleanup() {
-    // TODO: this
 }
 	
 void Chamber::Update() {
@@ -388,8 +389,11 @@ void Chamber::OnEntityExitedTile( TileEntity * actor, int tileLoc ) {
 
 void Chamber::OnEntityEnteredTile( TileEntity * actor, int tileLoc ) {
     std::list< TileEntity * >::iterator iter;
+    int i = tileEntityTileListArr[tileLoc].size();
     for ( iter = tileEntityTileListArr[tileLoc].begin(); iter != tileEntityTileListArr[tileLoc].end(); ++iter ) {
-        (*iter)->OnEntered( actor );
+        if ( (*iter) != actor ) {
+            (*iter)->OnEntered( actor );
+        }
     }
 }
 
