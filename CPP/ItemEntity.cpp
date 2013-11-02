@@ -24,14 +24,13 @@ using namespace MysticDave;
 ItemEntity::ItemEntity( std::string name, int uid ) : TileEntity( name, uid ) {
     InitItemEntity();
 
-    visual = new BitmapVisual( pos, (ResourceManager::GetInstance()).GetTextureSheet( "./res/items-6.png" )->GetTexture(itemID));
+    visual = new BitmapVisual( pos, (ResourceManager::GetInstance()).LoadTextureSheet( "./res/items-6.png", TILE_DIM, TILE_DIM )->GetTexture(itemID));
 }
 
 ItemEntity::ItemEntity( jsoncons::json jobj ) : TileEntity( jobj ) {
     InitItemEntity();
 
     json jPropertiesArr = jobj["properties"];
-    moveType  = jPropertiesArr["MoveType"].as_int();
     itemID = jPropertiesArr["ItemID"].as_int();
 
     visual = new TileBitmapVisual( pos, (ResourceManager::GetInstance()).LoadTextureSheet( "./res/items-6.png", TILE_DIM, TILE_DIM )->GetTexture(itemID));
@@ -47,8 +46,8 @@ void ItemEntity::InitItemEntity() {
     moveType = 0;
     itemID = 0;
 
-    Register( "MoveType", &moveType );
-    Register( "ItemID", &itemID );
+    Register( "MoveType", &moveType, false );
+    Register( "ItemID", &itemID, true );
 
     renderZ = 3;
     blocksOccupation = false;
@@ -77,6 +76,7 @@ void ItemEntity::OnEntered( TileEntity * actor ) {
         // upcast to player entity
         PlayerEntity *player = dynamic_cast<PlayerEntity *>(actor);
         // add item to player inventory
+        player->AddInventoryItem( itemID );
 
         // kill item entity
         ItemEntity::OnInput( "Kill" );

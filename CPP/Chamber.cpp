@@ -14,6 +14,7 @@
 #include "TileEntity.h"
 #include "CampFire.h"
 #include "StoneBlock.h"
+#include "IceBlock.h"
 #include "Trigger.h"
 #include "TransitionEntity.h"
 #include "ItemEntity.h"
@@ -115,6 +116,8 @@ Chamber::Chamber( jsoncons::json jobj ) {
             te = new CampFire( *it );
         } else if ( (*it)["type"].as_string().compare( "StoneBlock" ) == 0 ) {
             te = new StoneBlock( *it );
+        } else if ( (*it)["type"].as_string().compare( "IceBlock" ) == 0 ) {
+            te = new IceBlock( *it );
         } else if ( (*it)["type"].as_string().compare( "Trigger" ) == 0 ) {
             te = new Trigger( *it );
         } else if ( (*it)["type"].as_string().compare( "TransitionEntity" ) == 0 ) {

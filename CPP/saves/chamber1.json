@@ -66,9 +66,7 @@
             },
             "properties":
             {
-                "MoveType":1,
-                "SygaldryA":0,
-                "SygaldryB":0
+                "Sygaldry":0
             },
             "sourceTileLoc":-1,
             "type":"StoneBlock",
@@ -83,9 +81,7 @@
             },
             "properties":
             {
-                "MoveType":1,
-                "SygaldryA":0,
-                "SygaldryB":0
+                "Sygaldry":0
             },
             "sourceTileLoc":-1,
             "type":"StoneBlock",
@@ -100,9 +96,7 @@
             },
             "properties":
             {
-                "MoveType":1,
-                "SygaldryA":0,
-                "SygaldryB":0
+                "Sygaldry":0
             },
             "sourceTileLoc":-1,
             "type":"StoneBlock",
@@ -117,9 +111,7 @@
             },
             "properties":
             {
-                "MoveType":1,
-                "SygaldryA":0,
-                "SygaldryB":0
+                "Sygaldry":0
             },
             "sourceTileLoc":-1,
             "type":"StoneBlock",
@@ -161,7 +153,6 @@
             {
                 "Param":3,
                 "TargetChamberUID":2,
-                "TransitionDuration":50,
                 "TransitionType":2
             },
             "sourceTileLoc":-1,
@@ -179,7 +170,6 @@
             {
                 "Param":2,
                 "TargetChamberUID":3,
-                "TransitionDuration":50,
                 "TransitionType":2
             },
             "sourceTileLoc":-1,

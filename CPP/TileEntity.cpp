@@ -134,11 +134,6 @@ void TileEntity::Render( int x, int y ) {
     }
 }
 
-void TileEntity::HaltAllMotion( Motion * motion ) {
-    //TODO: this
-    // first blip Dave over to a tile
-}
-
 void TileEntity::MoveDir( int dir, int sourceTileLoc, int ticksInMove ) {
 	
 	switch ( dir ) {

@@ -23,6 +23,7 @@
 #include "Trigger.h"
 #include "TransitionEntity.h"
 #include "SygaldryScreen.h"
+#include "InventoryScreen.h"
 #include "InputManager.h"
 #include "ForceNet.h"
 
@@ -140,7 +141,7 @@ void MainScreen::Update() {
                 int cury = player->GetPos()->GetTileY();
 
                 // check to see if there is an entity with the sygaldry property in the tile we are facing
-                TileEntity * sygaldryAble = curChamber->GetEntityWithPropertyInTile( "SygaldryA", Chamber::GetTileNumFromPos(curx + dx, cury + dy) );
+                TileEntity * sygaldryAble = curChamber->GetEntityWithPropertyInTile( "Sygaldry", Chamber::GetTileNumFromPos(curx + dx, cury + dy) );
                 if ( sygaldryAble != 0 ) {
                     // open the SygaldryScreen on that object
                     BaseScreen * bs = new SygaldryScreen( sygaldryAble );
@@ -148,8 +149,14 @@ void MainScreen::Update() {
                     (ScreenManager::GetInstance()).PushGameScreen( bs );
                 }
                 
-            } else if ( numDirsPressed == 1 ) {
+            } else if ( keysToggled[INVENTORY] && keysPressed[INVENTORY] ) {
 
+                // open up the inventory screen
+                BaseScreen * bs = new InventoryScreen();
+                bs->Init();
+                (ScreenManager::GetInstance()).PushGameScreen( bs );
+
+            } else if ( numDirsPressed == 1 ) {
 
 			    int dx = 0;
 			    int dy = 0;

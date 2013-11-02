@@ -12,14 +12,28 @@
             {
                 "Param":1,
                 "TargetChamberUID":1,
-                "TransitionDuration":50,
                 "TransitionType":2
             },
             "sourceTileLoc":-1,
             "type":"TransitionEntity",
             "uid":12,
-            "x":9,
+            "x":12,
             "y":5
+        },
+        {
+            "name":"iceBlock1",
+            "outputs":
+            {
+            },
+            "properties":
+            {
+                "Sygaldry":0
+            },
+            "sourceTileLoc":-1,
+            "type":"IceBlock",
+            "uid":16,
+            "x":5,
+            "y":7
         }
     ],
     "tileImageAddrArr":

@@ -1,8 +1,9 @@
 /*
 ========================================================================
 
-	A tile entity that can be pushed around and etched on (has 2 spots)
-    Standard movement of the block is 1 tile
+	A tile entity that can be pushed around and etched on
+    Standard movement of the block is for it to slide until it hits
+    something
 
     Author: Tim Wheeler
     Contact: timwheeleronline@gmail.com
@@ -10,7 +11,7 @@
 ========================================================================
 */
 
-#include "StoneBlock.h"
+#include "IceBlock.h"
 #include "ResourceManager.h"
 #include "SygaldryVisualOverlay.h"
 #include "Utils.h"
@@ -18,23 +19,23 @@
 using jsoncons::json;
 using namespace MysticDave;
 
-StoneBlock::StoneBlock( std::string name, int uid ) : TileEntity( name, uid ) {
-    InitStoneBlock();
+IceBlock::IceBlock( std::string name, int uid ) : TileEntity( name, uid ) {
+    InitIceBlock();
 }
 
-StoneBlock::StoneBlock( jsoncons::json jobj ) : TileEntity( jobj ) {
-    InitStoneBlock();
+IceBlock::IceBlock( jsoncons::json jobj ) : TileEntity( jobj ) {
+    InitIceBlock();
 
     json jPropertiesArr = jobj["properties"];
     sygaldry = jPropertiesArr["Sygaldry"].as_int();
 }
 
-StoneBlock::~StoneBlock() {
+IceBlock::~IceBlock() {
     // do nothing
 }
 
-void StoneBlock::InitStoneBlock() {
-    type = "StoneBlock";
+void IceBlock::InitIceBlock() {
+    type = "IceBlock";
 
     moveType = 1;
     sygaldry = 0;
@@ -46,7 +47,8 @@ void StoneBlock::InitStoneBlock() {
     blocksOccupation = true;
     flammable = false;
     
-    SygaldryVisualOverlay * vis = new SygaldryVisualOverlay( pos, (ResourceManager::GetInstance()).GetBitmap( "./res/StoneBlock.png" ) );
+    
+    SygaldryVisualOverlay * vis = new SygaldryVisualOverlay( pos, (ResourceManager::GetInstance()).GetBitmap( "./res/IceBlock.png" ) );
     vis->SetSygaldry( sygaldry, 0.0f, 1.0f, 0.0f );
     visual = vis;
 }

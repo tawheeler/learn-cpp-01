@@ -176,6 +176,8 @@ UpdateLogic
  */
 void UpdateLogic( void ) {
 	myScreenManager->Update();
+    myEntityEventManager->Update();
+    myInputManager->ZeroToggled();
 }
 
 void GameLoop( void ) {
@@ -189,8 +191,6 @@ void GameLoop( void ) {
        if ( evt.type == ALLEGRO_EVENT_TIMER ) {
            redraw = true;
            UpdateLogic();
-           myEntityEventManager->Update();
-           myInputManager->ZeroToggled();
        } else {
 			if ( evt.type == ALLEGRO_EVENT_KEY_DOWN ) {
 				if ( evt.keyboard.keycode == ALLEGRO_KEY_ESCAPE ) {

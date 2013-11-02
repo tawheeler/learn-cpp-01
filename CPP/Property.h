@@ -38,6 +38,7 @@ namespace MysticDave {
 
 	    Data	m_data;
 	    Type	m_type;
+        bool    m_save; // whether this property item should be saved to disk (and correspondingly loaded)
 	    std::string m_name;
 
     private:
@@ -46,6 +47,7 @@ namespace MysticDave {
 	    Property& Copy(const Property& source_object) {
 		    m_data = source_object.m_data;
 		    m_type = source_object.m_type;
+            m_save = source_object.m_save;
 		    m_name = source_object.m_name;
 
 		    return *this;
@@ -60,26 +62,31 @@ namespace MysticDave {
 		    m_type = EMPTY;
 		    m_data.m_int = 0;
 		    m_name = "";
+            m_save = false;
 	    }
 
-	    void Register(int* value) {
+	    void Register(int* value, bool save) {
 		    m_type = INT;
 		    m_data.m_int = value;
+            m_save = save;
 	    }
 
-	    void Register(float* value) {
+	    void Register(float* value, bool save) {
 		    m_type = FLOAT;
 		    m_data.m_float = value;
+            m_save = save;
 	    }
 
-	    void Register(std::string* new_string) {
+	    void Register(std::string* new_string, bool save) {
 		    m_type = STRING;
 		    m_data.m_string = new_string;
+            m_save = save;
 	    }
 
-	    void Register(bool* value) {
+	    void Register(bool* value, bool save) {
 		    m_type = BOOL;
 		    m_data.m_bool = value;
+            m_save = save;
 	    }
 
     public:
@@ -94,26 +101,27 @@ namespace MysticDave {
 	    Property(std::string const& name) {
 		    EraseType();
 		    m_name = name;
+            m_save = false;
 	    }
 
-	    Property(std::string const& name, int* value) {
+	    Property(std::string const& name, int* value, bool save) {
 		    m_name = name;
-		    Register(value);
+		    Register(value, save);
 	    }
 
-	    Property(std::string const& name, float* value) {
+	    Property(std::string const& name, float* value, bool save) {
 		    m_name = name;
-		    Register(value);
+		    Register(value, save);
 	    }
 
-	    Property(std::string const& name, std::string* value) {
+	    Property(std::string const& name, std::string* value, bool save) {
 		    m_name = name;
-		    Register(value);
+		    Register(value, save);
 	    }
 
-	    Property(std::string const& name, bool* value) {
+	    Property(std::string const& name, bool* value, bool save) {
 		    m_name = name;
-		    Register(value);
+		    Register(value, save);
 	    }
 
 	    bool SetUnknownValue(std::string const& value);
@@ -121,6 +129,10 @@ namespace MysticDave {
 	    bool Set(float value);
 	    bool Set(bool value);
 	    bool Set(std::string const& value);
+        
+        bool SetSaveToDisk( bool save ) { 
+            m_save = save;
+        }
 
 	    void SetName(std::string const& name) {
 		    m_name = name;
@@ -149,6 +161,10 @@ namespace MysticDave {
 		    assert(m_type == BOOL);
 		    return *m_data.m_bool;
 	    }
+
+        bool GetSaveToDisk() {
+            return m_save;
+        }
 
 	    // generic return...
 	    std::string GetValue();

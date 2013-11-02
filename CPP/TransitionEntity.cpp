@@ -20,12 +20,12 @@
 using jsoncons::json;
 using namespace MysticDave;
 
-TransitionEntity::TransitionEntity( std::string name, int uid, int transitionType, int targetChamberUID, int transitionDuration, int param ) : TileEntity( name, uid ) {
+TransitionEntity::TransitionEntity( std::string name, int uid, int transitionType, int targetChamberUID, int param ) : TileEntity( name, uid ) {
     InitTransitionEntity();
     
     TransitionEntity::transitionType = transitionType;
     TransitionEntity::targetChamberUID = targetChamberUID;
-    TransitionEntity::transitionDuration = transitionDuration;
+    TransitionEntity::transitionDuration = 50;
     TransitionEntity::param = param;
 }
 
@@ -35,7 +35,7 @@ TransitionEntity::TransitionEntity( jsoncons::json jobj ) : TileEntity( jobj ) {
     json jPropertiesArr = jobj["properties"];
     transitionType      = jPropertiesArr["TransitionType"].as_int();
     targetChamberUID    = jPropertiesArr["TargetChamberUID"].as_int();
-    transitionDuration  = jPropertiesArr["TransitionDuration"].as_int();
+    transitionDuration  = 50;
     param               = jPropertiesArr["Param"].as_int();
 }
 
@@ -46,10 +46,10 @@ TransitionEntity::~TransitionEntity() {
 void TransitionEntity::InitTransitionEntity() {
     type = "TransitionEntity";
 
-    Register( "TransitionType", &transitionType );
-    Register( "TargetChamberUID", &targetChamberUID );
-    Register( "TransitionDuration", &transitionDuration );
-    Register( "Param", &param );
+    Register( "TransitionType", &transitionType, true );
+    Register( "TargetChamberUID", &targetChamberUID, true );
+    Register( "TransitionDuration", &transitionDuration, false );
+    Register( "Param", &param, true );
 
     renderZ = -1;
     blocksOccupation = false;

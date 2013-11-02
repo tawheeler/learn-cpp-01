@@ -33,6 +33,7 @@ void ChamberManager::ShutDown() {
 	// free chambers
 	std::map < int, Chamber * >::iterator iter;
 	for ( iter = chamberMap.begin(); iter != chamberMap.end(); ) {
+        curChamber = (iter->second); // set this so entities can refer to themselves in deletion
         (iter->second)->Cleanup();
 		delete (iter->second);
 		iter = chamberMap.erase(iter);

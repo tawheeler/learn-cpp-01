@@ -33,24 +33,24 @@ namespace MysticDave {
 
 	    ~PropertySet();
 
-	    void Register(std::string const& name, int* value); 
-	    void Register(std::string const& name, float* value); 
-	    void Register(std::string const& name, std::string* value); 
-	    void Register(std::string const& name, bool* value); 
+	    void Register( std::string const& name, int* value,         bool save ); 
+	    void Register( std::string const& name, float* value,       bool save ); 
+	    void Register( std::string const& name, std::string* value, bool save ); 
+	    void Register( std::string const& name, bool* value,        bool save ); 
 
-	    Property* Lookup(std::string const& name);
+	    Property* Lookup( std::string const& name );
         bool      HasProperty( std::string const& name );
 
 	    // use this for generic access when the data type is unknown
 	    // this will convert to the proper format.
-	    bool SetValue(std::string const& name, std::string const& value);
+	    bool SetValue( std::string const& name, std::string const& value );
 
 	    // use these if you know the data type
-	    bool Set(std::string const& name, std::string const& value);
-	    bool Set(std::string const& name, int value);
-	    bool Set(std::string const& name, float value);
-	    bool Set(std::string const& name, bool value);
-	    bool Set(std::string const& name, char* value);
+	    bool Set( std::string const& name, std::string const& value );
+	    bool Set( std::string const& name, int value );
+	    bool Set( std::string const& name, float value );
+	    bool Set( std::string const& name, bool value );
+	    bool Set( std::string const& name, char* value );
 
         // get a list of available properties
         std::list< std::string > GetKeys();

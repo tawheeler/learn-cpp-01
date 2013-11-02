@@ -145,10 +145,15 @@ jsoncons::json Entity::GetJSON() {
         std::string key = (*iter);
         Property * p    = Lookup(key);
 
-        if ( p->IsOfType(Property::BOOL) )        propertiesJSON[ key ] = p->GetBool();
-        else if ( p->IsOfType(Property::FLOAT) )  propertiesJSON[ key ] = p->GetFloat();
-        else if ( p->IsOfType(Property::STRING) ) propertiesJSON[ key ] = p->GetString();
-        else if ( p->IsOfType(Property::INT) )    propertiesJSON[ key ] = p->GetInt();
+        // only write certain ones to disk
+        if ( p->GetSaveToDisk() ) {
+
+            if ( p->IsOfType(Property::BOOL) )        propertiesJSON[ key ] = p->GetBool();
+            else if ( p->IsOfType(Property::FLOAT) )  propertiesJSON[ key ] = p->GetFloat();
+            else if ( p->IsOfType(Property::STRING) ) propertiesJSON[ key ] = p->GetString();
+            else if ( p->IsOfType(Property::INT) )    propertiesJSON[ key ] = p->GetInt();
+
+        }
     }
     obj["properties"] = propertiesJSON;
 

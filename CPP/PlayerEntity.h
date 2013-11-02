@@ -38,6 +38,7 @@ namespace MysticDave {
 
         void                    AddInventoryItem( int id );
         void                    RemoveInventoryItem( int id );
+        std::list< int > *      GetInventory() { return &inventory; }
 
         virtual jsoncons::json  GetJSON();
 

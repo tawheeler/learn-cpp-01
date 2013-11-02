@@ -56,7 +56,7 @@ void PlayerEntity::Init() {
 
     sourceTileLoc = -1;
 	dir = UTIL::DIR_SOUTH;
-    Register( "dir", &dir );
+    Register( "dir", &dir, true );
 
 	standingArr = new int[4];
 	standingArr[UTIL::DIR_NORTH] = 3;
@@ -168,7 +168,7 @@ bool PlayerEntity::IsPlayingAnimation() {
 void PlayerEntity::AddInventoryItem( int id ) {
     // check whether it contains it first
     std::list<int>::iterator findIter = std::find( inventory.begin(), inventory.end(), id );
-    if ( findIter != inventory.end() ) {
+    if ( findIter == inventory.end() ) {
         inventory.push_back( id ); // add it to the inventory
     }
 }
@@ -191,6 +191,8 @@ jsoncons::json PlayerEntity::GetJSON() {
         inventoryJSON.add( (*iter) );
     }
     jobj["inventory"] = inventoryJSON;
+
+    jobj["dir"] = json( dir );
 
     return jobj;
 }

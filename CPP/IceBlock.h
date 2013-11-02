@@ -2,7 +2,8 @@
 ========================================================================
 
 	A tile entity that can be pushed around and etched on
-    Standard movement of the block is 1 tile
+    Standard movement of the block is for it to slide until it hits
+    something
 
     Author: Tim Wheeler
     Contact: timwheeleronline@gmail.com
@@ -15,14 +16,14 @@
 #include "TileEntity.h"
 
 namespace MysticDave {
-    class StoneBlock : public TileEntity {
+    class IceBlock : public TileEntity {
     public:
 
-                                    StoneBlock( std::string name, int uid );
-                                    StoneBlock( jsoncons::json jobj );
-		virtual                     ~StoneBlock();
+                                    IceBlock( std::string name, int uid );
+                                    IceBlock( jsoncons::json jobj );
+		virtual                     ~IceBlock();
 
-        void                        InitStoneBlock();
+        void                        InitIceBlock();
 
     private:
         int                         sygaldry;

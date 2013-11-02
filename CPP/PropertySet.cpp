@@ -20,23 +20,23 @@ PropertySet::PropertySet() {}
 
 PropertySet::~PropertySet() {}
 
-void PropertySet::Register(std::string const& name, int* value) {
-	Property* new_property = new Property(name,value);
+void PropertySet::Register(std::string const& name, int* value, bool save ) {
+	Property* new_property = new Property(name,value,save);
 	m_properties[name] = new_property;
 }
 
-void PropertySet::Register(std::string const& name, float* value) {
-	Property* new_property = new Property(name,value);
+void PropertySet::Register(std::string const& name, float* value, bool save ) {
+	Property* new_property = new Property(name,value,save);
 	m_properties[name] = new_property;
 }
 
-void PropertySet::Register(std::string const& name, std::string* value) {
-	Property* new_property = new Property(name,value);
+void PropertySet::Register(std::string const& name, std::string* value, bool save ) {
+	Property* new_property = new Property(name,value,save);
 	m_properties[name] = new_property;
 }
 
-void PropertySet::Register(std::string const& name, bool* value) {
-	Property* new_property = new Property(name,value);
+void PropertySet::Register(std::string const& name, bool* value, bool save ) {
+	Property* new_property = new Property(name,value,save);
     m_properties[name] = new_property;
 }
 

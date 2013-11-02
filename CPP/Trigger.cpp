@@ -41,7 +41,7 @@ void Trigger::InitTrigger() {
 
     startDisabled = false;
 
-    Register( "StartDisabled", &startDisabled );
+    Register( "StartDisabled", &startDisabled, true );
 
     renderZ = -1;
     blocksOccupation = false;

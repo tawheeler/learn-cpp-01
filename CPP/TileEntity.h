@@ -43,7 +43,7 @@ namespace MysticDave {
         int                         GetSourceTileLoc() const { return sourceTileLoc; }  //the tile it is moving from or is currently in
 
         void				        AddMotion( Motion * motion );
-        void                        HaltAllMotion( Motion * motion ); // halts all motions in the stack
+        //void                        HaltAllMotion( Motion * motion ); // halts all motions in the stack
 	    void 		                MoveDir( int dir, int sourceTileLoc, int ticksInMove ); // have the TE move one tile in the specified direction
         //void                        MoveTarget( int targetTileLoc, int sourceTileLoc ); // have the TE move to the target tile
 

@@ -12,7 +12,6 @@
             {
                 "Param":0,
                 "TargetChamberUID":1,
-                "TransitionDuration":50,
                 "TransitionType":2
             },
             "sourceTileLoc":-1,
@@ -28,7 +27,6 @@
             },
             "properties":
             {
-                "MoveType":0,
                 "ItemID":94
             },
             "sourceTileLoc":-1,
