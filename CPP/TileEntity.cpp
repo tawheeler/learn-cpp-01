@@ -120,8 +120,8 @@ void TileEntity::Update() {
                 // Call onEntered tile on all tile entities except for this one in current tile
                 curChamber->OnEntityEnteredTile( this, Chamber::GetTileNumFromPos( pos->GetTileX(), pos->GetTileY() ) );
 
-                // forget where it came from
-                sourceTileLoc = -1;
+                // Call onMoveCompleted on self
+                OnMoveCompleted();
             }
         }
 
@@ -134,7 +134,7 @@ void TileEntity::Render( int x, int y ) {
     }
 }
 
-void TileEntity::MoveDir( int dir, int sourceTileLoc, int ticksInMove ) {
+void TileEntity::MoveDir( int dir, int ticksInMove ) {
 	
 	switch ( dir ) {
 		case UTIL::DIR_NORTH:
@@ -151,7 +151,7 @@ void TileEntity::MoveDir( int dir, int sourceTileLoc, int ticksInMove ) {
 			break;
 	}
 
-	TileEntity::sourceTileLoc = sourceTileLoc;
+	TileEntity::sourceTileLoc = Chamber::GetTileNumFromPos( pos->GetTileX(), pos->GetTileY() );
 }
 	
 bool TileEntity::IsInMotion() const {
@@ -160,6 +160,10 @@ bool TileEntity::IsInMotion() const {
 
 void TileEntity::AddMotion( Motion * motion ) {
     motionQueue.push_back( motion );
+}
+
+void TileEntity::OnMoveCompleted() {
+    sourceTileLoc = -1;
 }
 
 void TileEntity::OnInput( const std::string I ) {

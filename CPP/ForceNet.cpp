@@ -53,7 +53,7 @@ void ForceNet::Move( int dir, Chamber * C ) {
         y = (*iter)->GetPos()->GetTileY();
 
 		C->RegisterTileEntityInTile( (*iter), x + dx, y + dy );
-        (*iter)->MoveDir( dir, Chamber::GetTileNumFromPos( x, y ), 36 );
+        (*iter)->MoveDir( dir, 36 );
 	}
 	
 }

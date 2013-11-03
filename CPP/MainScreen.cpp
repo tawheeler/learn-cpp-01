@@ -17,10 +17,7 @@
 #include "TileBitmapVisual.h"
 #include "Entity.h"
 #include "jsoncons/json.hpp"
-#include "CampFire.h"
 #include "PlayerEntity.h"
-#include "StoneBlock.h"
-#include "Trigger.h"
 #include "TransitionEntity.h"
 #include "SygaldryScreen.h"
 #include "InventoryScreen.h"
@@ -37,78 +34,6 @@ void MainScreen::Init() {
 
     CM = &(ChamberManager::GetInstance());
     Chamber * curChamber = CM->GetChamber( 1 );
-    //Chamber * curChamber = new Chamber( json::parse_file("./saves/chamber.json") );
-    
-    /*
-    Chamber * curChamber = new Chamber(1);
-
-    CampFire * cf1 = new CampFire( "campFire1", 2 );
-    CampFire * cf2 = new CampFire( "campFire2", 3 );
-    CampFire * cf3 = new CampFire( "campFire3", 4 );
-    CampFire * cf4 = new CampFire( "campFire4", 5 );
-    cf1->SetPosTile( 2, 2 );
-    curChamber->AddTileEntity( cf1 );
-    curChamber->RegisterTileEntityInTile( cf1, 2, 2 );
-    cf2->SetPosTile( 10, 2 );
-    curChamber->AddTileEntity( cf2 );
-    curChamber->RegisterTileEntityInTile( cf2, 10, 2 );
-    cf3->SetPosTile( 2, 8 );
-    curChamber->AddTileEntity( cf3 );
-    curChamber->RegisterTileEntityInTile( cf3, 2, 8 );
-    cf4->SetPosTile( 10, 8 );
-    curChamber->AddTileEntity( cf4 );
-    curChamber->RegisterTileEntityInTile( cf4, 10, 8 );
-
-    StoneBlock * sb1 = new StoneBlock( "stoneBlock1", 6 );
-    sb1->SetPosTile( 3, 3 );
-    curChamber->AddTileEntity( sb1 );
-    curChamber->RegisterTileEntityInTile( sb1, 3, 3 );
-
-    StoneBlock * sb2 = new StoneBlock( "stoneBlock2", 7 );
-    sb2->SetPosTile( 9, 3 );
-    curChamber->AddTileEntity( sb2 );
-    curChamber->RegisterTileEntityInTile( sb2, 9, 3 );
-
-    StoneBlock * sb3 = new StoneBlock( "stoneBlock3", 8 );
-    sb3->SetPosTile( 3, 7 );
-    curChamber->AddTileEntity( sb3 );
-    curChamber->RegisterTileEntityInTile( sb3, 3, 7 );
-
-    StoneBlock * sb4 = new StoneBlock( "stoneBlock4", 9 );
-    sb4->SetPosTile( 9, 7 );
-    curChamber->AddTileEntity( sb4 );
-    curChamber->RegisterTileEntityInTile( sb4, 9, 7 );
-
-    Trigger * tr1 = new Trigger( "trigger1", 10 );
-    tr1->SetPosTile( 6, 5 );
-    curChamber->AddTileEntity( tr1 );
-    curChamber->RegisterTileEntityInTile( tr1, 6, 5 );    
-
-    OutputStruct os2 = OutputStruct();
-    os2.fireOnceOnly = true;
-    os2.inputName = "Kill";
-    os2.outputName = "OnTrigger";
-    os2.targetEntityID = 2;
-    os2.timeDelay = 0;
-    tr1->AddOutput( os2 );
-
-    TransitionEntity * transitionEntity = new TransitionEntity( "transitionEntity1", 11, TransitionEntity::Transition::TRANSITION_BLACKOUT, 2, 60, 1 );
-    transitionEntity->SetPosTile( 6, 6 );
-    curChamber->AddTileEntity( transitionEntity );
-    curChamber->RegisterTileEntityInTile( transitionEntity, 6, 6 );
-
-    using namespace std;
-    using jsoncons::json;
-    using jsoncons::pretty_print;
-
-    jsoncons::json jobj_out = curChamber->GetJSON();
-
-    ofstream myfile;
-    myfile.open ("./saves/chamber.json");
-    myfile << pretty_print(jobj_out) << std::endl;
-    myfile.close();
-    */
-
     
     // TODO: properly place the player into the chamber
     CM->GetPlayer()->GetPos()->SetPosFromTile( 6, 4 );
@@ -182,7 +107,7 @@ void MainScreen::Update() {
 				    // check if target is free
                     if ( curChamber->CanTileBeEntered( tx, ty ) ) {
                         curChamber->RegisterTileEntityInTile( player, tx, ty );
-                        player->MoveDir( desDir, Chamber::GetTileNumFromPos( curx, cury ), 24 );
+                        player->MoveDir( desDir, 24 );
                         switch ( desDir ) {
                             case ( UTIL::DIR_NORTH ): player->PlayAnimation( "walkNorth" ); break;
                             case ( UTIL::DIR_EAST ):  player->PlayAnimation( "walkEast" );  break;
@@ -200,7 +125,7 @@ void MainScreen::Update() {
 
                                 if ( fnet->CanMove( desDir, curChamber ) ) {
                                     curChamber->RegisterTileEntityInTile( player, tx, ty );
-                                    player->MoveDir( desDir, Chamber::GetTileNumFromPos( curx, cury ), 36 );
+                                    player->MoveDir( desDir, 36 );
                                     switch ( desDir ) {
                                         case ( UTIL::DIR_NORTH ): player->PlayAnimation( "pushNorth" ); break;
                                         case ( UTIL::DIR_EAST ):  player->PlayAnimation( "pushEast" );  break;
@@ -221,7 +146,7 @@ void MainScreen::Update() {
                                 // handle pushing a single tile entity
                                 if ( curChamber->CanTileBeEntered( tx + dx, ty + dy ) ) { //if we can push through into next space
                                     curChamber->RegisterTileEntityInTile( player, tx, ty );
-                                    player->MoveDir( desDir, Chamber::GetTileNumFromPos( curx, cury ), 36 );
+                                    player->MoveDir( desDir, 36 );
                                     switch ( desDir ) {
                                         case ( UTIL::DIR_NORTH ): player->PlayAnimation( "pushNorth" ); break;
                                         case ( UTIL::DIR_EAST ):  player->PlayAnimation( "pushEast" );  break;
@@ -229,7 +154,7 @@ void MainScreen::Update() {
                                         case ( UTIL::DIR_WEST ):  player->PlayAnimation( "pushWest" );  break;
                                     }
                                     curChamber->RegisterTileEntityInTile( pushable, tx + dx, ty + dy );
-                                    pushable->MoveDir( desDir, Chamber::GetTileNumFromPos( tx, ty ), 36 );
+                                    pushable->MoveDir( desDir, 36 );
                                 } else {
                                     switch ( desDir ) {
                                         case ( UTIL::DIR_NORTH ): player->PlayAnimation( "tryPushNorth" ); break;

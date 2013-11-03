@@ -69,18 +69,6 @@ ALLEGRO_BITMAP * ResourceManager::GetBitmap( const char * name ) {
 }
 
  // returns it if it has already been loaded
-TextureSheet * ResourceManager::GetTextureSheet ( const char * name ) {
-	std::string str = (name);
-	std::map < std::string, TextureSheet * >::iterator iter = texSheetMap.find(str);
-	if ( iter != texSheetMap.end() ) {
-		//element found
-		return iter->second;
-	} else {
-		return 0; //element not found
-	}
-}
-
- // returns it if it has already been loaded
 TextureSheet * ResourceManager::LoadTextureSheet ( const char * name, int texWidth, int texHeight ) {
 	std::string str = (name);
 	std::map < std::string, TextureSheet * >::iterator iter = texSheetMap.find(str);

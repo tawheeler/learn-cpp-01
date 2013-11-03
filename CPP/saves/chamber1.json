@@ -60,61 +60,65 @@
             "y":8
         },
         {
-            "name":"stoneBlock1",
+            "name":"block1",
             "outputs":
             {
             },
             "properties":
             {
+                "BlockType":"STONE",
                 "Sygaldry":0
             },
             "sourceTileLoc":-1,
-            "type":"StoneBlock",
+            "type":"Block",
             "uid":6,
             "x":3,
             "y":3
         },
         {
-            "name":"stoneBlock2",
+            "name":"block2",
             "outputs":
             {
             },
             "properties":
             {
+                "BlockType":"ICE",
                 "Sygaldry":0
             },
             "sourceTileLoc":-1,
-            "type":"StoneBlock",
+            "type":"Block",
             "uid":7,
             "x":9,
             "y":3
         },
         {
-            "name":"stoneBlock3",
+            "name":"block3",
             "outputs":
             {
             },
             "properties":
             {
+                "BlockType":"METAL",
                 "Sygaldry":0
             },
             "sourceTileLoc":-1,
-            "type":"StoneBlock",
+            "type":"Block",
             "uid":8,
             "x":3,
             "y":7
         },
         {
-            "name":"stoneBlock4",
+            "name":"block4",
             "outputs":
             {
             },
             "properties":
             {
+                "BlockType":"WOOD",
                 "Sygaldry":0
             },
             "sourceTileLoc":-1,
-            "type":"StoneBlock",
+            "type":"Block",
             "uid":9,
             "x":9,
             "y":7

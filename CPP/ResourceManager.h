@@ -27,7 +27,6 @@ namespace MysticDave {
 	    static ResourceManager&								GetInstance();	
 
 	    ALLEGRO_BITMAP *									GetBitmap( const char * name ); // loads it if it needs to, otherwise returns it
-	    TextureSheet *										GetTextureSheet ( const char * name ); // returns it if it has already been loaded
 	    TextureSheet *										LoadTextureSheet ( const char * name, int texWidth, int texHeight ); // returns if it has already been loaded, otherwise creates it
 
     private:

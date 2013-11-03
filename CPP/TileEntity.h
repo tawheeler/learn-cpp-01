@@ -44,7 +44,7 @@ namespace MysticDave {
 
         void				        AddMotion( Motion * motion );
         //void                        HaltAllMotion( Motion * motion ); // halts all motions in the stack
-	    void 		                MoveDir( int dir, int sourceTileLoc, int ticksInMove ); // have the TE move one tile in the specified direction
+	    void 		                MoveDir( int dir, int ticksInMove ); // have the TE move one tile in the specified direction
         //void                        MoveTarget( int targetTileLoc, int sourceTileLoc ); // have the TE move to the target tile
 
 	    virtual void		        Update();
@@ -53,6 +53,7 @@ namespace MysticDave {
 
         virtual void                OnEntered( TileEntity * actor ) {} // called when actor enteres the space this TE is in
         virtual void                OnExited( TileEntity * actor ) {}  // called when actor leaves the space this TE is in
+        virtual void                OnMoveCompleted(); // called whenever this tile entity completes a motion
 
         virtual void                OnInput( const std::string I );
 

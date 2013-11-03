@@ -49,7 +49,7 @@ void SygaldryScreen::Init() {
     colorMap[12] = 255; colorMap[13] = 255; colorMap[14] =   0; //yellow
     colorMap[15] = 248; colorMap[16] = 133; colorMap[17] =  29; //orange
 
-    rune = sygaldryEntity->Lookup("SygaldryA")->GetInt();
+    rune = sygaldryEntity->Lookup("Sygaldry")->GetInt();
 
     inputDelayCounter = 0;
 }
@@ -62,7 +62,7 @@ void SygaldryScreen::Update() {
 
     if ( keysToggled[ENTER] && keysPressed[ENTER] ) {
 
-        sygaldryEntity->Lookup("SygaldryA")->Set( rune );
+        sygaldryEntity->Lookup("Sygaldry")->Set( rune );
 
         int runeIndex = (rune & 0x00FF);
         char runeColor = (rune >> 8 ) & 0x00FF;

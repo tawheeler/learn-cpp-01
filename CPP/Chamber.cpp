@@ -13,8 +13,7 @@
 #include "Utils.h"
 #include "TileEntity.h"
 #include "CampFire.h"
-#include "StoneBlock.h"
-#include "IceBlock.h"
+#include "Block.h"
 #include "Trigger.h"
 #include "TransitionEntity.h"
 #include "ItemEntity.h"
@@ -114,10 +113,8 @@ Chamber::Chamber( jsoncons::json jobj ) {
             te = new TileEntity( *it );
         } else if ( (*it)["type"].as_string().compare( "CampFire" ) == 0 ) {
             te = new CampFire( *it );
-        } else if ( (*it)["type"].as_string().compare( "StoneBlock" ) == 0 ) {
-            te = new StoneBlock( *it );
-        } else if ( (*it)["type"].as_string().compare( "IceBlock" ) == 0 ) {
-            te = new IceBlock( *it );
+        } else if ( (*it)["type"].as_string().compare( "Block" ) == 0 ) {
+            te = new Block( *it );
         } else if ( (*it)["type"].as_string().compare( "Trigger" ) == 0 ) {
             te = new Trigger( *it );
         } else if ( (*it)["type"].as_string().compare( "TransitionEntity" ) == 0 ) {
@@ -350,8 +347,8 @@ void Chamber::CalcForceNets() {
     ForceNet * farr[6] = { new ForceNet(), new ForceNet(), new ForceNet(), new ForceNet(), new ForceNet(), new ForceNet() };
     std::list < TileEntity * >::iterator iter;
 	for ( iter = tileEntityList.begin(); iter != tileEntityList.end(); ++iter ) {
-        if ( (*iter)->HasProperty("SygaldryA") ) {
-            int sygA = (*iter)->Lookup( "SygaldryA" )->GetInt();
+        if ( (*iter)->HasProperty("Sygaldry") ) {
+            int sygA = (*iter)->Lookup( "Sygaldry" )->GetInt();
             char runeIndex = (sygA & 0x00FF);
             char runeColor = (sygA >> 8 ) & 0x00FF;
             if ( runeIndex == 1 ) { // if a force rune
