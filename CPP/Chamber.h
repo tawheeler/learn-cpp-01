@@ -50,6 +50,7 @@ namespace MysticDave {
         bool                                    IsInChamber_Pixel( float x, float y ); // whether the given pixel point is in the chamber
 
         bool                                    CanTileBeEntered( int x, int y );
+        bool                                    HasEntityInMotion();
 
         void                                    AddEntity( Entity * e );
 	    void									AddTileEntity( TileEntity * te );

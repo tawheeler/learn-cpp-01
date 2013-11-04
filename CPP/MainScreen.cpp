@@ -53,7 +53,7 @@ void MainScreen::Update() {
 
 	if ( player != 0 ) {
 
-        if ( !(player->IsInMotion() ) ) {
+        if ( !(player->IsInMotion())  ) { // && !(curChamber->HasEntityInMotion())
 
             int numDirsPressed = (keysPressed[DOWN] ? 1 : 0) + (keysPressed[UP] ? 1 : 0) + (keysPressed[LEFT] ? 1 : 0) + (keysPressed[RIGHT] ? 1 : 0);
 
@@ -122,7 +122,6 @@ void MainScreen::Update() {
                             ForceNet * fnet = curChamber->GetForceNetContaining( pushable->GetUID() );
                             if ( fnet != 0  ) {
                                 // handle pushing a force net
-
                                 if ( fnet->CanMove( desDir, curChamber ) ) {
                                     curChamber->RegisterTileEntityInTile( player, tx, ty );
                                     player->MoveDir( desDir, 36 );
@@ -144,7 +143,7 @@ void MainScreen::Update() {
 
                             } else {
                                 // handle pushing a single tile entity
-                                if ( curChamber->CanTileBeEntered( tx + dx, ty + dy ) ) { //if we can push through into next space
+                                if ( pushable->CanMove( desDir, curChamber ) ) { //if we can push through into next space
                                     curChamber->RegisterTileEntityInTile( player, tx, ty );
                                     player->MoveDir( desDir, 36 );
                                     switch ( desDir ) {
@@ -163,6 +162,7 @@ void MainScreen::Update() {
                                         case ( UTIL::DIR_WEST ):  player->PlayAnimation( "tryPushWest" );  break;
                                     }
                                 }
+                                
                             }
                         }
                     }

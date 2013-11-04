@@ -28,10 +28,13 @@ namespace MysticDave {
 
 	    void									AddTileEntity( TileEntity * toAdd );
 
+        int                                     CalcMoveType();
         int                                     GetSize() { return tileEntityList.size(); }
 	    bool									Contains( int uid );
+        TileEntity *                            GetTileEntityAtIndex( int index ) { return tileEntityList[index]; }
 
     private:
+
 	    std::deque < TileEntity * >				tileEntityList;
     };
 }

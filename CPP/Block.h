@@ -26,9 +26,9 @@ namespace MysticDave {
 
         void                        InitBlock();
 
-        virtual void                OnMoveCompleted();
+        virtual void                OnMoveCompleted( Motion * completedMotion );
 
-    private:
+    protected:
         
         int                         blockType; // type of block
         int                         sygaldry;  // the rune enscribed on it

@@ -14,14 +14,42 @@
 
 using namespace MysticDave;
 
-Motion::Motion( Pos2D * pos, int dX, int dY, int totalMotionTime )
+Motion::Motion( Pos2D * pos, int dir, int totalMotionTime )
     : startX( pos->GetPixDX() ),
       startY( pos->GetPixDY() ),
-      destX( pos->GetPixDX() + dX ),
-      destY( pos->GetPixDY() + dY ),
+      destX( 0 ),
+      destY( 0 ),
       totalMotionTime( totalMotionTime ),
-      motionTick( totalMotionTime )
+      motionTick( totalMotionTime ),
+      dir( dir )
 { 
+    int dX = 0;
+    int dY = 0;
+
+    switch ( dir ) {
+    case UTIL::DIR_NONE:
+        break;
+	case UTIL::DIR_NORTH:
+        dX = 0;
+        dY = -TILE_DIM;
+		break;
+	case UTIL::DIR_EAST:  
+        dX = TILE_DIM;
+        dY = 0;
+		break;
+	case UTIL::DIR_SOUTH: 
+        dX = 0;
+        dY = TILE_DIM;
+		break;
+	case UTIL::DIR_WEST:  
+        dX = -TILE_DIM;
+        dY = 0;
+		break;
+	}
+
+    destX = startX + dX;
+    destY = startY + dY;
+
     Motion::pos = pos;
 }
 

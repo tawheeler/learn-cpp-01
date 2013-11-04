@@ -14,6 +14,7 @@
 #include "TileEntity.h"
 #include "CampFire.h"
 #include "Block.h"
+#include "CompoundBlock.h"
 #include "Trigger.h"
 #include "TransitionEntity.h"
 #include "ItemEntity.h"
@@ -115,6 +116,8 @@ Chamber::Chamber( jsoncons::json jobj ) {
             te = new CampFire( *it );
         } else if ( (*it)["type"].as_string().compare( "Block" ) == 0 ) {
             te = new Block( *it );
+        } else if ( (*it)["type"].as_string().compare( "CompoundBlock" ) == 0 ) {
+            te = new CompoundBlock( *it );
         } else if ( (*it)["type"].as_string().compare( "Trigger" ) == 0 ) {
             te = new Trigger( *it );
         } else if ( (*it)["type"].as_string().compare( "TransitionEntity" ) == 0 ) {
@@ -308,6 +311,15 @@ bool Chamber::CanTileBeEntered( int x, int y ) {
     return retval;
 }
 
+bool Chamber::HasEntityInMotion() {
+    for ( auto it = tileEntityList.begin(); it != tileEntityList.end(); ++it ) {
+        if ( (*it)->IsInMotion() ) {
+            return true;
+        }
+    }
+    return false;
+}
+
 Entity * Chamber::GetEntity( int uid ) {
     std::map< int, Entity *>::iterator pos = entityUIDMap.find(uid);
     //assert(pos != entityUIDMap.end());
@@ -344,7 +356,8 @@ void Chamber::CalcForceNets() {
 	}
 
     // run through tile entities and add them to the force nets as appropriate
-    ForceNet * farr[6] = { new ForceNet(), new ForceNet(), new ForceNet(), new ForceNet(), new ForceNet(), new ForceNet() };
+    ForceNet * farr[12] = { new ForceNet(), new ForceNet(), new ForceNet(), new ForceNet(), new ForceNet(), new ForceNet(),
+                            new ForceNet(), new ForceNet(), new ForceNet(), new ForceNet(), new ForceNet(), new ForceNet()};
     std::list < TileEntity * >::iterator iter;
 	for ( iter = tileEntityList.begin(); iter != tileEntityList.end(); ++iter ) {
         if ( (*iter)->HasProperty("Sygaldry") ) {
@@ -355,10 +368,44 @@ void Chamber::CalcForceNets() {
                 farr[runeColor]->AddTileEntity( *iter ); // add this tile entity to the given force net
             }
         }
+        if ( (*iter)->HasProperty("InherentSygaldry") ) {
+            int sygA = (*iter)->Lookup( "InherentSygaldry" )->GetInt();
+            char runeIndex = (sygA & 0x00FF);
+            char runeColor = (sygA >> 8 ) & 0x00FF;
+            if ( runeIndex == 1 ) { // if a force rune
+                farr[runeColor]->AddTileEntity( *iter ); // add this tile entity to the given force net
+            }
+        }
+    }
+
+    // check whether any force nets intersect
+    // if they do, move all entities from the second into the first
+    for ( int i = 0; i < 12; i ++ ) {
+        for ( int j = i + 1; j < 12; j ++ ) {
+
+            bool intersects = false;
+            for ( int k = 0; k < farr[j]->GetSize(); k ++ ) {
+                if ( farr[i]->Contains( farr[j]->GetTileEntityAtIndex(k)->GetUID() ) ) {
+                    intersects = true;
+                    break;
+                }
+            }
+
+            if ( intersects ) {
+                // move all entities from the second into the first
+                for ( int k = 0; k < farr[j]->GetSize(); k ++ ) {
+                    farr[i]->AddTileEntity( farr[j]->GetTileEntityAtIndex( k ) );
+                }
+
+                // clear out the force net
+                delete farr[j];
+                farr[j] = new ForceNet();
+            }
+        }
     }
 
     // save the force nets that contain entities
-    for ( int i = 0; i < 6; i ++ ) {
+    for ( int i = 0; i < 12; i ++ ) {
         if ( farr[i]->GetSize() > 0 ) {
             forceNetList.push_back( farr[i] );
         }

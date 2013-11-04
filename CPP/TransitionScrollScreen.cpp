@@ -61,6 +61,8 @@ TransitionScrollScreen::TransitionScrollScreen( int targetChamberUID, int transi
         default:
             break;
     }
+
+    destChamber->CalcForceNets();
 }
 
 void TransitionScrollScreen::Init() {

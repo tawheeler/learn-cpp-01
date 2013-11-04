@@ -21,18 +21,39 @@
             "y":5
         },
         {
-            "name":"iceBlock1",
+            "name":"dudeItIsABlock",
             "outputs":
             {
             },
             "properties":
             {
-                "Sygaldry":0
+                "BlockType":"STONE",
+                "TileType":"WEST_TERMINAL",
+                "Sygaldry":0,
+                "InherentSygaldry":1793
             },
             "sourceTileLoc":-1,
-            "type":"IceBlock",
+            "type":"CompoundBlock",
             "uid":16,
             "x":5,
+            "y":7
+        },
+        {
+            "name":"dudeItIsABlock2",
+            "outputs":
+            {
+            },
+            "properties":
+            {
+                "BlockType":"STONE",
+                "TileType":"EAST_TERMINAL",
+                "Sygaldry":0,
+                "InherentSygaldry":1793
+            },
+            "sourceTileLoc":-1,
+            "type":"CompoundBlock",
+            "uid":17,
+            "x":6,
             "y":7
         }
     ],

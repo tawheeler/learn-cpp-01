@@ -19,6 +19,8 @@
 #include <string>
 
 namespace MysticDave {
+    class Chamber;
+
     class TileEntity : public Entity {
     public:
 
@@ -42,6 +44,7 @@ namespace MysticDave {
         bool				        IsInMotion() const;
         int                         GetSourceTileLoc() const { return sourceTileLoc; }  //the tile it is moving from or is currently in
 
+        bool                        CanMove( int dir, Chamber * C );
         void				        AddMotion( Motion * motion );
         //void                        HaltAllMotion( Motion * motion ); // halts all motions in the stack
 	    void 		                MoveDir( int dir, int ticksInMove ); // have the TE move one tile in the specified direction
@@ -53,7 +56,7 @@ namespace MysticDave {
 
         virtual void                OnEntered( TileEntity * actor ) {} // called when actor enteres the space this TE is in
         virtual void                OnExited( TileEntity * actor ) {}  // called when actor leaves the space this TE is in
-        virtual void                OnMoveCompleted(); // called whenever this tile entity completes a motion
+        virtual void                OnMoveCompleted( Motion * completedMotion ); // called whenever this tile entity completes a motion
 
         virtual void                OnInput( const std::string I );
 

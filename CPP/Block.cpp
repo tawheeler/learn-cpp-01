@@ -16,6 +16,7 @@
 #include "Utils.h"
 #include "Globals.h"
 #include "ChamberManager.h"
+#include "ForceNet.h"
 
 using jsoncons::json;
 using namespace MysticDave;
@@ -63,25 +64,25 @@ void Block::InitBlock() {
     case ( BLOCK_TYPE::WOOD ):
         moveType = 1;
         flammable = true;
-        imageIndex = 3;
+        imageIndex = 15;
         hardness = 0;
         break;
     case ( BLOCK_TYPE::STONE ):
         moveType = 1;
         flammable = false;
-        imageIndex = 1;
+        imageIndex = 7;
         hardness = 1;
         break;
     case ( BLOCK_TYPE::ICE ):
         moveType = 2;
         flammable = false;
-        imageIndex = 2;
+        imageIndex = 11;
         hardness = 0;
         break;
     case ( BLOCK_TYPE::METAL ):
         moveType = 1;
         flammable = false;
-        imageIndex = 0;
+        imageIndex = 3;
         hardness = 2;
         break;
     }
@@ -97,9 +98,31 @@ void Block::InitBlock() {
     visual = vis;
 }
 
-void Block::OnMoveCompleted() {
+void Block::OnMoveCompleted( Motion * completedMotion ) {
 
-    if ( moveType == 2 ) { // move type 2 keeps on sliding
+    Chamber * curChamber = (ChamberManager::GetInstance()).GetCurrentChamber();
+    bool stopping = true;
+    ForceNet * fnet = curChamber->GetForceNetContaining( this->uid );
+
+    // check whether the force net containing can still move
+    if ( fnet != 0 ) {
+        int moveType = fnet->CalcMoveType();
+        if ( moveType == 2 ) { // will slide if possible
+
+            int dir = completedMotion->GetDir();
+            if ( fnet->CanMove( dir, curChamber ) ) {
+
+                int tx = pos->GetTileX() + UTIL::DirToXAdjustment( dir );
+                int ty = pos->GetTileY() + UTIL::DirToYAdjustment( dir );
+
+                curChamber->RegisterTileEntityInTile( this, tx, ty );
+                MoveDir( dir, completedMotion->GetTotalMotionTile() );
+
+                stopping = false;
+            }
+        }
+    } 
+    else if ( moveType == 2 ) { // move type 2 keeps on sliding
         Chamber * curChamber = (ChamberManager::GetInstance()).GetCurrentChamber();
 
         int cx = pos->GetTileX();
@@ -113,11 +136,13 @@ void Block::OnMoveCompleted() {
         if ( curChamber->CanTileBeEntered( tx, ty ) ) { //if it can slide through into the next space
             curChamber->RegisterTileEntityInTile( this, tx, ty );
             MoveDir( desDir, 36 );
-        } else {
-            sourceTileLoc = -1;
-        }
-    } else {
-        sourceTileLoc = -1; // just forget where we came from
+            stopping = false;
+        } 
+    }
+
+    if ( stopping ) {
+        // forget previous location
+        sourceTileLoc = -1;
     }
 
 }

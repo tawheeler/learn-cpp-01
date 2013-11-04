@@ -154,7 +154,7 @@ int PlayerEntity::GetDir() {
 void PlayerEntity::SetDir( int dir ) {
 	PlayerEntity::dir = dir;
 	animVis->SetBitmap( (ResourceManager::GetInstance()).LoadTextureSheet( "./res/Sprites/DaveSpriteSheet.png", TILE_DIM, TILE_DIM )->GetTexture( standingArr[dir] ) );
-    AddMotion( new Motion( pos, 0, 0, 8 ) ); // adds a little delay after turning
+    AddMotion( new Motion( pos, UTIL::DIR_NONE, 8 ) ); // adds a little delay after turning
 }
 
 void PlayerEntity::PlayAnimation( std::string animName ) {

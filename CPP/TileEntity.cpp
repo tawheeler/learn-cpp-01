@@ -11,6 +11,7 @@
 
 #include "TileEntity.h"
 #include "Utils.h"
+#include "ForceNet.h"
 #include "ChamberManager.h"
 
 using jsoncons::json;
@@ -107,8 +108,7 @@ void TileEntity::Update() {
         if ( curMotion->IsDone() ) {
             motionQueue.pop_front();
             pos->SetToClosestTile();
-
-            delete curMotion;
+            
             if ( sourceTileLoc != -1 ) {
                 // grab current chamber and remove from location
                 Chamber * curChamber = (ChamberManager::GetInstance()).GetCurrentChamber();
@@ -121,8 +121,10 @@ void TileEntity::Update() {
                 curChamber->OnEntityEnteredTile( this, Chamber::GetTileNumFromPos( pos->GetTileX(), pos->GetTileY() ) );
 
                 // Call onMoveCompleted on self
-                OnMoveCompleted();
+                OnMoveCompleted( curMotion );
             }
+
+            delete curMotion;
         }
 
     }
@@ -135,22 +137,7 @@ void TileEntity::Render( int x, int y ) {
 }
 
 void TileEntity::MoveDir( int dir, int ticksInMove ) {
-	
-	switch ( dir ) {
-		case UTIL::DIR_NORTH:
-            motionQueue.push_back( new Motion( pos, 0, -TILE_DIM, ticksInMove ) ); 
-			break;
-		case UTIL::DIR_EAST:  
-			motionQueue.push_back( new Motion( pos, TILE_DIM, 0, ticksInMove ) ); 
-			break;
-		case UTIL::DIR_SOUTH: 
-			motionQueue.push_back( new Motion( pos, 0, TILE_DIM, ticksInMove ) ); 
-			break;
-		case UTIL::DIR_WEST:  
-			motionQueue.push_back( new Motion( pos, -TILE_DIM, 0, ticksInMove ) ); 
-			break;
-	}
-
+    motionQueue.push_back( new Motion( pos, dir, ticksInMove ) ); 
 	TileEntity::sourceTileLoc = Chamber::GetTileNumFromPos( pos->GetTileX(), pos->GetTileY() );
 }
 	
@@ -158,12 +145,47 @@ bool TileEntity::IsInMotion() const {
 	return !motionQueue.empty();
 }
 
+bool TileEntity::CanMove( int dir, Chamber * C ) {
+    int dx = UTIL::DirToXAdjustment( dir );
+    int dy = UTIL::DirToYAdjustment( dir );
+    int x = pos->GetTileX();
+    int y = pos->GetTileY();
+    return HasProperty("MoveType") && (Lookup( "MoveType" )->GetInt() != 0) && C->CanTileBeEntered( x + dx, y + dy );
+}
+
 void TileEntity::AddMotion( Motion * motion ) {
     motionQueue.push_back( motion );
 }
 
-void TileEntity::OnMoveCompleted() {
-    sourceTileLoc = -1;
+void TileEntity::OnMoveCompleted( Motion * completedMotion ) {
+
+    Chamber * curChamber = (ChamberManager::GetInstance()).GetCurrentChamber();
+    bool stopping = true;
+    ForceNet * fnet = curChamber->GetForceNetContaining( this->uid );
+
+    // check whether the force net containing can still move
+    if ( fnet != 0 ) {
+        int moveType = fnet->CalcMoveType();
+        if ( moveType == 2 ) { // will slide if possible
+
+            int dir = completedMotion->GetDir();
+            if ( fnet->CanMove( dir, curChamber ) ) {
+
+                int tx = pos->GetTileX() + UTIL::DirToXAdjustment( dir );
+                int ty = pos->GetTileY() + UTIL::DirToYAdjustment( dir );
+
+                curChamber->RegisterTileEntityInTile( this, tx, ty );
+                MoveDir( dir, completedMotion->GetTotalMotionTile() );
+
+                stopping = false;
+            }
+        }
+    } 
+
+    if ( stopping ) {
+        // forget previous location
+        sourceTileLoc = -1;
+    }
 }
 
 void TileEntity::OnInput( const std::string I ) {

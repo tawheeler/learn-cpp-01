@@ -20,6 +20,7 @@ namespace UTIL {
 
     using namespace MysticDave;
 
+    static const int DIR_NONE = -1;
 	static const int DIR_NORTH = 0;
 	static const int DIR_EAST  = 1;
 	static const int DIR_SOUTH = 2;

@@ -16,12 +16,14 @@ namespace MysticDave {
     class Motion {
     public:
 
-				    Motion( Pos2D * pos, int dX, int dY, int totalMotionTime );
+				    Motion( Pos2D * pos, int dir, int totalMotionTime );
 				    ~Motion();
 
 	    void		Update();
 	    bool		IsDone() const;
-	
+
+        int         GetDir() { return dir; }
+        int         GetTotalMotionTile() { return totalMotionTime; }
 
     private:
 	
@@ -35,6 +37,8 @@ namespace MysticDave {
 	    int			startY; // [pix]
 	    int			destX;  // [pix]
 	    int			destY;  // [pix]
+
+        int         dir;
 
 	    Pos2D *		pos;    // the vector tied to the motion
 
