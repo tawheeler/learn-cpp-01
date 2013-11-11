@@ -24,6 +24,8 @@ namespace MysticDave {
 
     public:
 
+        enum MOVE{ WALK, PUSH, TRY_PUSH };
+
 						        PlayerEntity();
                                 PlayerEntity( jsoncons::json jobj );
 		virtual 		        ~PlayerEntity();
@@ -34,6 +36,7 @@ namespace MysticDave {
 	    void				    SetDir( int dir );
 
 	    void				    PlayAnimation( std::string animName );
+        void                    MoveWithAnimation( int dir, int ticksInMove, int moveType );
 	    bool				    IsPlayingAnimation();
 
         void                    AddInventoryItem( int id );

@@ -141,6 +141,12 @@ void TileEntity::MoveDir( int dir, int ticksInMove ) {
 	TileEntity::sourceTileLoc = Chamber::GetTileNumFromPos( pos->GetTileX(), pos->GetTileY() );
 }
 	
+Motion * TileEntity::GetCurrentMotion() {
+    if ( !(motionQueue.empty()) ) {
+        return motionQueue.front();
+    }
+}
+
 bool TileEntity::IsInMotion() const {
 	return !motionQueue.empty();
 }
@@ -150,7 +156,22 @@ bool TileEntity::CanMove( int dir, Chamber * C ) {
     int dy = UTIL::DirToYAdjustment( dir );
     int x = pos->GetTileX();
     int y = pos->GetTileY();
-    return HasProperty("MoveType") && (Lookup( "MoveType" )->GetInt() != 0) && C->CanTileBeEntered( x + dx, y + dy );
+
+    if ( HasProperty("MoveType") && (Lookup( "MoveType" )->GetInt() != 0) ) { // && (!IsInMotion())
+        if ( C->CanTileBeEntered( x + dx, y + dy ) ) { // space is open
+            return true;
+        } else { // space is not open
+            // check if what is blocking us is part of the same fnet
+            Chamber * curChamber = (ChamberManager::GetInstance()).GetCurrentChamber();
+            ForceNet * fnet = curChamber->GetForceNetContaining( this->uid );
+            TileEntity * pushable = curChamber->GetEntityWithPropertyInTile( "MoveType", Chamber::GetTileNumFromPos( x + dx, y + dy) );
+            if ( pushable != 0 && fnet != 0 && fnet->Contains( pushable->GetUID() ) ) {
+                return true;
+            }
+        }
+    }
+
+    return false;
 }
 
 void TileEntity::AddMotion( Motion * motion ) {
@@ -175,7 +196,7 @@ void TileEntity::OnMoveCompleted( Motion * completedMotion ) {
                 int ty = pos->GetTileY() + UTIL::DirToYAdjustment( dir );
 
                 curChamber->RegisterTileEntityInTile( this, tx, ty );
-                MoveDir( dir, completedMotion->GetTotalMotionTile() );
+                MoveDir( dir, completedMotion->GetTotalMotionTime() );
 
                 stopping = false;
             }

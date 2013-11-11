@@ -55,6 +55,22 @@
             "uid":17,
             "x":6,
             "y":7
+        },
+        {
+            "name":"blahblahBlock",
+            "outputs":
+            {
+            },
+            "properties":
+            {
+                "BlockType":"ICE",
+                "Sygaldry":0
+            },
+            "sourceTileLoc":-1,
+            "type":"Block",
+            "uid":7,
+            "x":9,
+            "y":3
         }
     ],
     "tileImageAddrArr":

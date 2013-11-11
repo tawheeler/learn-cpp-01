@@ -86,6 +86,17 @@ void TransitionScrollScreen::Update() {
         player->GetPos()->SetPosFromTile( targetTile );
         destChamber->RegisterTileEntityInTile( player, targetTile );
 
+        // have player move one tile on entry
+        int dx = UTIL::DirToXAdjustment( player->GetDir() );
+        int dy = UTIL::DirToYAdjustment( player->GetDir() );
+        int curx = player->GetPos()->GetTileX();
+        int cury = player->GetPos()->GetTileY();
+        int tx = curx + dx;
+        int ty = cury + dy;
+        destChamber->RegisterTileEntityInTile( player, tx, ty );
+        player->MoveWithAnimation( player->GetDir(), 24, PlayerEntity::MOVE::WALK );
+
+
         this->SetDead();
     }
 }

@@ -161,6 +161,44 @@ void PlayerEntity::PlayAnimation( std::string animName ) {
 	animVis->PlayAnimation( animationMap[animName] );
 }
 
+void PlayerEntity::MoveWithAnimation( int dir, int ticksInMove, int moveType ) {
+
+    MoveDir( dir, ticksInMove );
+
+    std::string animName;
+    switch ( moveType ) {
+    case (MOVE::WALK): 
+        switch ( dir ) {
+            case ( UTIL::DIR_NORTH ): animName = "walkNorth"; break;
+            case ( UTIL::DIR_EAST ):  animName = "walkEast";  break;
+            case ( UTIL::DIR_SOUTH ): animName = "walkSouth"; break;
+            case ( UTIL::DIR_WEST ):  animName = "walkWest";  break;
+        }
+        break;
+    case (MOVE::PUSH):
+        switch ( dir ) {
+            case ( UTIL::DIR_NORTH ): animName = "pushNorth"; break;
+            case ( UTIL::DIR_EAST ):  animName = "pushEast";  break;
+            case ( UTIL::DIR_SOUTH ): animName = "pushSouth"; break;
+            case ( UTIL::DIR_WEST ):  animName = "pushWest";  break;
+        }
+        break;
+    case (MOVE::TRY_PUSH):
+        switch ( dir ) {
+            case ( UTIL::DIR_NORTH ): animName = "tryPushNorth"; break;
+            case ( UTIL::DIR_EAST ):  animName = "tryPushEast";  break;
+            case ( UTIL::DIR_SOUTH ): animName = "tryPushSouth"; break;
+            case ( UTIL::DIR_WEST ):  animName = "tryPushWest";  break;
+        }
+        break;
+    }
+
+    PlayAnimation( animName );
+
+    
+    
+}
+
 bool PlayerEntity::IsPlayingAnimation() {
 	return animVis->IsPlayingAnimation();
 }

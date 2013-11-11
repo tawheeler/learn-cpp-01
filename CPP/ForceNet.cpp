@@ -24,7 +24,6 @@ ForceNet::~ForceNet() {
 	// do nothing, someone else will delete the tile entities
 }
 
-
 bool ForceNet::CanMove( int dir, Chamber * C ) {
 	bool retval =  true;
 
@@ -70,7 +69,7 @@ int ForceNet::CalcMoveType() {
     for ( auto iter = tileEntityList.begin(); iter != tileEntityList.end(); ++iter ) {
         int mt = (*iter)->Lookup("MoveType")->GetInt();
         if ( mt < retval ) {
-            mt = retval;
+            retval = mt;
         }
     }
 

@@ -106,8 +106,8 @@ void Block::OnMoveCompleted( Motion * completedMotion ) {
 
     // check whether the force net containing can still move
     if ( fnet != 0 ) {
-        int moveType = fnet->CalcMoveType();
-        if ( moveType == 2 ) { // will slide if possible
+        int fnetMoveType = fnet->CalcMoveType();
+        if ( fnetMoveType == 2 ) { // will slide if possible
 
             int dir = completedMotion->GetDir();
             if ( fnet->CanMove( dir, curChamber ) ) {
@@ -116,7 +116,7 @@ void Block::OnMoveCompleted( Motion * completedMotion ) {
                 int ty = pos->GetTileY() + UTIL::DirToYAdjustment( dir );
 
                 curChamber->RegisterTileEntityInTile( this, tx, ty );
-                MoveDir( dir, completedMotion->GetTotalMotionTile() );
+                MoveDir( dir, completedMotion->GetTotalMotionTime() );
 
                 stopping = false;
             }

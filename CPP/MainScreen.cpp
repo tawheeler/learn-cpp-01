@@ -107,13 +107,7 @@ void MainScreen::Update() {
 				    // check if target is free
                     if ( curChamber->CanTileBeEntered( tx, ty ) ) {
                         curChamber->RegisterTileEntityInTile( player, tx, ty );
-                        player->MoveDir( desDir, 24 );
-                        switch ( desDir ) {
-                            case ( UTIL::DIR_NORTH ): player->PlayAnimation( "walkNorth" ); break;
-                            case ( UTIL::DIR_EAST ):  player->PlayAnimation( "walkEast" );  break;
-                            case ( UTIL::DIR_SOUTH ): player->PlayAnimation( "walkSouth" ); break;
-                            case ( UTIL::DIR_WEST ):  player->PlayAnimation( "walkWest" );  break;
-                        }
+                        player->MoveWithAnimation( desDir, 24, PlayerEntity::MOVE::WALK );
                     }
                     else {
                         TileEntity * pushable = curChamber->GetEntityWithPropertyInTile( "MoveType", Chamber::GetTileNumFromPos( tx, ty) );
@@ -124,14 +118,19 @@ void MainScreen::Update() {
                                 // handle pushing a force net
                                 if ( fnet->CanMove( desDir, curChamber ) ) {
                                     curChamber->RegisterTileEntityInTile( player, tx, ty );
-                                    player->MoveDir( desDir, 36 );
-                                    switch ( desDir ) {
-                                        case ( UTIL::DIR_NORTH ): player->PlayAnimation( "pushNorth" ); break;
-                                        case ( UTIL::DIR_EAST ):  player->PlayAnimation( "pushEast" );  break;
-                                        case ( UTIL::DIR_SOUTH ): player->PlayAnimation( "pushSouth" ); break;
-                                        case ( UTIL::DIR_WEST ):  player->PlayAnimation( "pushWest" );  break;
-                                    }
+                                    player->MoveWithAnimation( desDir, 36, PlayerEntity::MOVE::PUSH );
                                     fnet->Move( desDir, curChamber );
+                                } else if ( pushable->IsInMotion() && pushable->GetCurrentMotion()->GetDir() == player->GetDir() ) {
+                                    // the pushable is moving and it is moving the same direction we want to go
+
+                                    Motion * mot = pushable->GetCurrentMotion();
+                                    int ticksLeftInMove = mot->GetTotalMotionTime();
+                                    int moveSpeed = (ticksLeftInMove > 24 ? ticksLeftInMove : 24);
+
+                                    // move the player
+                                    curChamber->RegisterTileEntityInTile( player, tx, ty );
+                                    player->MoveWithAnimation( desDir, moveSpeed, PlayerEntity::MOVE::WALK );
+
                                 } else {
                                     switch ( desDir ) {
                                         case ( UTIL::DIR_NORTH ): player->PlayAnimation( "tryPushNorth" ); break;
@@ -145,15 +144,20 @@ void MainScreen::Update() {
                                 // handle pushing a single tile entity
                                 if ( pushable->CanMove( desDir, curChamber ) ) { //if we can push through into next space
                                     curChamber->RegisterTileEntityInTile( player, tx, ty );
-                                    player->MoveDir( desDir, 36 );
-                                    switch ( desDir ) {
-                                        case ( UTIL::DIR_NORTH ): player->PlayAnimation( "pushNorth" ); break;
-                                        case ( UTIL::DIR_EAST ):  player->PlayAnimation( "pushEast" );  break;
-                                        case ( UTIL::DIR_SOUTH ): player->PlayAnimation( "pushSouth" ); break;
-                                        case ( UTIL::DIR_WEST ):  player->PlayAnimation( "pushWest" );  break;
-                                    }
+                                    player->MoveWithAnimation( desDir, 36, PlayerEntity::MOVE::PUSH );
                                     curChamber->RegisterTileEntityInTile( pushable, tx + dx, ty + dy );
                                     pushable->MoveDir( desDir, 36 );
+                                }  else if ( pushable->IsInMotion() && pushable->GetCurrentMotion()->GetDir() == player->GetDir() ) {
+                                    // the pushable is moving and it is moving the same direction we want to go
+
+                                    Motion * mot = pushable->GetCurrentMotion();
+                                    int ticksLeftInMove = mot->GetTotalMotionTime();
+                                    int moveSpeed = min( 36, ticksLeftInMove );
+
+                                    // move the player
+                                    curChamber->RegisterTileEntityInTile( player, tx, ty );
+                                    player->MoveWithAnimation( desDir, moveSpeed, PlayerEntity::MOVE::WALK );
+
                                 } else {
                                     switch ( desDir ) {
                                         case ( UTIL::DIR_NORTH ): player->PlayAnimation( "tryPushNorth" ); break;

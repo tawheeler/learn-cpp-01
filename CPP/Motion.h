@@ -22,8 +22,9 @@ namespace MysticDave {
 	    void		Update();
 	    bool		IsDone() const;
 
-        int         GetDir() { return dir; }
-        int         GetTotalMotionTile() { return totalMotionTime; }
+        int         GetDir() const { return dir; }
+        int         GetTotalMotionTime() const { return totalMotionTime; }
+        int         GetRemainingMotionTime() const { return motionTick; }
 
     private:
 	
