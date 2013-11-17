@@ -81,6 +81,32 @@ void MainScreen::Update() {
                 bs->Init();
                 (ScreenManager::GetInstance()).PushGameScreen( bs );
 
+            } else if ( keysToggled[ALLEGRO_KEY_F] && keysPressed[ALLEGRO_KEY_F] ) {
+
+                int dx = UTIL::DirToXAdjustment( player->GetDir() );
+                int dy = UTIL::DirToYAdjustment( player->GetDir() );
+                int curx = player->GetPos()->GetTileX();
+                int cury = player->GetPos()->GetTileY();
+
+                std::list <TileEntity *> * tileEntityList = curChamber->GetEntitiesInTile( Chamber::GetTileNumFromPos(curx + dx, cury + dy) );
+                std::list < TileEntity * >::iterator iter;
+	            for ( iter = tileEntityList->begin(); iter != tileEntityList->end(); ++iter ) {
+                    (*iter)->OnInput( "OnHeated" );
+                }
+
+            } else if ( keysToggled[ALLEGRO_KEY_G] && keysPressed[ALLEGRO_KEY_G] ) {
+
+                int dx = UTIL::DirToXAdjustment( player->GetDir() );
+                int dy = UTIL::DirToYAdjustment( player->GetDir() );
+                int curx = player->GetPos()->GetTileX();
+                int cury = player->GetPos()->GetTileY();
+
+                std::list <TileEntity *> * tileEntityList = curChamber->GetEntitiesInTile( Chamber::GetTileNumFromPos(curx + dx, cury + dy) );
+                std::list < TileEntity * >::iterator iter;
+	            for ( iter = tileEntityList->begin(); iter != tileEntityList->end(); ++iter ) {
+                    (*iter)->OnInput( "OnChilled" );
+                }
+
             } else if ( numDirsPressed == 1 ) {
 
 			    int dx = 0;
@@ -185,5 +211,5 @@ void MainScreen::Update() {
 void MainScreen::Render() const {
     // TODO: add camera
 	CM->GetCurrentChamber()->Render( 0, 0 );
-	CM->GetPlayer()->GetVisual()->Render( 0, 0 );
+	CM->GetPlayer()->Render( 0, 0 );
 }

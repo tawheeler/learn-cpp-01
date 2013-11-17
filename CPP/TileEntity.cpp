@@ -13,6 +13,7 @@
 #include "Utils.h"
 #include "ForceNet.h"
 #include "ChamberManager.h"
+#include "ResourceManager.h"
 
 using jsoncons::json;
 using namespace MysticDave;
@@ -47,8 +48,16 @@ void TileEntity::Init() {
 
     sourceTileLoc = -1;
 
+    fireDurationCounter = -1;
     visual = 0;
     pos = new Pos2D();
+
+    fireFlickerVisual = new AnimationVisual( pos, (ResourceManager::GetInstance()).LoadTextureSheet( "./res/FireSprite.png", TILE_DIM, TILE_DIM )->GetTexture(1) );
+
+    fireFlickerAnim = new Animation( 2, (ResourceManager::GetInstance()).LoadTextureSheet("./res/FireSprite.png", TILE_DIM, TILE_DIM) );
+	fireFlickerAnim->frameDurations[0] = 10; fireFlickerAnim->frameIDs[0] = 0;
+	fireFlickerAnim->frameDurations[1] = 10; fireFlickerAnim->frameIDs[1] = 1;
+	fireFlickerAnim->Init();
 }
 
 void TileEntity::Cleanup() {
@@ -70,6 +79,11 @@ void TileEntity::Cleanup() {
 		visual->Cleanup();
 		delete visual;
 	}
+
+    // fire flicker
+    fireFlickerVisual->Cleanup();
+    delete fireFlickerVisual;
+    delete fireFlickerAnim;
 
     // motions
     std::deque< Motion * >::iterator iter;
@@ -98,6 +112,14 @@ void TileEntity::SetVisual( Visual * visual ) {
 void TileEntity::Update() {
 	Entity::Update();
 	
+    // update the fire flicker
+    if ( IsOnFire() ) {
+        fireDurationCounter++;
+        if ( !(fireFlickerVisual->IsPlayingAnimation()) ) {
+            fireFlickerVisual->PlayAnimation( fireFlickerAnim );
+        }
+    }
+
     // update the motion, if we have one
     if ( !motionQueue.empty() ) {
 
@@ -134,6 +156,9 @@ void TileEntity::Render( int x, int y ) {
     if ( visual != 0 ) {
         visual->Render( x, y );
     }
+    if ( IsOnFire() ) {
+        fireFlickerVisual->Render( x, y );
+    }
 }
 
 void TileEntity::MoveDir( int dir, int ticksInMove ) {
@@ -145,6 +170,7 @@ Motion * TileEntity::GetCurrentMotion() {
     if ( !(motionQueue.empty()) ) {
         return motionQueue.front();
     }
+    return 0;
 }
 
 bool TileEntity::IsInMotion() const {
@@ -157,7 +183,7 @@ bool TileEntity::CanMove( int dir, Chamber * C ) {
     int x = pos->GetTileX();
     int y = pos->GetTileY();
 
-    if ( HasProperty("MoveType") && (Lookup( "MoveType" )->GetInt() != 0) ) { // && (!IsInMotion())
+    if ( HasProperty("MoveType") && (Lookup( "MoveType" )->GetInt() != 0) ) {
         if ( C->CanTileBeEntered( x + dx, y + dy ) ) { // space is open
             return true;
         } else { // space is not open
@@ -201,7 +227,25 @@ void TileEntity::OnMoveCompleted( Motion * completedMotion ) {
                 stopping = false;
             }
         }
-    } 
+    } else if ( (HasProperty("MoveType") && Lookup("MoveType")->GetInt() == 2) // can move do to having move type 2
+                || (curChamber->GetEntityOfTypeInTile( "IcePatch", Chamber::GetTileNumFromPos(pos->GetTileX(), pos->GetTileY()) ) != 0) ) {  // can move due to being on ice patch
+        
+        Chamber * curChamber = (ChamberManager::GetInstance()).GetCurrentChamber();
+
+        int cx = pos->GetTileX();
+        int cy = pos->GetTileY();
+        int dx = cx - Chamber::GetTileXFromNum( sourceTileLoc );
+        int dy = cy - Chamber::GetTileYFromNum( sourceTileLoc );
+        int tx = cx + dx;
+        int ty = cy + dy;
+        int desDir = UTIL::DirFromDelta( dx, dy );
+
+        if ( curChamber->CanTileBeEntered( tx, ty ) ) { //if it can slide through into the next space
+            curChamber->RegisterTileEntityInTile( this, tx, ty );
+            MoveDir( desDir, completedMotion->GetTotalMotionTime() );
+            stopping = false;
+        } 
+    }
 
     if ( stopping ) {
         // forget previous location
@@ -217,6 +261,13 @@ void TileEntity::OnInput( const std::string I ) {
     } else if ( I.compare( "DisableCollision" ) == 0 ) {
         // Sets the blocksOccupation to false
         blocksOccupation = false;
+    } else if ( I.compare( "OnHeated" ) == 0 ) {
+        // set it on fire if it is flammable
+        if( flammable ) {
+            fireDurationCounter = 0; // set on fire!
+        }
+    } else if ( I.compare( "OnChilled" ) == 0 ) {
+        fireDurationCounter = -1; // extinguish fire
     } else {
         Entity::OnInput( I );
     }

@@ -11,7 +11,6 @@
             "properties":
             {
             },
-            "sourceTileLoc":-1,
             "type":"CampFire",
             "uid":2,
             "x":2,
@@ -25,7 +24,6 @@
             "properties":
             {
             },
-            "sourceTileLoc":-1,
             "type":"CampFire",
             "uid":3,
             "x":10,
@@ -39,7 +37,6 @@
             "properties":
             {
             },
-            "sourceTileLoc":-1,
             "type":"CampFire",
             "uid":4,
             "x":2,
@@ -53,7 +50,6 @@
             "properties":
             {
             },
-            "sourceTileLoc":-1,
             "type":"CampFire",
             "uid":5,
             "x":10,
@@ -69,7 +65,6 @@
                 "BlockType":"STONE",
                 "Sygaldry":0
             },
-            "sourceTileLoc":-1,
             "type":"Block",
             "uid":6,
             "x":3,
@@ -85,7 +80,6 @@
                 "BlockType":"ICE",
                 "Sygaldry":0
             },
-            "sourceTileLoc":-1,
             "type":"Block",
             "uid":7,
             "x":9,
@@ -101,7 +95,6 @@
                 "BlockType":"METAL",
                 "Sygaldry":0
             },
-            "sourceTileLoc":-1,
             "type":"Block",
             "uid":8,
             "x":3,
@@ -117,7 +110,6 @@
                 "BlockType":"WOOD",
                 "Sygaldry":0
             },
-            "sourceTileLoc":-1,
             "type":"Block",
             "uid":9,
             "x":9,
@@ -142,7 +134,6 @@
             {
                 "StartDisabled":true
             },
-            "sourceTileLoc":-1,
             "type":"Trigger",
             "uid":10,
             "x":6,
@@ -159,7 +150,6 @@
                 "TargetChamberUID":2,
                 "TransitionType":2
             },
-            "sourceTileLoc":-1,
             "type":"TransitionEntity",
             "uid":11,
             "x":0,
@@ -176,11 +166,23 @@
                 "TargetChamberUID":3,
                 "TransitionType":2
             },
-            "sourceTileLoc":-1,
             "type":"TransitionEntity",
             "uid":14,
             "x":6,
             "y":10
+        },
+        {
+            "name":"icePatch1",
+            "outputs":
+            {
+            },
+            "properties":
+            {
+            },
+            "type":"IcePatch",
+            "uid":87,
+            "x":2,
+            "y":1
         }
     ],
     "tileHeight":11,

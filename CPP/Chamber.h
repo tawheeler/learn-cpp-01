@@ -67,7 +67,9 @@ namespace MysticDave {
 	    ALLEGRO_BITMAP *						GetFloorImage() const;
 
         Entity *                                GetEntity( int uid );
+        TileEntity *                            GetEntityOfTypeInTile( std::string type, int tileNum );
         TileEntity *                            GetEntityWithPropertyInTile( std::string propertyName, int tileNum );
+        std::list < TileEntity * > *            GetEntitiesInTile( int tileNum );
 
         void                                    CalcForceNets();
         ForceNet *                              GetForceNetContaining( int uid );

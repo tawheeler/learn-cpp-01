@@ -15,6 +15,7 @@
 #include "Pos2D.h"
 #include "Visual.h"
 #include "Motion.h"
+#include "AnimationVisual.h"
 #include <deque>
 #include <string>
 
@@ -40,6 +41,8 @@ namespace MysticDave {
 
         bool                        IsFlammable() const { return flammable; }
         void                        SetFlammable( bool b ) { TileEntity::flammable = b; }
+        bool                        IsOnFire() const { return fireDurationCounter > -1; }
+        int                         GetFireDuration() const { return fireDurationCounter; }
 
         bool				        IsInMotion() const;
         int                         GetSourceTileLoc() const { return sourceTileLoc; }  //the tile it is moving from or is currently in
@@ -70,6 +73,10 @@ namespace MysticDave {
 
         bool				        blocksOccupation;
         bool                        flammable;
+        
+        int                         fireDurationCounter; // how long this has been on fire (-1 if not on fire)
+        AnimationVisual *           fireFlickerVisual;
+        Animation *                 fireFlickerAnim;
 
         Pos2D *                     pos;  // position in pixel space
         Visual*				        visual;

@@ -98,51 +98,76 @@ void Block::InitBlock() {
     visual = vis;
 }
 
-void Block::OnMoveCompleted( Motion * completedMotion ) {
+void Block::OnInput( const std::string I ) {
 
-    Chamber * curChamber = (ChamberManager::GetInstance()).GetCurrentChamber();
-    bool stopping = true;
-    ForceNet * fnet = curChamber->GetForceNetContaining( this->uid );
+    if ( I.compare( "OnHeated" ) == 0 && blockType == BLOCK_TYPE::ICE ) {
 
-    // check whether the force net containing can still move
-    if ( fnet != 0 ) {
-        int fnetMoveType = fnet->CalcMoveType();
-        if ( fnetMoveType == 2 ) { // will slide if possible
+        // turn it into a puddle!
+        // TODO: this
+        OnInput( "Kill" );
 
-            int dir = completedMotion->GetDir();
-            if ( fnet->CanMove( dir, curChamber ) ) {
-
-                int tx = pos->GetTileX() + UTIL::DirToXAdjustment( dir );
-                int ty = pos->GetTileY() + UTIL::DirToYAdjustment( dir );
-
-                curChamber->RegisterTileEntityInTile( this, tx, ty );
-                MoveDir( dir, completedMotion->GetTotalMotionTime() );
-
-                stopping = false;
-            }
-        }
-    } 
-    else if ( moveType == 2 ) { // move type 2 keeps on sliding
-        Chamber * curChamber = (ChamberManager::GetInstance()).GetCurrentChamber();
-
-        int cx = pos->GetTileX();
-        int cy = pos->GetTileY();
-        int dx = cx - Chamber::GetTileXFromNum( sourceTileLoc );
-        int dy = cy - Chamber::GetTileYFromNum( sourceTileLoc );
-        int tx = cx + dx;
-        int ty = cy + dy;
-        int desDir = UTIL::DirFromDelta( dx, dy );
-
-        if ( curChamber->CanTileBeEntered( tx, ty ) ) { //if it can slide through into the next space
-            curChamber->RegisterTileEntityInTile( this, tx, ty );
-            MoveDir( desDir, 36 );
-            stopping = false;
-        } 
+    } else {
+        TileEntity::OnInput( I );
     }
-
-    if ( stopping ) {
-        // forget previous location
-        sourceTileLoc = -1;
-    }
-
 }
+
+void Block::Update() {
+    TileEntity::Update();
+
+    if ( blockType == BLOCK_TYPE::WOOD ) {
+        // if the block is on fire for too long
+        if ( fireDurationCounter > 300 ) {
+            OnInput( "Kill" );
+        }
+    }
+    
+}
+
+//void Block::OnMoveCompleted( Motion * completedMotion ) {
+//
+//    Chamber * curChamber = (ChamberManager::GetInstance()).GetCurrentChamber();
+//    bool stopping = true;
+//    ForceNet * fnet = curChamber->GetForceNetContaining( this->uid );
+//
+//    // check whether the force net containing can still move
+//    if ( fnet != 0 ) {
+//        int fnetMoveType = fnet->CalcMoveType();
+//        if ( fnetMoveType == 2 ) { // will slide if possible
+//
+//            int dir = completedMotion->GetDir();
+//            if ( fnet->CanMove( dir, curChamber ) ) {
+//
+//                int tx = pos->GetTileX() + UTIL::DirToXAdjustment( dir );
+//                int ty = pos->GetTileY() + UTIL::DirToYAdjustment( dir );
+//
+//                curChamber->RegisterTileEntityInTile( this, tx, ty );
+//                MoveDir( dir, completedMotion->GetTotalMotionTime() );
+//
+//                stopping = false;
+//            }
+//        }
+//    } 
+//    else if ( moveType == 2 ) { // move type 2 keeps on sliding
+//        Chamber * curChamber = (ChamberManager::GetInstance()).GetCurrentChamber();
+//
+//        int cx = pos->GetTileX();
+//        int cy = pos->GetTileY();
+//        int dx = cx - Chamber::GetTileXFromNum( sourceTileLoc );
+//        int dy = cy - Chamber::GetTileYFromNum( sourceTileLoc );
+//        int tx = cx + dx;
+//        int ty = cy + dy;
+//        int desDir = UTIL::DirFromDelta( dx, dy );
+//
+//        if ( curChamber->CanTileBeEntered( tx, ty ) ) { //if it can slide through into the next space
+//            curChamber->RegisterTileEntityInTile( this, tx, ty );
+//            MoveDir( desDir, 36 );
+//            stopping = false;
+//        } 
+//    }
+//
+//    if ( stopping ) {
+//        // forget previous location
+//        sourceTileLoc = -1;
+//    }
+//
+//}

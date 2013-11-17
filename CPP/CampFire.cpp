@@ -13,6 +13,7 @@
 
 #include "CampFire.h"
 #include "ResourceManager.h"
+#include "TileBitmapVisual.h"
 #include "Utils.h"
 
 using jsoncons::json;
@@ -35,22 +36,10 @@ void CampFire::InitCampFire() {
 
     renderZ = 1;
     blocksOccupation = true;
-    flammable = false;
+    flammable = true;
+    fireDurationCounter = 0;
     
-    animVis = new AnimationVisual( pos, (ResourceManager::GetInstance()).GetBitmap( "./res/CampfireSprite.png" ) );
-	visual = animVis;
+    visual = new TileBitmapVisual( pos, (ResourceManager::GetInstance()).GetBitmap( "./res/Woodpile.png" ));
 
-    fireFlickerAnim = new Animation( 2, (ResourceManager::GetInstance()).LoadTextureSheet("./res/CampfireSpriteSheet.gif", TILE_DIM, TILE_DIM) );
-	fireFlickerAnim->frameDurations[0] = 10; fireFlickerAnim->frameIDs[0] = 0;
-	fireFlickerAnim->frameDurations[1] = 10; fireFlickerAnim->frameIDs[1] = 1;
-	fireFlickerAnim->Init();
-}
-
-void CampFire::Update() {
-
-    // repeat the animation if it is not playing
-    if ( !(animVis->IsPlayingAnimation()) ) {
-        animVis->PlayAnimation( fireFlickerAnim );
-    }
 }
 

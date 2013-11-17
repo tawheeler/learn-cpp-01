@@ -1,7 +1,7 @@
 /*
 ========================================================================
 
-	A tile entity that is always on fire. One can interact with it to
+	A tile entity that is by default on fire. One can interact with it to
     put an inventory item in the flames. It can only be added to a net
     by putting an inventory item with sygaldry into the camp fire.
 
@@ -14,8 +14,6 @@
 #pragma once
 
 #include "TileEntity.h"
-#include "AnimationVisual.h"
-#include "Animation.h"
 
 namespace MysticDave {
     class CampFire : public TileEntity {
@@ -26,10 +24,6 @@ namespace MysticDave {
 		virtual                     ~CampFire();
 
         void                        InitCampFire();
-	    virtual void		        Update();
 
-    private:
-        AnimationVisual *           animVis;
-        Animation *                 fireFlickerAnim;
     };
 }

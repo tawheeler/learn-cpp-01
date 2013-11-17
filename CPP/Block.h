@@ -19,14 +19,19 @@ namespace MysticDave {
     public:
 
         enum BLOCK_TYPE{ STONE, ICE, WOOD, METAL };
+        
 
                                     Block( std::string name, int uid, int blockType );
                                     Block( jsoncons::json jobj );
 		virtual                     ~Block();
 
+        virtual void		        Update();
+
+        virtual void                OnInput( const std::string I );
+
         void                        InitBlock();
 
-        virtual void                OnMoveCompleted( Motion * completedMotion );
+        //virtual void                OnMoveCompleted( Motion * completedMotion );
 
     protected:
         

@@ -69,7 +69,7 @@ ALLEGRO_BITMAP * ResourceManager::GetBitmap( const char * name ) {
 }
 
  // returns it if it has already been loaded
-TextureSheet * ResourceManager::LoadTextureSheet ( const char * name, int texWidth, int texHeight ) {
+    TextureSheet * ResourceManager::LoadTextureSheet ( const char * name, int texWidth, int texHeight ) {
 	std::string str = (name);
 	std::map < std::string, TextureSheet * >::iterator iter = texSheetMap.find(str);
 	TextureSheet * retval;

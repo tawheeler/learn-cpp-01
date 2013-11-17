@@ -15,6 +15,7 @@
 #include "CampFire.h"
 #include "Block.h"
 #include "CompoundBlock.h"
+#include "IcePatch.h"
 #include "Trigger.h"
 #include "TransitionEntity.h"
 #include "ItemEntity.h"
@@ -124,6 +125,8 @@ Chamber::Chamber( jsoncons::json jobj ) {
             te = new TransitionEntity( *it );
         } else if ( (*it)["type"].as_string().compare( "ItemEntity" ) == 0 ) {
             te = new ItemEntity( *it );
+        } else if ( (*it)["type"].as_string().compare( "IcePatch" ) == 0 ) {
+            te = new IcePatch( *it );
         }
 
         if ( te != 0 ) {
@@ -202,9 +205,7 @@ void Chamber::Render( int x, int y ) {
 
     std::list < TileEntity * >::iterator iter;
 	for ( iter = tileEntityList.begin(); iter != tileEntityList.end(); ++iter ) {
-		if ( (*iter)->GetVisual() != 0 ) {
-			(*iter)->GetVisual()->Render( x, y );
-		}
+			(*iter)->Render( x, y );
 	}
 }
 
@@ -214,18 +215,50 @@ void Chamber::AddEntity( Entity * e) {
 }
 
 void Chamber::AddTileEntity( TileEntity * te ) {
-    tileEntityList.push_back( te );
+    //tileEntityList.push_back( te );
+
+    // insert in order by renderZ
+    int index = 0;
+    bool inserted = false;
+    for ( auto iter = tileEntityList.begin(); iter != tileEntityList.end(); ++iter ) {
+        if ( (*iter)->GetRenderZ() > te->GetRenderZ() ) {
+            tileEntityList.insert( iter, te );
+            inserted = true;
+            break;
+        }
+        index ++;
+    }
+
+    if ( !inserted ) {
+        tileEntityList.push_front( te );
+    }
+
+    // place in map
     entityUIDMap[ te->GetUID() ] = te;
 }
 
 void Chamber::RegisterTileEntityInTile( TileEntity * te, int tileX, int tileY ) {
-    // TODO: insert in list in order of zbuffer
-    tileEntityTileListArr[GetTileNumFromPos(tileX, tileY)].push_back( te );
+    RegisterTileEntityInTile( te, GetTileNumFromPos(tileX, tileY) );
 }
 
 void Chamber::RegisterTileEntityInTile( TileEntity * te, int tileNum ) {
-    // TODO: insert in list in order of zbuffer
-    tileEntityTileListArr[tileNum].push_back( te );
+
+    // insert in order
+    /*int index = 0;
+    bool inserted = false;
+    for ( auto iter = tileEntityTileListArr[tileNum].begin(); iter != tileEntityTileListArr[tileNum].end(); ++iter ) {
+        if ( (*iter)->GetRenderZ() > te->GetRenderZ() ) {
+            tileEntityTileListArr[tileNum].insert( iter, te );
+            inserted = true;
+            break;
+        }
+        index ++;
+    }*/
+
+    //if ( !inserted ) {
+        tileEntityTileListArr[tileNum].push_front( te );
+    //}
+    
 }
 
 void Chamber::RemoveEntity( Entity * e ) {
@@ -341,6 +374,33 @@ TileEntity * Chamber::GetEntityWithPropertyInTile( std::string propertyName, int
                 break;
             }
         }
+    }
+
+    return retval;
+}
+
+TileEntity * Chamber::GetEntityOfTypeInTile( std::string type, int tileNum ) {
+    TileEntity * retval = 0;
+
+    if ( IsInChamber_Tile( tileNum ) ) {
+        std::list < TileEntity * > list = tileEntityTileListArr[tileNum];
+        std::list < TileEntity * >::iterator iter;
+	    for ( iter = list.begin(); iter != list.end(); ++iter ) {
+            if ( (*iter)->GetType().compare(type) == 0 ) {
+                retval = (*iter);
+                break;
+            }
+        }
+    }
+
+    return retval;
+}
+
+std::list < TileEntity * > * Chamber::GetEntitiesInTile( int tileNum ) {
+    std::list < TileEntity * > * retval;
+
+    if ( IsInChamber_Tile( tileNum ) ) {
+        retval = &(tileEntityTileListArr[tileNum]);
     }
 
     return retval;
