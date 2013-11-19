@@ -17,6 +17,8 @@
 #include "Globals.h"
 #include "ChamberManager.h"
 #include "ForceNet.h"
+#include "IcePatch.h"
+#include "ChamberManager.h"
 
 using jsoncons::json;
 using namespace MysticDave;
@@ -102,9 +104,14 @@ void Block::OnInput( const std::string I ) {
 
     if ( I.compare( "OnHeated" ) == 0 && blockType == BLOCK_TYPE::ICE ) {
 
-        // turn it into a puddle!
-        // TODO: this
+        // turn it into an ice patch!
         OnInput( "Kill" );
+        IcePatch * icePatch = new IcePatch( "icepatch", Entity::GetNextUID() );
+        icePatch->GetPos()->SetPosFromTile( pos->GetTileNum() ); // set it to the same location
+
+        Chamber * curChamber = (ChamberManager::GetInstance()).GetCurrentChamber();
+        curChamber->RegisterTileEntityInTile( icePatch, icePatch->GetPos()->GetTileX(), icePatch->GetPos()->GetTileY() );
+        curChamber->AddTileEntity( icePatch );
 
     } else {
         TileEntity::OnInput( I );

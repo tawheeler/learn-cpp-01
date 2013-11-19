@@ -33,6 +33,8 @@ namespace MysticDave {
 
         PlayerEntity *                                      GetPlayer();
 
+        int                                                 GetNextUID();
+
         
 
     private:

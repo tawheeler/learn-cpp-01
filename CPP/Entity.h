@@ -44,6 +44,8 @@ namespace MysticDave {
         bool                                    ShouldBeRemoved() { return shouldBeRemoved; }
 
         virtual jsoncons::json  				GetJSON();
+
+        static int                              GetNextUID();
         
     protected:
 	    std::string								name;

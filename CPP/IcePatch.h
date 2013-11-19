@@ -25,5 +25,7 @@ namespace MysticDave {
 		virtual                     ~IcePatch();
 
         void                        InitIcePatch();
+
+        virtual void                OnInput( const std::string I );
     };
 }

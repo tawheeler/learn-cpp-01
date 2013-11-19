@@ -123,6 +123,12 @@ void Entity::TriggerOutput( const std::string outputName ) {
     } 
 }
 
+int Entity::GetNextUID() {
+    static int uidLog = 1; // player is always 0
+    ++uidLog;
+    return uidLog;
+}
+
 jsoncons::json Entity::GetJSON() {
     //
     // name - string
