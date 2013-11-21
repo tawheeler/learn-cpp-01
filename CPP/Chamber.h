@@ -71,8 +71,10 @@ namespace MysticDave {
         TileEntity *                            GetEntityOfTypeInTile( std::string type, int tileNum );
         TileEntity *                            GetEntityWithPropertyInTile( std::string propertyName, int tileNum );
         std::list < TileEntity * > *            GetEntitiesInTile( int tileNum );
+        std::list < int >                       GetTilesContainingTileEntity( int tileEntityID );
 
         void                                    CalcForceNets();
+        void                                    CalcConductionNets( TileEntity * te );
         ForceNet *                              GetForceNetContaining( int uid );
 
         void                                    OnEntityExitedTile( TileEntity * actor, int tileLoc ); // Call onExtited tile on all tile entities in given tile

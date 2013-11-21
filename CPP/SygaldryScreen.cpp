@@ -74,6 +74,7 @@ void SygaldryScreen::Update() {
         vis->SetSygaldry( runeIndex, cx, cy, cz );
 
         (ChamberManager::GetInstance()).GetCurrentChamber()->CalcForceNets();
+        (ChamberManager::GetInstance()).GetCurrentChamber()->CalcConductionNets( sygaldryEntity );
 
         this->SetDead();
 

@@ -20,6 +20,8 @@
 #include "TransitionEntity.h"
 #include "ItemEntity.h"
 #include "LogManager.h"
+#include "MessageStruct.h"
+#include "EntityEventManager.h"
 #include <assert.h>
 
 using jsoncons::json;
@@ -423,6 +425,22 @@ std::list < TileEntity * > * Chamber::GetEntitiesInTile( int tileNum ) {
     return retval;
 }
 
+std::list < int > Chamber::GetTilesContainingTileEntity( int tileEntityID ) {
+    
+    std::list < int > retval;
+    
+    for ( int a = 0; a < numTiles; a ++ ) {
+        for ( auto it = tileEntityTileListArr[a].begin(); it != tileEntityTileListArr[a].end(); ++it ) {
+            if ( (*it)->GetUID() == tileEntityID ) {
+                retval.push_back( a );
+                break;
+            }
+        }
+    }
+    
+    return retval;
+}
+
 void Chamber::CalcForceNets() {
 
     // delete the current force nets
@@ -487,6 +505,169 @@ void Chamber::CalcForceNets() {
             forceNetList.push_back( farr[i] );
         }
     }
+}
+
+void Chamber::CalcConductionNets( TileEntity * te ) {
+
+    // this function calculates the conduction net corresponding to a specific tile entity
+    // 1 - add the TE to the conduction net
+    // while ( we have new things we just added )
+    //    2 - For every new TE, find which tile(s) it is in and add all other TEs into the conduction net
+    //    3 - For nevey new TE, add any TEs which share conduction sygaldry with it
+    
+
+    std::list < TileEntity * > condNet;
+    std::set  < int > condSet; // keyed by uid
+    std::list < TileEntity * > newAdditions;
+    std::list < TileEntity * > additions;
+
+    // (1) add the given TE
+    condNet.push_back( te );
+    condSet.insert( te->GetUID() );
+    newAdditions.push_back( te );
+
+    while ( !(newAdditions.empty()) ) {
+        
+        additions.empty(); // empty it out
+        additions.insert( additions.begin(), newAdditions.begin(), newAdditions.end() ); // copy the new additions
+        newAdditions.clear(); // empty it out
+
+        for ( auto it = additions.begin(); it != additions.end(); ++it ) {
+            // (2) add tile entities that were in the same tile
+            std::list < int > tileIDs = GetTilesContainingTileEntity( te->GetUID() ); // list of tile ids that this TE is in
+            for ( auto it2 = tileIDs.begin(); it2 != tileIDs.end(); ++it2 ) {
+                std::list < TileEntity * > * entitiesInTile = GetEntitiesInTile( *it2 );
+                for ( auto it3 = entitiesInTile->begin(); it3 != entitiesInTile->end(); ++it3 ) {
+                    if ( condSet.find( (*it3)->GetUID() ) == condSet.end() ) { // not yet in set
+                        // insert!
+                        condNet.push_back( *it3 );
+                        condSet.insert( (*it3)->GetUID() );
+                        newAdditions.push_back( *it3 );
+                    }
+                }
+            }
+
+            // (3) add all TEs that share sygaldry with it
+            if ( (*it)->HasProperty("Sygaldry") ) {
+                int sygA = (*it)->Lookup( "Sygaldry" )->GetInt();
+                char runeIndex = (sygA & 0x00FF);
+                char runeColor = (sygA >> 8 ) & 0x00FF;
+                if ( runeIndex == 2 ) { // if a conduction rune
+                    // go through all entities and find those which also have this rune
+
+                    for ( auto it2 = tileEntityList.begin(); it2 != tileEntityList.end(); ++it2 ) {
+                        if ( (*it2)->HasProperty( "Sygaldry" ) && ((*it2)->Lookup("Sygaldry")->GetInt() == sygA)
+                            && condSet.find( (*it2)->GetUID() ) == condSet.end() ) {
+                            // insert!
+                            condNet.push_back( *it2 );
+                            condSet.insert( (*it2)->GetUID() );
+                            newAdditions.push_back( *it2 );
+                        }
+                        if ( (*it2)->HasProperty( "InherentSygaldry" ) && ((*it2)->Lookup("InherentSygaldry")->GetInt() == sygA)
+                            && condSet.find( (*it2)->GetUID() ) == condSet.end() ) {
+                            // insert!
+                            condNet.push_back( *it2 );
+                            condSet.insert( (*it2)->GetUID() );
+                            newAdditions.push_back( *it2 );
+                        }
+                    }
+
+                }
+            }
+            if ( (*it)->HasProperty("InherentSygaldry") ) {
+                int sygA = (*it)->Lookup( "InherentSygaldry" )->GetInt();
+                char runeIndex = (sygA & 0x00FF);
+                char runeColor = (sygA >> 8 ) & 0x00FF;
+                if ( runeIndex == 2 ) { // if a conduction rune
+                    // go through all entities and find those which also have this rune
+
+                    for ( auto it2 = tileEntityList.begin(); it2 != tileEntityList.end(); ++it2 ) {
+                        if ( (*it2)->HasProperty( "Sygaldry" ) && ((*it2)->Lookup("Sygaldry")->GetInt() == sygA)
+                            && condSet.find( (*it2)->GetUID() ) == condSet.end() ) {
+                            // insert!
+                            condNet.push_back( *it2 );
+                            condSet.insert( (*it2)->GetUID() );
+                            newAdditions.push_back( *it2 );
+                        }
+                        if ( (*it2)->HasProperty( "InherentSygaldry" ) && ((*it2)->Lookup("InherentSygaldry")->GetInt() == sygA)
+                            && condSet.find( (*it2)->GetUID() ) == condSet.end() ) {
+                            // insert!
+                            condNet.push_back( *it2 );
+                            condSet.insert( (*it2)->GetUID() );
+                            newAdditions.push_back( *it2 );
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+
+    // now compute the action to take
+    // 1 - sort entities into "hot", "cold", and "neutral"
+    // 2 - if there are more hot than cold, apply "OnHeated" to cold and neutral
+    // 3 - if there are more cold than hold, apply "OnChilled" to hot and neutral
+    // 4 - if there is an equal amount, apply "OnHeated" to hot, "OnChilled" to cold, and nothing to neutral
+
+    // (1) count cold and hot
+    int numHot = 0;
+    int numCold = 0;
+    for ( auto it = condNet.begin(); it != condNet.end(); ++it ) {
+        switch( (*it)->GetTemperature() ) {
+            case ( TileEntity::TEMPERATURE::HOT ): numHot++; break;
+            case ( TileEntity::TEMPERATURE::COLD ): numCold++; break;
+        }
+    }
+
+    for ( auto it = condNet.begin(); it != condNet.end(); ++it ) {
+        if ( numHot > numCold ) {
+            if ( (*it)->GetTemperature() != TileEntity::TEMPERATURE::HOT ) {
+
+                MessageStruct * ms = new MessageStruct();
+                ms->inputName = "OnHeated";
+                ms->targetEntity = (*it)->GetName();
+                ms->timeDelay = 0;
+
+                (EntityEventManager::GetInstance()).AddEvent( ms );
+            }
+
+        } else if ( numCold > numHot ) {
+            if ( (*it)->GetTemperature() != TileEntity::TEMPERATURE::COLD ) {
+
+                MessageStruct * ms = new MessageStruct();
+                ms->inputName = "OnChilled";
+                ms->targetEntity = (*it)->GetName();
+                ms->timeDelay = 0;
+
+                (EntityEventManager::GetInstance()).AddEvent( ms );
+            }
+
+        } else {
+
+            if ( (*it)->GetTemperature() == TileEntity::TEMPERATURE::HOT ) {
+
+                MessageStruct * ms = new MessageStruct();
+                ms->inputName = "OnChilled";
+                ms->targetEntity = (*it)->GetName();
+                ms->timeDelay = 0;
+
+                (EntityEventManager::GetInstance()).AddEvent( ms );
+            }
+
+            if ( (*it)->GetTemperature() == TileEntity::TEMPERATURE::COLD ) {
+
+                MessageStruct * ms = new MessageStruct();
+                ms->inputName = "OnHeated";
+                ms->targetEntity = (*it)->GetName();
+                ms->timeDelay = 0;
+
+                (EntityEventManager::GetInstance()).AddEvent( ms );
+            }
+
+        }
+    }
+
+    
 }
 
 ForceNet * Chamber::GetForceNetContaining( int uid ) {

@@ -174,6 +174,14 @@ Motion * TileEntity::GetCurrentMotion() {
     return 0;
 }
 
+int TileEntity::GetTemperature() {
+    if ( IsOnFire() ) {
+        return TEMPERATURE::HOT;
+    } else {
+        return TEMPERATURE::NEUTRAL;
+    }
+}
+
 bool TileEntity::IsInMotion() const {
 	return !motionQueue.empty();
 }
