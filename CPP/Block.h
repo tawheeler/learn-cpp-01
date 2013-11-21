@@ -21,7 +21,7 @@ namespace MysticDave {
         enum BLOCK_TYPE{ STONE, ICE, WOOD, METAL };
         
 
-                                    Block( std::string name, int uid, int blockType );
+                                    Block( int blockType );
                                     Block( jsoncons::json jobj );
 		virtual                     ~Block();
 

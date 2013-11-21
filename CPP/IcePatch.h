@@ -20,7 +20,7 @@ namespace MysticDave {
     class IcePatch : public TileEntity {
     public:
 
-                                    IcePatch( std::string name, int uid );
+                                    IcePatch();
                                     IcePatch( jsoncons::json jobj );
 		virtual                     ~IcePatch();
 

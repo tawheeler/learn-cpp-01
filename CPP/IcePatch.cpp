@@ -1,4 +1,4 @@
-/*
+  /*
 ========================================================================
 
 	A tile entity representing a patch of ice on the floor.
@@ -22,8 +22,9 @@
 using jsoncons::json;
 using namespace MysticDave;
 
-IcePatch::IcePatch( std::string name, int uid ) : TileEntity( name, uid ) {
+IcePatch::IcePatch() : TileEntity() {
     InitIcePatch();
+    name = type;
 }
 
 IcePatch::IcePatch( jsoncons::json jobj ) : TileEntity( jobj ) {
@@ -52,12 +53,13 @@ void IcePatch::OnInput( const std::string I ) {
         OnInput( "Kill" );
 
         // create a water patch
-        WaterPatch * waterPatch = new WaterPatch( "waterpatch", Entity::GetNextUID() );
-        waterPatch->GetPos()->SetPosFromTile( pos->GetTileNum() ); // set it to the same location
 
         Chamber * curChamber = (ChamberManager::GetInstance()).GetCurrentChamber();
-        curChamber->RegisterTileEntityInTile( waterPatch, waterPatch->GetPos()->GetTileX(), waterPatch->GetPos()->GetTileY() );
+        WaterPatch * waterPatch = new WaterPatch();
+        waterPatch->GetPos()->SetPosFromTile( pos->GetTileNum() ); // set it to the same location
+
         curChamber->AddTileEntity( waterPatch );
+        curChamber->RegisterTileEntityInTile( waterPatch, waterPatch->GetPos()->GetTileX(), waterPatch->GetPos()->GetTileY() );
 
     } else {
         TileEntity::OnInput( I );

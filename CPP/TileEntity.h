@@ -25,7 +25,7 @@ namespace MysticDave {
     class TileEntity : public Entity {
     public:
 
-                                    TileEntity( std::string name, int uid );
+                                    TileEntity();
                                     TileEntity( jsoncons::json jobj );
 		virtual                     ~TileEntity();
 

@@ -20,7 +20,7 @@ namespace MysticDave {
         enum TILE_TYPE{ NORTH_EDGE, NORTHEAST_CORNER, EAST_EDGE, SOUTHEAST_CORNER, SOUTH_EDGE, SOUTHWEST_CORNER, WEST_EDGE, NORTHWEST_CORNER, CENTER,
             NORTH_TERMINAL, EAST_TERMINAL, SOUTH_TERMINAL, WEST_TERMINAL, VERTICAL, HORIZONTAL };
 
-                                    CompoundBlock( std::string name, int uid, int blockType, int tileType );
+                                    CompoundBlock( int blockType, int tileType );
                                     CompoundBlock( jsoncons::json jobj );
 		virtual                     ~CompoundBlock();
 

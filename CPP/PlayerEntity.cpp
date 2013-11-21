@@ -22,11 +22,9 @@
 using jsoncons::json;
 using namespace MysticDave;
 
-PlayerEntity::PlayerEntity() : TileEntity( "PlayerEntity", 1 ) {
-
-	// TODO: fix UID 1 by default
+PlayerEntity::PlayerEntity() : TileEntity() {
     Init();
-
+    name = type;
 }
 
 PlayerEntity::PlayerEntity( jsoncons::json jobj ) : TileEntity( jobj ) {
@@ -46,6 +44,7 @@ PlayerEntity::~PlayerEntity() {
 void PlayerEntity::Init() {
 
     type = "PlayerEntity";
+    uid = 1;
 
     renderZ = 1;
     blocksOccupation = true;

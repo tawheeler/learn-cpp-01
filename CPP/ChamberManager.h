@@ -33,10 +33,6 @@ namespace MysticDave {
 
         PlayerEntity *                                      GetPlayer();
 
-        int                                                 GetNextUID();
-
-        
-
     private:
 		std::map < int, Chamber * >			                chamberMap;
         std::map < int, std::string >                       chamberFileLocMap;

@@ -67,6 +67,7 @@ namespace MysticDave {
 	    ALLEGRO_BITMAP *						GetFloorImage() const;
 
         Entity *                                GetEntity( int uid );
+        Entity *                                GetEntity( std::string name );
         TileEntity *                            GetEntityOfTypeInTile( std::string type, int tileNum );
         TileEntity *                            GetEntityWithPropertyInTile( std::string propertyName, int tileNum );
         std::list < TileEntity * > *            GetEntitiesInTile( int tileNum );
@@ -76,6 +77,8 @@ namespace MysticDave {
 
         void                                    OnEntityExitedTile( TileEntity * actor, int tileLoc ); // Call onExtited tile on all tile entities in given tile
         void                                    OnEntityEnteredTile( TileEntity * actor, int tileLoc ); // Call onEntered tile on all tile entities in given tile
+
+        int                                     GetNextUID();
 
         jsoncons::json                          GetJSON();
 

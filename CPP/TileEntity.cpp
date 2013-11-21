@@ -18,8 +18,9 @@
 using jsoncons::json;
 using namespace MysticDave;
 
-TileEntity::TileEntity( std::string name, int uid ) : Entity( name, uid ) {
+TileEntity::TileEntity() : Entity() {
     Init();
+    name = type;
 }
 
 TileEntity::TileEntity( jsoncons::json jobj ) : Entity ( jobj ) {

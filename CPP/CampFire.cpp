@@ -19,8 +19,9 @@
 using jsoncons::json;
 using namespace MysticDave;
 
-CampFire::CampFire( std::string name, int uid ) : TileEntity( name, uid ) {
+CampFire::CampFire() : TileEntity() {
     InitCampFire();
+    name = type;
 }
 
 CampFire::CampFire( jsoncons::json jobj ) : TileEntity( jobj ) {

@@ -21,10 +21,11 @@
 using jsoncons::json;
 using namespace MysticDave;
 
-ItemEntity::ItemEntity( std::string name, int uid ) : TileEntity( name, uid ) {
+ItemEntity::ItemEntity() : TileEntity() {
     InitItemEntity();
-
     visual = new BitmapVisual( pos, (ResourceManager::GetInstance()).LoadTextureSheet( "./res/items-6.png", TILE_DIM, TILE_DIM )->GetTexture(itemID));
+
+    name = type;
 }
 
 ItemEntity::ItemEntity( jsoncons::json jobj ) : TileEntity( jobj ) {

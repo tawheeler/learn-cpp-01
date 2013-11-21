@@ -20,7 +20,7 @@ namespace MysticDave {
     class WaterPatch : public TileEntity {
     public:
 
-                                    WaterPatch( std::string name, int uid );
+                                    WaterPatch();
                                     WaterPatch( jsoncons::json jobj );
 		virtual                     ~WaterPatch();
 

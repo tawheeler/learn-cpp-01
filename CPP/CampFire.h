@@ -19,7 +19,7 @@ namespace MysticDave {
     class CampFire : public TileEntity {
     public:
 
-                                    CampFire( std::string name, int uid );
+                                    CampFire();
                                     CampFire( jsoncons::json jobj );
 		virtual                     ~CampFire();
 

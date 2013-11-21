@@ -66,7 +66,7 @@ void EntityEventManager::Update() {
 
             // fire it off!
             Chamber * curChamber = (ChamberManager::GetInstance()).GetCurrentChamber();
-            Entity * entity = curChamber->GetEntity( (*iter)->targetEntityID );
+            Entity * entity = curChamber->GetEntity( (*iter)->targetEntity );
             if ( entity != 0 ) {
                // (LogManager::GetInstance()).Write( LogManager::LOG_APP, "ASDFS\n" );
                 entity->OnInput( (*iter)->inputName );

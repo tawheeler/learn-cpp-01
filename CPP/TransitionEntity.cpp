@@ -20,13 +20,15 @@
 using jsoncons::json;
 using namespace MysticDave;
 
-TransitionEntity::TransitionEntity( std::string name, int uid, int transitionType, int targetChamberUID, int param ) : TileEntity( name, uid ) {
+TransitionEntity::TransitionEntity( int transitionType, int targetChamberUID, int param ) : TileEntity( name ) {
     InitTransitionEntity();
     
     TransitionEntity::transitionType = transitionType;
     TransitionEntity::targetChamberUID = targetChamberUID;
     TransitionEntity::transitionDuration = 50;
     TransitionEntity::param = param;
+
+    name = type;
 }
 
 TransitionEntity::TransitionEntity( jsoncons::json jobj ) : TileEntity( jobj ) {

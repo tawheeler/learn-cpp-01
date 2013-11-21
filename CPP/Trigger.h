@@ -18,7 +18,7 @@ namespace MysticDave {
     class Trigger : public TileEntity {
     public:
 
-                                    Trigger( std::string name, int uid );
+                                    Trigger();
                                     Trigger( jsoncons::json jobj );
 		virtual                     ~Trigger();
 

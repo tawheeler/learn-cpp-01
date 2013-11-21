@@ -25,7 +25,7 @@ namespace MysticDave {
 
         enum Transition { TRANSITION_BLACKOUT = 1, TRANSITION_SCROLL = 2, TRANSITION_SPIN_TILE = 3 };
 
-                                    TransitionEntity( std::string name, int uid, int transitionType, int targetChamberUID, int param );
+                                    TransitionEntity( int transitionType, int targetChamberUID, int param );
                                     TransitionEntity( jsoncons::json jobj );
 		virtual                     ~TransitionEntity();
 

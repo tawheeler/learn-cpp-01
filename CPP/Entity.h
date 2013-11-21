@@ -26,13 +26,14 @@ namespace MysticDave {
     class Entity : public PropertySet {
     public:
 
-						                        Entity( std::string name, int uid );
+						                        Entity();
                                                 Entity( jsoncons::json jobj );
 		virtual                                 ~Entity();
 
-	    std::string			                    GetName() { return name; }
-        std::string                             GetType() { return type; }
-        long                                    GetUID() { return uid; }
+	    std::string			                    GetName() const { return name; }
+        std::string                             GetType() const { return type; }
+        int                                     GetUID() const { return uid; }
+        void                                    SetUID( int uid ) { Entity::uid = uid; }
 
 	    virtual void		                    Update();
 	    virtual void		                    Cleanup();
@@ -44,8 +45,6 @@ namespace MysticDave {
         bool                                    ShouldBeRemoved() { return shouldBeRemoved; }
 
         virtual jsoncons::json  				GetJSON();
-
-        static int                              GetNextUID();
         
     protected:
 	    std::string								name;
@@ -57,7 +56,7 @@ namespace MysticDave {
         std::map< std::string, std::list<OutputStruct> * >  outputMap;
         std::set< std::string >                           inputs;
 
-        void                                   Init();
+        void                                    Init();
 	
     };
 }

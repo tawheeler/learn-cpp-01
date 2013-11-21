@@ -20,10 +20,11 @@
 using jsoncons::json;
 using namespace MysticDave;
 
-CompoundBlock::CompoundBlock( std::string name, int uid, int blocktype, int tileType ) : Block( name, uid, blocktype ),
+CompoundBlock::CompoundBlock( int blocktype, int tileType ) : Block( blocktype ),
     tileType( tileType )
 {
     InitCompoundBlock();
+    name = type;
 }
 
 CompoundBlock::CompoundBlock( jsoncons::json jobj ) : Block( jobj ) {

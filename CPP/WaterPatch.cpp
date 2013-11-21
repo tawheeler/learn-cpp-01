@@ -22,8 +22,9 @@
 using jsoncons::json;
 using namespace MysticDave;
 
-WaterPatch::WaterPatch( std::string name, int uid ) : TileEntity( name, uid ) {
+WaterPatch::WaterPatch() : TileEntity() {
     InitWaterPatch();
+    name = type;
 }
 
 WaterPatch::WaterPatch( jsoncons::json jobj ) : TileEntity( jobj ) {
@@ -56,10 +57,11 @@ void WaterPatch::OnInput( const std::string I ) {
         // it freezes into an ice patch
         OnInput( "Kill" );
         
-        IcePatch * icePatch = new IcePatch( "icepatch", Entity::GetNextUID() );
+        Chamber * curChamber = (ChamberManager::GetInstance()).GetCurrentChamber();
+
+        IcePatch * icePatch = new IcePatch( "icepatch" );
         icePatch->GetPos()->SetPosFromTile( pos->GetTileNum() ); // set it to the same location
 
-        Chamber * curChamber = (ChamberManager::GetInstance()).GetCurrentChamber();
         curChamber->RegisterTileEntityInTile( icePatch, icePatch->GetPos()->GetTileX(), icePatch->GetPos()->GetTileY() );
         curChamber->AddTileEntity( icePatch );
 

@@ -210,12 +210,15 @@ void Chamber::Render( int x, int y ) {
 }
 
 void Chamber::AddEntity( Entity * e) {
+    e->SetUID( GetNextUID() ); // generate a UID for the entity
     entityList.push_back( e );
     entityUIDMap[ e->GetUID() ] = e;
 }
 
 void Chamber::AddTileEntity( TileEntity * te ) {
-    //tileEntityList.push_back( te );
+
+    // generate a UID for the entity
+    te->SetUID( GetNextUID() );
 
     // insert in order by renderZ
     int index = 0;
@@ -362,6 +365,20 @@ Entity * Chamber::GetEntity( int uid ) {
     return pos->second;
 }
 
+Entity * Chamber::GetEntity( std::string name ) {
+    Entity * retval = 0;
+
+    std::map< int, Entity *>::iterator iter;
+    for( iter = entityUIDMap.begin(); iter != entityUIDMap.end(); ++iter) {
+        if ( (iter->second)->GetName().compare( name ) == 0 ) {
+            retval = iter->second;
+            break;
+        }
+    }
+
+    return retval;
+}
+
 TileEntity * Chamber::GetEntityWithPropertyInTile( std::string propertyName, int tileNum ) {
     TileEntity * retval = 0;
 
@@ -502,6 +519,17 @@ void Chamber::OnEntityEnteredTile( TileEntity * actor, int tileLoc ) {
             (*iter)->OnEntered( actor );
         }
     }
+}
+
+int Chamber::GetNextUID() {
+    // run through all of the entities and return the first UID not yet used
+    int retval = 1;
+    bool done = false;
+    while ( !done ) {
+        retval++;
+        done = (entityUIDMap.find(retval) == entityUIDMap.end());
+    }
+    return retval;
 }
 
 jsoncons::json Chamber::GetJSON() {

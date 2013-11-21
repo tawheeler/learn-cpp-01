@@ -16,7 +16,6 @@
             },
             "sourceTileLoc":-1,
             "type":"TransitionEntity",
-            "uid":12,
             "x":12,
             "y":5
         },
@@ -34,7 +33,6 @@
             },
             "sourceTileLoc":-1,
             "type":"CompoundBlock",
-            "uid":16,
             "x":5,
             "y":7
         },
@@ -52,7 +50,6 @@
             },
             "sourceTileLoc":-1,
             "type":"CompoundBlock",
-            "uid":17,
             "x":6,
             "y":7
         },
@@ -68,7 +65,6 @@
             },
             "sourceTileLoc":-1,
             "type":"Block",
-            "uid":7,
             "x":9,
             "y":3
         }

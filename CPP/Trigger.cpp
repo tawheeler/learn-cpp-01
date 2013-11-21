@@ -18,9 +18,10 @@
 using jsoncons::json;
 using namespace MysticDave;
 
-Trigger::Trigger( std::string name, int uid ) : TileEntity( name, uid ) {
+Trigger::Trigger() : TileEntity() {
     InitTrigger();
     isEnabled = startDisabled;
+    name = type;
 }
 
 Trigger::Trigger( jsoncons::json jobj ) : TileEntity( jobj ) {

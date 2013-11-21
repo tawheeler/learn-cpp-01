@@ -12,7 +12,6 @@
             {
             },
             "type":"CampFire",
-            "uid":2,
             "x":2,
             "y":2
         },
@@ -25,7 +24,6 @@
             {
             },
             "type":"CampFire",
-            "uid":3,
             "x":10,
             "y":2
         },
@@ -38,7 +36,6 @@
             {
             },
             "type":"CampFire",
-            "uid":4,
             "x":2,
             "y":8
         },
@@ -51,7 +48,6 @@
             {
             },
             "type":"CampFire",
-            "uid":5,
             "x":10,
             "y":8
         },
@@ -66,7 +62,6 @@
                 "Sygaldry":0
             },
             "type":"Block",
-            "uid":6,
             "x":3,
             "y":3
         },
@@ -81,7 +76,6 @@
                 "Sygaldry":0
             },
             "type":"Block",
-            "uid":7,
             "x":9,
             "y":3
         },
@@ -96,7 +90,6 @@
                 "Sygaldry":0
             },
             "type":"Block",
-            "uid":8,
             "x":3,
             "y":7
         },
@@ -111,7 +104,6 @@
                 "Sygaldry":0
             },
             "type":"Block",
-            "uid":9,
             "x":9,
             "y":7
         },
@@ -123,9 +115,9 @@
                 [
                     {
                         "fireOnceOnly":true,
-                        "inputName":"Kill",
+                        "inputName":"OnChilled",
                         "outputName":"OnTrigger",
-                        "targetEntityID":2,
+                        "targetEntity":"campFire1",
                         "timeDelay":0
                     }
                 ]
@@ -135,7 +127,6 @@
                 "StartDisabled":true
             },
             "type":"Trigger",
-            "uid":10,
             "x":6,
             "y":5
         },
@@ -151,7 +142,6 @@
                 "TransitionType":2
             },
             "type":"TransitionEntity",
-            "uid":11,
             "x":0,
             "y":5
         }
@@ -167,7 +157,6 @@
                 "TransitionType":2
             },
             "type":"TransitionEntity",
-            "uid":14,
             "x":6,
             "y":10
         },
@@ -180,7 +169,6 @@
             {
             },
             "type":"IcePatch",
-            "uid":87,
             "x":2,
             "y":1
         }
