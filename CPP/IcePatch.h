@@ -26,6 +26,8 @@ namespace MysticDave {
 
         void                        InitIcePatch();
 
+        virtual int                 GetTemperature();
+
         virtual void                OnInput( const std::string I );
     };
 }

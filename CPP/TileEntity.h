@@ -45,7 +45,7 @@ namespace MysticDave {
         int                         GetFireDuration() const { return fireDurationCounter; }
 
         enum TEMPERATURE{ COLD, HOT, NEUTRAL };
-        int                         GetTemperature();
+        virtual int                 GetTemperature();
 
         bool				        IsInMotion() const;
         int                         GetSourceTileLoc() const { return sourceTileLoc; }  //the tile it is moving from or is currently in

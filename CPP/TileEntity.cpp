@@ -260,6 +260,9 @@ void TileEntity::OnMoveCompleted( Motion * completedMotion ) {
         // forget previous location
         sourceTileLoc = -1;
     }
+
+    // don't forget to calculate conduction nets
+    curChamber->CalcConductionNets( this );
 }
 
 void TileEntity::OnInput( const std::string I ) {

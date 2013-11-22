@@ -14,6 +14,7 @@
 #include "Entity.h"
 #include "LogManager.h"
 #include "EntityEventManager.h"
+#include "ChamberManager.h"
 
 using jsoncons::json;
 using namespace MysticDave;
@@ -102,7 +103,7 @@ void Entity::TriggerOutput( const std::string outputName ) {
 
             MessageStruct * ms = new MessageStruct();
             ms->inputName = (*iter).inputName;
-            ms->targetEntity = (*iter).targetEntity;
+            ms->targetEntityID = (ChamberManager::GetInstance()).GetCurrentChamber()->GetEntity( (*iter).targetEntity )->GetUID();
             ms->timeDelay = (*iter).timeDelay;
  
             (EntityEventManager::GetInstance()).AddEvent( ms );

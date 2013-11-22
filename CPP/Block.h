@@ -31,7 +31,7 @@ namespace MysticDave {
 
         void                        InitBlock();
 
-        //virtual void                OnMoveCompleted( Motion * completedMotion );
+        virtual int                 GetTemperature();
 
     protected:
         

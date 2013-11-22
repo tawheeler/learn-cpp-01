@@ -372,6 +372,7 @@ Entity * Chamber::GetEntity( std::string name ) {
 
     std::map< int, Entity *>::iterator iter;
     for( iter = entityUIDMap.begin(); iter != entityUIDMap.end(); ++iter) {
+        //std::string name = (iter->second)->GetName();
         if ( (iter->second)->GetName().compare( name ) == 0 ) {
             retval = iter->second;
             break;
@@ -528,13 +529,16 @@ void Chamber::CalcConductionNets( TileEntity * te ) {
 
     while ( !(newAdditions.empty()) ) {
         
-        additions.empty(); // empty it out
+        additions.clear(); // empty it out
         additions.insert( additions.begin(), newAdditions.begin(), newAdditions.end() ); // copy the new additions
         newAdditions.clear(); // empty it out
 
         for ( auto it = additions.begin(); it != additions.end(); ++it ) {
+
+            std::string name = (*it)->GetName();
+
             // (2) add tile entities that were in the same tile
-            std::list < int > tileIDs = GetTilesContainingTileEntity( te->GetUID() ); // list of tile ids that this TE is in
+            std::list < int > tileIDs = GetTilesContainingTileEntity( (*it)->GetUID() ); // list of tile ids that this TE is in
             for ( auto it2 = tileIDs.begin(); it2 != tileIDs.end(); ++it2 ) {
                 std::list < TileEntity * > * entitiesInTile = GetEntitiesInTile( *it2 );
                 for ( auto it3 = entitiesInTile->begin(); it3 != entitiesInTile->end(); ++it3 ) {
@@ -619,13 +623,18 @@ void Chamber::CalcConductionNets( TileEntity * te ) {
         }
     }
 
+    (LogManager::GetInstance()).Write( LogManager::LOG_APP, "Conduction Net: %d, %d\n", numHot, numCold );
+    for ( auto it = condNet.begin(); it != condNet.end(); ++it ) {
+        (LogManager::GetInstance()).Write( LogManager::LOG_APP, "\t%s\n", (*it)->GetType().c_str() );
+    }
+
     for ( auto it = condNet.begin(); it != condNet.end(); ++it ) {
         if ( numHot > numCold ) {
             if ( (*it)->GetTemperature() != TileEntity::TEMPERATURE::HOT ) {
 
                 MessageStruct * ms = new MessageStruct();
                 ms->inputName = "OnHeated";
-                ms->targetEntity = (*it)->GetName();
+                ms->targetEntityID = (*it)->GetUID();
                 ms->timeDelay = 0;
 
                 (EntityEventManager::GetInstance()).AddEvent( ms );
@@ -636,7 +645,7 @@ void Chamber::CalcConductionNets( TileEntity * te ) {
 
                 MessageStruct * ms = new MessageStruct();
                 ms->inputName = "OnChilled";
-                ms->targetEntity = (*it)->GetName();
+                ms->targetEntityID = (*it)->GetUID();
                 ms->timeDelay = 0;
 
                 (EntityEventManager::GetInstance()).AddEvent( ms );
@@ -648,7 +657,7 @@ void Chamber::CalcConductionNets( TileEntity * te ) {
 
                 MessageStruct * ms = new MessageStruct();
                 ms->inputName = "OnChilled";
-                ms->targetEntity = (*it)->GetName();
+                ms->targetEntityID = (*it)->GetUID();
                 ms->timeDelay = 0;
 
                 (EntityEventManager::GetInstance()).AddEvent( ms );
@@ -658,7 +667,7 @@ void Chamber::CalcConductionNets( TileEntity * te ) {
 
                 MessageStruct * ms = new MessageStruct();
                 ms->inputName = "OnHeated";
-                ms->targetEntity = (*it)->GetName();
+                ms->targetEntityID = (*it)->GetUID();
                 ms->timeDelay = 0;
 
                 (EntityEventManager::GetInstance()).AddEvent( ms );

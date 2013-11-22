@@ -121,6 +121,15 @@ void Block::OnInput( const std::string I ) {
     }
 }
 
+int Block::GetTemperature() {
+    if ( blockType == BLOCK_TYPE::ICE ) {
+        return TEMPERATURE::COLD;
+    }
+    else { 
+        return TileEntity::GetTemperature();
+    }
+}
+
 void Block::Update() {
     TileEntity::Update();
 

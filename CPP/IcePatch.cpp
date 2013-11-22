@@ -46,6 +46,10 @@ void IcePatch::InitIcePatch() {
 
 }
 
+int IcePatch::GetTemperature() {
+    return TEMPERATURE::COLD;
+}
+
 void IcePatch::OnInput( const std::string I ) {
 
     if ( I.compare( "OnHeated" ) == 0 ) {
