@@ -13,7 +13,10 @@
 
 #include "allegro5/allegro.h"
 #include <allegro5/allegro_image.h>
+#include <allegro5/allegro_audio.h>
+#include <allegro5/allegro_acodec.h>
 #include "TextureSheet.h"
+#include "jsoncons/json.hpp"
 #include <string>
 #include <deque>
 #include <map>
@@ -29,16 +32,19 @@ namespace MysticDave {
 	    ALLEGRO_BITMAP *									GetBitmap( const char * name ); // loads it if it needs to, otherwise returns it
 	    TextureSheet *										LoadTextureSheet ( const char * name, int texWidth, int texHeight ); // returns if it has already been loaded, otherwise creates it
 
+        void	    										PlaySample( const std::string sampleName );
+        void                                                PlaySample( const std::string sampleName, float gain, float pan, float speed );
+
+        void                                                LoadSamples( jsoncons::json jobj ); // load samples given by the json file
+
     private:
 														    ResourceManager() {};
 														    ResourceManager( ResourceManager const& );  //do not implement
 	    void operator = ( ResourceManager const& ); // don't implement
 
-	    std::deque < ALLEGRO_BITMAP * >						bitmapList;
-	    std::deque < TextureSheet * >						texSheetList;
-
 	    std::map < std::string, ALLEGRO_BITMAP * >			bitmapMap;
 	    std::map < std::string, TextureSheet * >			texSheetMap;
+        std::map < std::string, ALLEGRO_SAMPLE * >          audioMap;
 	
     };
 }

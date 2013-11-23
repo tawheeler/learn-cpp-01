@@ -78,6 +78,8 @@ void ItemEntity::OnEntered( TileEntity * actor ) {
         PlayerEntity *player = dynamic_cast<PlayerEntity *>(actor);
         // add item to player inventory
         player->AddInventoryItem( itemID );
+        // play dat sound
+        (ResourceManager::GetInstance()).PlaySample( "Fanfare_Item" );
 
         // kill item entity
         ItemEntity::OnInput( "Kill" );

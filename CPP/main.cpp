@@ -79,7 +79,7 @@ void Init( void ) {
 	al_install_audio();     // audio addon
 	al_init_acodec_addon(); // audio codec addon
 
-	al_reserve_samples( 15 );
+	al_reserve_samples( NUM_AUDIO_SAMPLES );
 
 	myScreenManager = &(ScreenManager::GetInstance());
 	myScreenManager->StartUp();

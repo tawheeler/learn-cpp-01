@@ -13,29 +13,32 @@
 #include "LogManager.h"
 #include <assert.h>
 
+using jsoncons::json;
 using namespace MysticDave;
 
 void ResourceManager::StartUp() {
-	// do nothing
+	LoadSamples( json::parse_file("./res/audio/audioSet.json") );
 }
 
 void ResourceManager::ShutDown() {
-	
-	// free texture sheets first
-	std::deque < TextureSheet * >::iterator iterTex;
-	for ( iterTex = texSheetList.begin(); iterTex != texSheetList.end(); ) {
-		delete (*iterTex);
-		iterTex = texSheetList.erase(iterTex);
-	}
-	texSheetList.clear();
 
-	// free bitmaps second
-	std::deque < ALLEGRO_BITMAP * >::iterator iter;
-	for ( iter = bitmapList.begin(); iter != bitmapList.end(); ) {
-		al_destroy_bitmap( *iter );
-		iter = bitmapList.erase(iter);
-	}
-	bitmapList.clear();
+    // free texture sheets
+    for ( auto iterTex = texSheetMap.begin(); iterTex != texSheetMap.end(); ) {
+        delete iterTex->second;
+        iterTex = texSheetMap.erase( iterTex );
+    }
+
+	// free bitmaps
+    for ( auto iterBitmap = bitmapMap.begin(); iterBitmap != bitmapMap.end(); ) {
+        al_destroy_bitmap( iterBitmap->second );
+        iterBitmap = bitmapMap.erase( iterBitmap );
+    }
+
+    // free audio samples
+    for ( auto iterAudio = audioMap.begin(); iterAudio != audioMap.end(); ) {
+        al_destroy_sample( iterAudio->second );
+        iterAudio = audioMap.erase( iterAudio );
+    }
 }
 
 ResourceManager& ResourceManager::GetInstance() {
@@ -60,7 +63,6 @@ ALLEGRO_BITMAP * ResourceManager::GetBitmap( const char * name ) {
         if ( retval == 0 ) {
             LogManager::GetInstance().Write( LogManager::LOG_APP, " [FAILED!]\n" );
         } else {
-		    bitmapList.push_back( retval );
 		    bitmapMap[ str ] = retval;
             LogManager::GetInstance().Write( LogManager::LOG_APP, " [DONE]\n" );
         }
@@ -68,8 +70,8 @@ ALLEGRO_BITMAP * ResourceManager::GetBitmap( const char * name ) {
 	return retval;
 }
 
- // returns it if it has already been loaded
-    TextureSheet * ResourceManager::LoadTextureSheet ( const char * name, int texWidth, int texHeight ) {
+// returns it if it has already been loaded
+TextureSheet * ResourceManager::LoadTextureSheet ( const char * name, int texWidth, int texHeight ) {
 	std::string str = (name);
 	std::map < std::string, TextureSheet * >::iterator iter = texSheetMap.find(str);
 	TextureSheet * retval;
@@ -79,8 +81,35 @@ ALLEGRO_BITMAP * ResourceManager::GetBitmap( const char * name ) {
 	} else {
 		//create and return
 		retval = new TextureSheet( name, texWidth, texHeight );
-		texSheetList.push_back( retval );
 		texSheetMap[ str ] = retval;
 	}
 	return retval;
+}
+
+void ResourceManager::PlaySample( const std::string sampleName ) {
+    PlaySample( sampleName, 1.0f, 0.0f, 1.0f );
+}
+
+void ResourceManager::PlaySample( const std::string sampleName, float gain, float pan, float speed ) {
+    std::map< std::string, ALLEGRO_SAMPLE *>::iterator iterAudio = audioMap.find(sampleName);
+    if ( iterAudio != audioMap.end() ) {
+        al_play_sample( iterAudio->second,  gain, pan, speed, ALLEGRO_PLAYMODE_ONCE, 0 ); 
+    } else {
+        (LogManager::GetInstance()).Write( LogManager::LOG_APP, "Failed to find sample %s\n", sampleName );
+    }
+}
+
+void ResourceManager::LoadSamples( jsoncons::json jobj ) {
+
+    for (auto it_obj = jobj.begin_members(); it_obj != jobj.end_members(); ++it_obj ) {
+        ALLEGRO_SAMPLE * sample = al_load_sample( it_obj->second.as_string().c_str() );
+        std::string audioName = it_obj->first;
+
+        if ( sample != 0 ) {
+            audioMap[ audioName ] = sample; // insert into map
+        } else {
+            (LogManager::GetInstance()).Write( LogManager::LOG_APP, "Failed to load sample %s\n", it_obj->first );
+        }
+    }
+
 }
