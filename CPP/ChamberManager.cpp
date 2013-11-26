@@ -19,9 +19,9 @@ using namespace MysticDave;
 
 void ChamberManager::StartUp() {
     curChamber = 0;
+    player = new PlayerEntity(); // TODO: load last save
+    player->AddQuest( "SaveNavi", 0 );
     LoadChamberSet();
-    player = new PlayerEntity();
-    // TODO: load last save or something. Move player to a GameManager or something?
 }
 
 void ChamberManager::ShutDown() {
@@ -95,6 +95,6 @@ void ChamberManager::LoadChamberSet() {
     for (auto it_obj = chamberSet.begin_members(); it_obj != chamberSet.end_members(); ++it_obj ) {
         std::string fileLoc = it_obj->first;
         int chamberID = it_obj->second.as_int();
-        chamberFileLocMap[ chamberID ] = fileLoc; // insert into map!
+        chamberFileLocMap[ chamberID ] = fileLoc; // insert into map
     }
 }

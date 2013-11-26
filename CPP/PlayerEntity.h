@@ -42,6 +42,11 @@ namespace MysticDave {
         void                    AddInventoryItem( int id );
         void                    RemoveInventoryItem( int id );
         std::list< int > *      GetInventory() { return &inventory; }
+        
+        void                    AddQuest( std::string questName, int questState );
+        void                    SetQuest( std::string questName, int questState );
+        bool                    HasQuest( std::string questName );
+        int                     GetQuest( std::string questName );
 
         virtual jsoncons::json  GetJSON();
 
@@ -54,6 +59,7 @@ namespace MysticDave {
 
         std::map< std::string, Animation * > animationMap;
         std::list< int >        inventory;   // holds all inventory items
+        std::map< std::string, int > questMap; // keys quest name to quest state
 
         void                    Init();
     };

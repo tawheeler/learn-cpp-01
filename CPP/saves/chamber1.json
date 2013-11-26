@@ -23,6 +23,11 @@
             "properties":
             {
             },
+            "conditions":
+            {
+                "QuestAt":0,
+                "QuestName":"SaveNavi"
+            },
             "type":"CampFire",
             "x":10,
             "y":2

@@ -217,6 +217,26 @@ void PlayerEntity::RemoveInventoryItem( int id ) {
     }
 }
 
+void PlayerEntity::AddQuest( std::string questName, int questState ) {
+    if ( questMap.find(questName) == questMap.end() ) {
+        questMap[questName] = questState;
+    } else {
+        (LogManager::GetInstance()).Write( LogManager::LOG_APP, "Error adding quest %s, it already exists\n", questName );
+    }
+}
+
+void PlayerEntity::SetQuest( std::string questName, int questState ) {
+    questMap[questName] = questState;
+}
+
+bool PlayerEntity::HasQuest( std::string questName ) {
+    return questMap.find(questName) != questMap.end(); // true if has quest
+}
+
+int PlayerEntity::GetQuest( std::string questName ) {
+    return questMap[questName];
+}
+
 jsoncons::json PlayerEntity::GetJSON() {
     
     jsoncons::json jobj = TileEntity::GetJSON();

@@ -112,5 +112,7 @@ namespace MysticDave {
 
         std::list< ForceNet * >                 forceNetList;     // list of force nets
 
+        bool                                    EntityPassesSpawnCondition( jsoncons::json * entityJSON );
+
     };
 }

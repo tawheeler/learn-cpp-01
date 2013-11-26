@@ -21,6 +21,7 @@
 #include "ItemEntity.h"
 #include "LogManager.h"
 #include "MessageStruct.h"
+#include "ChamberManager.h"
 #include "EntityEventManager.h"
 #include <assert.h>
 
@@ -81,12 +82,9 @@ Chamber::Chamber( jsoncons::json jobj ) {
 	tileHeight = jobj["tileHeight"].as_int();
 	numTiles   = tileWidth * tileHeight;
 
-    //tileArr = new Tile[numTiles];
     tileImageAddrArr = new int[numTiles];
     tilePassableArr = new bool[numTiles];
     tileEntityTileListArr = new std::list < TileEntity * >[numTiles];
-
-    floorImage = 0;
 
     int i = 0;
     json tileImageAddrArrJSON = jobj["tileImageAddrArr"];
@@ -105,6 +103,11 @@ Chamber::Chamber( jsoncons::json jobj ) {
     // extract plain entities
     json jEntities = jobj["entities"];
     for ( auto it = jEntities.begin_elements(); it != jEntities.end_elements(); ++it ) {
+
+        if ( !EntityPassesSpawnCondition( &(*it) ) ) {
+            continue;
+        }
+
         entityList.push_back( new Entity(*it) );
     }
 
@@ -112,6 +115,11 @@ Chamber::Chamber( jsoncons::json jobj ) {
     json jTileEntities = jobj["tileEntities"];
     for ( auto it = jTileEntities.begin_elements(); it != jTileEntities.end_elements(); ++it ) {
 
+        if ( !EntityPassesSpawnCondition( &(*it) ) ) {
+            continue;
+        }
+
+        // create the tile entity
         TileEntity * te = 0;
         if ( (*it)["type"].as_string().compare( "TileEntity" ) == 0 ) {
             te = new TileEntity( *it );
@@ -139,6 +147,8 @@ Chamber::Chamber( jsoncons::json jobj ) {
 
     // TODO: make this not-hardcoded
 	texSheet = new TextureSheet( "./res/BackgroundTiles.gif", 64, 64 );
+
+    floorImage = 0;
     GenerateFloorImage();
 }
 
@@ -757,4 +767,30 @@ jsoncons::json Chamber::GetJSON() {
 
     return obj;
     
+}
+
+bool Chamber::EntityPassesSpawnCondition( json * entityJSON ) {
+
+    bool passesConditions = true;
+
+    if ( entityJSON->has_member( "conditions" ) ) {
+        json conditionsJSON = entityJSON->get("conditions");
+        
+        if ( conditionsJSON.has_member( "HasQuest" ) ) {
+            passesConditions = passesConditions && ((ChamberManager::GetInstance()).GetPlayer()->HasQuest( conditionsJSON["HasQuest"].as_string() ));
+        }
+        if ( conditionsJSON.has_member( "QuestPast" ) ) { // goes with QuestName
+            passesConditions = passesConditions && ((ChamberManager::GetInstance()).GetPlayer()->HasQuest( conditionsJSON["QuestName"].as_string() )
+                && (ChamberManager::GetInstance()).GetPlayer()->GetQuest( conditionsJSON["QuestName"].as_string() ) >= conditionsJSON["QuestPast"].as_int() );
+            int val = conditionsJSON["QuestPast"].as_int();
+            int val2 = (ChamberManager::GetInstance()).GetPlayer()->GetQuest( conditionsJSON["QuestName"].as_string() );
+            int val3 = 2;
+        }
+        if ( conditionsJSON.has_member( "QuestAt" ) ) { // goes with QuestName
+            passesConditions = passesConditions && ((ChamberManager::GetInstance()).GetPlayer()->HasQuest( conditionsJSON["QuestName"].as_string() )
+                && (ChamberManager::GetInstance()).GetPlayer()->GetQuest( conditionsJSON["QuestName"].as_string() ) >= conditionsJSON["QuestAt"].as_int());
+        }
+    }
+
+    return passesConditions;
 }
