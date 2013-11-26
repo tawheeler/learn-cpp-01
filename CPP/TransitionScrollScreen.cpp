@@ -31,7 +31,6 @@ TransitionScrollScreen::TransitionScrollScreen( int targetChamberUID, int transi
     dy_player(0)
 { 
     sourceChamber = (ChamberManager::GetInstance()).GetCurrentChamber();
-    destChamber = (ChamberManager::GetInstance()).GetChamber( targetChamberUID );
     player = (ChamberManager::GetInstance()).GetPlayer();
 
     int playerX = player->GetPos()->GetTileX();
@@ -62,6 +61,9 @@ TransitionScrollScreen::TransitionScrollScreen( int targetChamberUID, int transi
             break;
     }
 
+    // reload the destination chamber
+    (ChamberManager::GetInstance()).ReloadChamber( targetChamberUID );
+    destChamber = (ChamberManager::GetInstance()).GetChamber( targetChamberUID );
     destChamber->CalcForceNets();
 }
 
@@ -95,7 +97,6 @@ void TransitionScrollScreen::Update() {
         int ty = cury + dy;
         destChamber->RegisterTileEntityInTile( player, tx, ty );
         player->MoveWithAnimation( player->GetDir(), 24, PlayerEntity::MOVE::WALK );
-
 
         this->SetDead();
     }

@@ -91,7 +91,7 @@ void PlayerEntity::Init() {
 
 	Animation * animPushNorth = new Animation( 2, tex );
 	animPushNorth->frameDurations[0] = 18; animPushNorth->frameIDs[0] = 6;
-	animPushNorth->frameDurations[1] = 18; animPushNorth->frameIDs[1] = 25;
+	animPushNorth->frameDurations[1] = 18; animPushNorth->frameIDs[1] = 13;
 	animPushNorth->Init();
     animationMap["pushNorth"] = animPushNorth;
 
@@ -102,7 +102,7 @@ void PlayerEntity::Init() {
     animationMap["pushEast"] = animPushEast;
 
 	Animation * animPushSouth = new Animation( 2, tex );
-	animPushSouth->frameDurations[0] = 18; animPushSouth->frameIDs[0] = 20;
+	animPushSouth->frameDurations[0] = 18; animPushSouth->frameIDs[0] = 19;
 	animPushSouth->frameDurations[1] = 18; animPushSouth->frameIDs[1] = 21;
 	animPushSouth->Init();
     animationMap["pushSouth"] = animPushSouth;
@@ -215,6 +215,11 @@ void PlayerEntity::RemoveInventoryItem( int id ) {
     if ( findIter != inventory.end() ) {
         inventory.erase( findIter );  // get rid of it
     }
+}
+
+bool PlayerEntity::HasInventoryItem( int id ) {
+    std::list<int>::iterator findIter = std::find( inventory.begin(), inventory.end(), id );
+    return findIter != inventory.end(); // true if it has it
 }
 
 void PlayerEntity::AddQuest( std::string questName, int questState ) {

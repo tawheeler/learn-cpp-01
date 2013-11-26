@@ -26,23 +26,30 @@ Entity::Entity():
 }
 
 Entity::Entity( jsoncons::json jobj ) {
-    Entity::name = std::string(jobj["name"].as_string().c_str());
+    if ( jobj.has_member( "name" ) ) {
+        //Entity::name = std::string(jobj["name"].as_string().c_str());
+        Entity::name = jobj["name"].as_string();
+    } else {
+        Entity::name = jobj["type"].as_string();
+    }
 
     // add the outputs
-    json outputsJSON = jobj["outputs"];
+    if ( jobj.has_member( "outputs" ) ) {
+        json outputsJSON = jobj["outputs"];
     
-    for (auto it_obj = outputsJSON.begin_members(); it_obj != outputsJSON.end_members(); ++it_obj ) {
-        json outputsListJSON = it_obj->second;
+        for (auto it_obj = outputsJSON.begin_members(); it_obj != outputsJSON.end_members(); ++it_obj ) {
+            json outputsListJSON = it_obj->second;
 
-        for (auto it_arr = outputsListJSON.begin_elements(); it_arr != outputsListJSON.end_elements(); ++it_arr) {
+            for (auto it_arr = outputsListJSON.begin_elements(); it_arr != outputsListJSON.end_elements(); ++it_arr) {
 
-            OutputStruct os = OutputStruct();
-            os.fireOnceOnly = (*it_arr)[ "fireOnceOnly" ].as_bool();
-            os.inputName    = (*it_arr)[ "inputName" ].as_string();
-            os.outputName   = (*it_arr)[ "outputName" ].as_string();
-            os.targetEntity = (*it_arr)[ "targetEntity" ].as_string();
-            os.timeDelay    = (*it_arr)[ "timeDelay" ].as_int();
-            AddOutput( os );
+                OutputStruct os = OutputStruct();
+                os.fireOnceOnly = (*it_arr)[ "fireOnceOnly" ].as_bool();
+                os.inputName    = (*it_arr)[ "inputName" ].as_string();
+                os.outputName   = (*it_arr)[ "outputName" ].as_string();
+                os.targetEntity = (*it_arr)[ "targetEntity" ].as_string();
+                os.timeDelay    = (*it_arr)[ "timeDelay" ].as_int();
+                AddOutput( os );
+            }
         }
     }
 

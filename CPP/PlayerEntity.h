@@ -42,6 +42,7 @@ namespace MysticDave {
         void                    AddInventoryItem( int id );
         void                    RemoveInventoryItem( int id );
         std::list< int > *      GetInventory() { return &inventory; }
+        bool                    HasInventoryItem( int id );
         
         void                    AddQuest( std::string questName, int questState );
         void                    SetQuest( std::string questName, int questState );

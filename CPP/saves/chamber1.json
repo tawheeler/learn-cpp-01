@@ -5,9 +5,6 @@
     [
         {
             "name":"campFire1",
-            "outputs":
-            {
-            },
             "properties":
             {
             },
@@ -17,9 +14,6 @@
         },
         {
             "name":"campFire2",
-            "outputs":
-            {
-            },
             "properties":
             {
             },
@@ -34,9 +28,6 @@
         },
         {
             "name":"campFire3",
-            "outputs":
-            {
-            },
             "properties":
             {
             },
@@ -46,9 +37,6 @@
         },
         {
             "name":"campFire4",
-            "outputs":
-            {
-            },
             "properties":
             {
             },
@@ -58,9 +46,6 @@
         },
         {
             "name":"block1",
-            "outputs":
-            {
-            },
             "properties":
             {
                 "BlockType":"STONE",
@@ -72,9 +57,6 @@
         },
         {
             "name":"block2",
-            "outputs":
-            {
-            },
             "properties":
             {
                 "BlockType":"ICE",
@@ -86,9 +68,6 @@
         },
         {
             "name":"block3",
-            "outputs":
-            {
-            },
             "properties":
             {
                 "BlockType":"METAL",
@@ -100,9 +79,6 @@
         },
         {
             "name":"block4",
-            "outputs":
-            {
-            },
             "properties":
             {
                 "BlockType":"WOOD",
@@ -129,7 +105,7 @@
             },
             "properties":
             {
-                "StartDisabled":true
+                "StartDisabled":false
             },
             "type":"Trigger",
             "x":6,
@@ -137,9 +113,6 @@
         },
         {
             "name":"transitionEntity1",
-            "outputs":
-            {
-            },
             "properties":
             {
                 "Param":3,
@@ -152,9 +125,6 @@
         }
         {
             "name":"transitionEntity4",
-            "outputs":
-            {
-            },
             "properties":
             {
                 "Param":2,
@@ -166,10 +136,6 @@
             "y":10
         },
         {
-            "name":"icePatch1",
-            "outputs":
-            {
-            },
             "properties":
             {
             },

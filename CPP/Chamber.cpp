@@ -31,49 +31,6 @@ using namespace MysticDave;
 int Chamber::CHAMBER_TILE_WIDTH = 13;
 int Chamber::CHAMBER_TILE_HEIGHT = 11;
 
-Chamber::Chamber( int chamberID ) {
-	Chamber::chamberID = chamberID;
-	
-	tileWidth  = CHAMBER_TILE_WIDTH;
-	tileHeight = CHAMBER_TILE_HEIGHT;
-	numTiles   = tileWidth * tileHeight;
-
-    tileImageAddrArr = new int[numTiles];
-    tilePassableArr = new bool[numTiles];
-    tileEntityTileListArr = new std::list < TileEntity * >[numTiles];
-
-    int chamberTileInd[] = {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2,
-					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
-					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
-					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
-					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
-					 20, 21, 21, 21, 21, 21,  6, 21, 21, 21, 21, 21, 22,
-					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
-					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
-					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
-					 20, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 21, 22,
-					 40, 41, 41, 41, 41, 41, 41, 41, 41, 41, 41, 41, 42 };
-
-	int ind = 0;
-	for ( int y = 0; y < 11; y ++ ) {
-		for ( int x = 0; x < 13; x ++ ) {
-			tileImageAddrArr[ind] = chamberTileInd[ind];
-			if ( x == 0 || x == 12 || y == 0 || y == 10 ) {
-				tilePassableArr[ind] = false;
-			} else {
-                tilePassableArr[ind] = true;
-            }
-			ind++;
-		}
-	}
-
-	floorImage = 0;
-
-	// TODO: make this not-hardcoded
-	texSheet = new TextureSheet( "./res/BackgroundTiles.gif", 64, 64 );
-    GenerateFloorImage();
-}
-
 Chamber::Chamber( jsoncons::json jobj ) {
 
     Chamber::chamberID = jobj["uid"].as_int();
@@ -789,6 +746,12 @@ bool Chamber::EntityPassesSpawnCondition( json * entityJSON ) {
         if ( conditionsJSON.has_member( "QuestAt" ) ) { // goes with QuestName
             passesConditions = passesConditions && ((ChamberManager::GetInstance()).GetPlayer()->HasQuest( conditionsJSON["QuestName"].as_string() )
                 && (ChamberManager::GetInstance()).GetPlayer()->GetQuest( conditionsJSON["QuestName"].as_string() ) >= conditionsJSON["QuestAt"].as_int());
+        }
+        if ( conditionsJSON.has_member( "HasItem" ) ) {
+            passesConditions = passesConditions && ((ChamberManager::GetInstance()).GetPlayer()->HasInventoryItem( conditionsJSON["HasItem"].as_int() ));
+        }
+        if ( conditionsJSON.has_member( "LacksItem" ) ) {
+            passesConditions = passesConditions && (!(ChamberManager::GetInstance()).GetPlayer()->HasInventoryItem( conditionsJSON["LacksItem"].as_int() ));
         }
     }
 

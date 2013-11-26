@@ -5,9 +5,6 @@
     [
         {
             "name":"transitionEntity3",
-            "outputs":
-            {
-            },
             "properties":
             {
                 "Param":0,
@@ -20,9 +17,10 @@
             "y":0
         },
         {
-            "name":"itemEntity1",
-            "outputs":
+            "name":"item1",
+            "conditions":
             {
+                "LacksItem":94
             },
             "properties":
             {

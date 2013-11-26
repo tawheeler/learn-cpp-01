@@ -85,6 +85,26 @@ bool ChamberManager::HasChamber( const int uid ) {
     return ( iter != chamberFileLocMap.end() );
 }
 
+void ChamberManager::ReloadChamber( const int uid ) {
+
+    assert( HasChamber( uid ) );
+
+	std::map < int, Chamber * >::iterator iter = chamberMap.find( uid );
+    if ( iter != chamberMap.end() ) { // delete it if we have already created it
+        Chamber * curChamberTemp = curChamber;
+        curChamber = (iter->second); // set this so entities can refer to themselves in deletion
+        (iter->second)->Cleanup();   // clean it up
+	    delete (iter->second);       // delete it
+	    iter = chamberMap.erase(iter); // erase it
+        curChamber = curChamberTemp;
+    }
+
+    // now create and add to the list
+    Chamber * C = new Chamber( json::parse_file(chamberFileLocMap[ uid ]) );
+    chamberMap[uid] = C;
+
+}
+
 PlayerEntity * ChamberManager::GetPlayer() {
     return player;
 }

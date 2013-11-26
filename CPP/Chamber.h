@@ -33,7 +33,6 @@ namespace MysticDave {
 	    static int								CHAMBER_TILE_WIDTH;  // how many tiles wide the chamber is (13)
 	    static int								CHAMBER_TILE_HEIGHT; // how many tiles tall the chamber is (11)
 
-											    Chamber( int chamberID );
                                                 Chamber( jsoncons::json jobj );
 											    ~Chamber();
 

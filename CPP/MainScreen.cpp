@@ -107,6 +107,13 @@ void MainScreen::Update() {
                     (*iter)->OnInput( "OnChilled" );
                 }
 
+            } else if ( keysToggled[ALLEGRO_KEY_R] && keysPressed[ALLEGRO_KEY_R] ) {
+
+                int uid = curChamber->GetUID();
+                CM->ReloadChamber( uid );
+                CM->SetCurrentChamber( uid ); 
+                return;
+
             } else if ( numDirsPressed == 1 ) {
 
 			    int dx = 0;
