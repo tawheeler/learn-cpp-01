@@ -44,9 +44,9 @@ namespace MysticDave {
 
         void									GenerateFloorImage();
 
-        bool									IsInChamber_Tile( int x, int y ); // whether the given tile point is in the chamber
-        bool									IsInChamber_Tile( int tileNum ); // whether the given tile point is in the chamber
-        bool                                    IsInChamber_Pixel( float x, float y ); // whether the given pixel point is in the chamber
+        bool									IsInChamber_Tile( int x, int y ) const; // whether the given tile point is in the chamber
+        bool									IsInChamber_Tile( int tileNum ) const; // whether the given tile point is in the chamber
+        bool                                    IsInChamber_Pixel( float x, float y ) const ; // whether the given pixel point is in the chamber
 
         bool                                    CanTileBeEntered( int x, int y );
         bool                                    HasEntityInMotion();
@@ -64,6 +64,9 @@ namespace MysticDave {
 	    int										GetTileWidth() const;
 	    int										GetTileHeight() const;
 	    ALLEGRO_BITMAP *						GetFloorImage() const;
+
+        int                                     GetTileImageAddress( int tileIndex ) const;
+        void                                    SetTileImageAddress( int tileIndex, int imageAddress );
 
         Entity *                                GetEntity( int uid );
         Entity *                                GetEntity( std::string name );

@@ -29,6 +29,7 @@
 
 #include "BaseScreen.h"
 #include "MainScreen.h"
+#include "ChamberEditorScreen_TileImages.h"
 
 using namespace MysticDave;
 
@@ -123,7 +124,8 @@ void Init( void ) {
     myEntityEventManager = &(EntityEventManager::GetInstance());
     myEntityEventManager->StartUp();
 
-	BaseScreen * screen = new MainScreen();
+	//BaseScreen * screen = new MainScreen();
+    BaseScreen * screen = new ChamberEditorScreen_TileImages();
 	screen->Init();
 	myScreenManager->PushGameScreen( screen );
 

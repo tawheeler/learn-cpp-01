@@ -261,6 +261,20 @@ ALLEGRO_BITMAP * Chamber::GetFloorImage() const {
 	return floorImage;
 }
 
+int Chamber::GetTileImageAddress( int tileIndex ) const {
+    int retval = 0;
+    if( IsInChamber_Tile( tileIndex ) ) {
+        retval = tileImageAddrArr[tileIndex];
+    }
+    return retval;
+}
+
+void Chamber::SetTileImageAddress( int tileIndex, int imageAddress ) {
+    if ( IsInChamber_Tile( tileIndex ) ) {
+        tileImageAddrArr[tileIndex] = imageAddress;
+    }
+}
+
 void Chamber::GenerateFloorImage() {
 	
 	// create an image if needed
@@ -286,15 +300,15 @@ void Chamber::GenerateFloorImage() {
 
 }
 
-bool Chamber::IsInChamber_Tile( int tileNum ) {
+bool Chamber::IsInChamber_Tile( int tileNum ) const {
 	return IsInChamber_Tile( Chamber::GetTileXFromNum(tileNum), Chamber::GetTileYFromNum(tileNum) );
 }
 
-bool Chamber::IsInChamber_Tile( int x, int y ) {
+bool Chamber::IsInChamber_Tile( int x, int y ) const {
 	return ( x >= 0 && x < tileWidth && y >= 0 && y < tileHeight );
 }
 
-bool Chamber::IsInChamber_Pixel( float x, float y ) {
+bool Chamber::IsInChamber_Pixel( float x, float y ) const {
 	return ( x >= 0 && x < tileWidth*TILE_DIM && y >= 0 && y < tileHeight*TILE_DIM );
 }
 
